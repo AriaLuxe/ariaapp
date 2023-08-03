@@ -1,5 +1,4 @@
-import 'package:ariapp/app/domain/entities/users_data.dart';
-import 'package:ariapp/app/presentation/screens/home_screen.dart';
+import 'package:ariapp/app/presentation/futures/shared/home_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,21 +30,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<UsersData>(
-          create: (_) => UsersData(),
-        ),
-      ],
-      child: MaterialApp(
-        builder: DevicePreview.appBuilder,
-        locale: DevicePreview.locale(context),
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: myCustomColor,
-        ),
-        home: const HomeScreen(),
+    return MaterialApp(
+      builder: DevicePreview.appBuilder,
+      locale: DevicePreview.locale(context),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: myCustomColor,
       ),
+      home: const HomeScreen(),
     );
   }
 }

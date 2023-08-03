@@ -9,17 +9,15 @@ class ChatModel extends Chat {
     required int id,
     required int userId,
     required UserAria receptor,
-    required String time,
-    required String text,
-    required bool isLiked,
+    required DateTime date,
+    required String lastMessage,
     required bool unread,
   }) : super(
           id: id,
           userId: userId,
           receptor: receptor,
-          time: time,
-          text: text,
-          isLiked: isLiked,
+          date: date,
+          lastMessage: lastMessage,
           unread: unread,
         );
   factory ChatModel.fromMap(Map json) {
@@ -27,9 +25,8 @@ class ChatModel extends Chat {
       id: json['id'],
       userId: json['userId'],
       receptor: json['receptor'],
-      time: json['time'],
-      text: json['text'],
-      isLiked: json['isLiked'],
+      date: json['date'],
+      lastMessage: json['lastMessage'],
       unread: json['unread'],
     );
   }
@@ -39,9 +36,8 @@ class ChatModel extends Chat {
       'id': id,
       'userId': userId,
       'receptorId': receptor,
-      'time': time,
-      'text': text,
-      'isLiked': isLiked,
+      'date': date,
+      'lastMessage': lastMessage,
       'unread': unread,
     };
   }
