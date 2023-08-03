@@ -1,4 +1,4 @@
-import 'package:ariapp/app/domain/models/chat_model.dart';
+import 'package:ariapp/app/domain/entities/chat.dart';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:flutter/material.dart';
 

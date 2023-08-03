@@ -1,4 +1,4 @@
-import 'package:ariapp/app/domain/models/user_aria_model.dart';
+import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
 import 'package:ariapp/app/presentation/widgets/search_users.dart';
 import 'package:flutter/material.dart';

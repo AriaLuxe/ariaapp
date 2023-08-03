@@ -1,4 +1,4 @@
-import 'package:ariapp/app/domain/models/users_data.dart';
+import 'package:ariapp/app/domain/entities/users_data.dart';
 import 'package:ariapp/app/presentation/screens/home_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';

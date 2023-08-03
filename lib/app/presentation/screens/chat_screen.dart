@@ -1,5 +1,5 @@
-import 'package:ariapp/app/domain/models/message_model.dart';
-import 'package:ariapp/app/domain/models/user_model.dart';
+import 'package:ariapp/app/domain/entities/message.dart';
+import 'package:ariapp/app/domain/entities/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
