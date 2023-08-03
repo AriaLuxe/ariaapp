@@ -1,12 +1,13 @@
 import 'package:ariapp/app/domain/entities/message.dart';
-import 'package:ariapp/app/domain/entities/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../../../domain/entities/user_aria.dart';
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.user});
-  final User user;
+  final UserAria user;
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
@@ -49,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              message.text,
+              'message.text',
               style: TextStyle(
                 color: isMe ? Colors.white : const Color(0xFF202248),
                 fontSize: 16,
@@ -58,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              message.time,
+              'message.time',
               style: TextStyle(
                 color: isMe ? Colors.white : const Color(0xFF202248),
                 fontSize: 12,
@@ -112,23 +113,23 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Row(
+        title: const Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage(widget.user.imageUrl),
+              backgroundImage: AssetImage('widget.user.imageUrl'),
             ),
-            const SizedBox(width: 18),
+            SizedBox(width: 18),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.user.name,
-                  style: const TextStyle(
+                  'widget.user.name',
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   "Activo hace 3m",
                   style: TextStyle(fontSize: 12),
                 ),
@@ -169,11 +170,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     reverse:
                         true, //mensajes hacia abajo en inversa y when aparece teclado se sube el mensaje tambien
                     padding: const EdgeInsets.only(top: 15),
-                    itemCount: messages.length,
+                    itemCount: 5,
                     itemBuilder: (BuildContext context, int index) {
-                      final Message message = messages[index];
-                      bool isMe = message.sender.id == currentUser.id;
-                      return _buildMessage(message, isMe);
+                      //final Message message = messages[index];
+                      //bool isMe = message.sender.id == currentUser.id;
+                      return const CircularProgressIndicator(); //_buildMessage(message, isMe);
                     },
                   ),
                 ),

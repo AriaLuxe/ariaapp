@@ -1,6 +1,7 @@
-import 'package:ariapp/app/domain/entities/chat.dart';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../infrastructure/models/chat_model.dart';
 
 class RecentChats extends StatelessWidget {
   RecentChats({super.key});
@@ -72,7 +73,7 @@ class RecentChats extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        chat!.name,
+                                        chat.receptor.nameUser,
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 15.0,
@@ -85,7 +86,7 @@ class RecentChats extends StatelessWidget {
                                             MediaQuery.of(context).size.width *
                                                 0.45,
                                         child: Text(
-                                          chat.text,
+                                          chat.lastMessage,
                                           style: const TextStyle(
                                             color: Colors.blueGrey,
                                             fontSize: 15.0,
@@ -101,7 +102,7 @@ class RecentChats extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    chat.time,
+                                    '${chat.date.hour}:${chat.date.minute}',
                                     style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 15.0,

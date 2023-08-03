@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/favorite_contacts.dart';
-import '../widgets/recent_chats.dart';
+import '../chats/widgets/favorite_contacts.dart';
+import '../chats/widgets/recent_chats.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});

@@ -137,10 +137,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }*/
 
-import 'package:ariapp/app/presentation/screens/messages_screen.dart';
-import 'package:ariapp/app/presentation/screens/people_screen.dart';
-import 'package:ariapp/app/presentation/screens/settings_screen.dart';
+import 'package:ariapp/app/presentation/futures/messages/messages_screen.dart';
+import 'package:ariapp/app/presentation/futures/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../people/people_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

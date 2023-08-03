@@ -1,7 +1,8 @@
-import 'package:ariapp/app/presentation/screens/home_screen.dart';
-import 'package:ariapp/app/presentation/screens/people_screen.dart';
-import 'package:ariapp/app/presentation/screens/settings_screen.dart';
+import 'package:ariapp/app/presentation/futures/shared/home_screen.dart';
+import 'package:ariapp/app/presentation/futures/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../../people/people_screen.dart';
 
 class CategorySelector extends StatefulWidget {
   const CategorySelector({super.key});

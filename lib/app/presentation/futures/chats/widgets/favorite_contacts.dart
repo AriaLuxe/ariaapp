@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/message.dart';
-import '../screens/chat_screen.dart';
-
 class FavoriteContacts extends StatelessWidget {
   const FavoriteContacts({super.key});
 
@@ -43,37 +40,35 @@ class FavoriteContacts extends StatelessWidget {
             child: ListView.builder(
                 padding: const EdgeInsets.only(left: 10.0),
                 scrollDirection: Axis.horizontal,
-                itemCount: favorites.length,
+                itemCount: 2,
                 itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
+                  return /*GestureDetector(
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => ChatScreen(user: favorites[index]),
+                        builder: (_) => ChatScreen(user: favorites[]),
                       ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 35.0,
-                            backgroundImage:
-                                AssetImage(favorites[index].imageUrl),
+                    ),*/
+                      Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 35.0,
+                          backgroundColor: Colors.red,
+                        ),
+                        const SizedBox(
+                          height: 6.0,
+                        ),
+                        Text(
+                          'favorites[index].name',
+                          style: const TextStyle(
+                            color: Color(0xFF202248),
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
                           ),
-                          const SizedBox(
-                            height: 6.0,
-                          ),
-                          Text(
-                            favorites[index].name,
-                            style: const TextStyle(
-                              color: Color(0xFF202248),
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 }),
