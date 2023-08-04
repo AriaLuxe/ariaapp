@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          useMaterial3: true, primarySwatch: myCustomColor, fontFamily: 'Lato'),
+          useMaterial3: false,
+          primarySwatch: myCustomColor,
+          fontFamily: 'Lato'),
       home: const HomeScreen(),
     );
   }

@@ -1,21 +1,36 @@
+import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/futures/layouts/widgets/header.dart';
 import 'package:ariapp/app/presentation/widgets/custom_search_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/favorite_contacts.dart';
-import 'widgets/recent_chats.dart';
+import 'widgets/chats_list.dart';
 
-class MessagesScreen extends StatelessWidget {
-  const MessagesScreen({super.key});
+class ChatsScreen extends StatelessWidget {
+  const ChatsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         //CategorySelector(),
+        Container(
+          // Ajusta la altura según tu diseño
+          decoration: BoxDecoration(
+            color: Styles.primaryColor, // Color de fondo morado
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          child: const Column(
+            children: [
+              Header(title: 'Chats'),
+            ],
+          ),
+        ),
         Expanded(
           child: Container(
-            height: 500.0,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -24,11 +39,9 @@ class MessagesScreen extends StatelessWidget {
               ),
             ),
             child: Column(
-              children: <Widget>[
-                const Header(title: 'Chats'),
-                const FavoriteContacts(),
-                const CustomSearchBar(),
-                RecentChats(),
+              children: [
+                FavoriteContacts(),
+                ChatsList(),
               ],
             ),
           ),

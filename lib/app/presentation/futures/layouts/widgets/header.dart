@@ -9,22 +9,25 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Padding(
-          padding: EdgeInsets.only(left: 20),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: CircleAvatar(
+            radius: 30,
             backgroundColor: Colors.purple,
           ),
         ),
         Text(
           title,
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.message,
-              color: Styles.primaryColor,
+              color: Colors.white,
             ))
       ],
     );
