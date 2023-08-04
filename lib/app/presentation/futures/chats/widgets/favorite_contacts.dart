@@ -17,7 +17,7 @@ class FavoriteContacts extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Favorite Contacts',
+                  'Contactos Favoritos',
                   style: TextStyle(
                       color: Color(0xFF202248),
                       fontWeight: FontWeight.bold,
@@ -55,13 +55,13 @@ class FavoriteContacts extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 35.0,
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.yellow,
                         ),
                         const SizedBox(
                           height: 6.0,
                         ),
                         Text(
-                          'favorites[index].name',
+                          'name',
                           style: const TextStyle(
                             color: Color(0xFF202248),
                             fontSize: 16.0,

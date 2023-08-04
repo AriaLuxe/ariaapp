@@ -13,25 +13,26 @@ class UserAriaModel extends UserAria {
     required bool enabled,
     required String registerDate,
   }) : super(
-            id: id,
-            nameUser: nameUser,
-            lastName: lastName,
-            email: email,
-            password: password,
-            imgProfile: imgProfile,
-            enabled: enabled,
-            registerDate: registerDate);
+          id: id,
+          nameUser: nameUser,
+          lastName: lastName,
+          email: email,
+          password: password,
+          imgProfile: imgProfile,
+          registerDate: registerDate,
+          enabled: enabled,
+        );
 
-  factory UserAriaModel.fromMap(Map userMap) {
+  factory UserAriaModel.fromJson(Map<String, dynamic> json) {
     return UserAriaModel(
-      id: userMap['id'],
-      nameUser: userMap['nameUser'],
-      lastName: userMap['lastName'],
-      email: userMap['email'],
-      password: userMap['password'],
-      imgProfile: userMap['imgProfile'],
-      enabled: userMap['enabled'],
-      registerDate: userMap['registerDate'],
+      id: json['id'],
+      nameUser: json['nameUser'],
+      lastName: json['lastName'],
+      email: json['email'],
+      password: json['password'],
+      imgProfile: json['imgProfile'],
+      registerDate: json['registerDate'],
+      enabled: json['enabled'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -42,13 +43,13 @@ class UserAriaModel extends UserAria {
       'email': email,
       'password': password,
       'imgProfile': imgProfile,
-      'enabled': enabled,
       'registerDate': registerDate,
+      'enabled': enabled,
     };
   }
 
   static List<UserAriaModel> toUserAriaList(String str) {
     return List<UserAriaModel>.from(
-        jsonDecode(str).map((x) => UserAriaModel.fromMap(x)));
+        jsonDecode(str).map((x) => UserAriaModel.fromJson(x)));
   }
 }

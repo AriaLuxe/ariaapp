@@ -1,7 +1,9 @@
+import 'package:ariapp/app/presentation/futures/layouts/widgets/header.dart';
+import 'package:ariapp/app/presentation/widgets/custom_search_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../chats/widgets/favorite_contacts.dart';
-import '../chats/widgets/recent_chats.dart';
+import 'widgets/favorite_contacts.dart';
+import 'widgets/recent_chats.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
@@ -23,7 +25,9 @@ class MessagesScreen extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
+                const Header(title: 'Chats'),
                 const FavoriteContacts(),
+                const CustomSearchBar(),
                 RecentChats(),
               ],
             ),

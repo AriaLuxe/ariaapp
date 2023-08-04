@@ -4,7 +4,7 @@ class Chat {
   final int id;
   final int userId;
   final UserAria receptor;
-  final DateTime date;
+  final String date;
   final String lastMessage;
   final bool unread;
   Chat({

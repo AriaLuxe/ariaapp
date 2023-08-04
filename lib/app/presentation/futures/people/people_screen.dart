@@ -1,6 +1,7 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
-import 'package:ariapp/app/presentation/futures/people/widgets/search_users.dart';
+import 'package:ariapp/app/presentation/futures/layouts/widgets/header.dart';
+import 'package:ariapp/app/presentation/widgets/custom_search_bar.dart';
 import 'package:flutter/material.dart';
 
 class PeopleScreen extends StatefulWidget {
@@ -20,7 +21,8 @@ class _PeopleScreenState extends State<PeopleScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Column(
         children: [
-          const SearchUser(),
+          const Header(title: 'Personas'),
+          const CustomSearchBar(),
           Expanded(
             child: Container(
               height: 500.0,

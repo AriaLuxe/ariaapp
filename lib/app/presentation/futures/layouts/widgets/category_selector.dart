@@ -1,4 +1,4 @@
-import 'package:ariapp/app/presentation/futures/shared/home_screen.dart';
+import 'package:ariapp/app/presentation/futures/layouts/layout.dart';
 import 'package:ariapp/app/presentation/futures/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 

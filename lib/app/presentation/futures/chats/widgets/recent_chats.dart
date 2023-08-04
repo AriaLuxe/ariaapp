@@ -101,9 +101,9 @@ class RecentChats extends StatelessWidget {
                               ),
                               Column(
                                 children: [
-                                  Text(
-                                    '${chat.date.hour}:${chat.date.minute}',
-                                    style: const TextStyle(
+                                  const Text(
+                                    '15:35',
+                                    style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.bold,

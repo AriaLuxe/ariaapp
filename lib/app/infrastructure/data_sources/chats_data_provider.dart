@@ -7,8 +7,8 @@ class ChatsDataProvider {
   String endPoint = 'chats';
   Future<List<ChatModel>> getAllChatsByUserId(int id) async {
     try {
-      final response = await http
-          .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint?userId=$id'));
+      final response =
+          await http.get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint'));
       List<ChatModel> chats = ChatModel.toChatsList(response.body);
       return chats;
     } catch (error) {
