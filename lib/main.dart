@@ -1,4 +1,6 @@
+import 'package:ariapp/app/presentation/futures/layouts/layout.dart';
 import 'package:ariapp/app/presentation/futures/sign_in/sing_in_screen.dart';
+import 'package:ariapp/app/presentation/futures/sign_up/sign_up_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: myCustomColor,
         fontFamily: 'Lato',
       ),

@@ -15,58 +15,59 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Styles.primaryColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 0.0),
+        padding:
+            const EdgeInsets.only(bottom: 8.0), // Ajusta el margen inferior
         child: DotNavigationBar(
-            paddingR: const EdgeInsets.symmetric(vertical: 15),
-            dotIndicatorColor: Colors.white,
-            unselectedItemColor: Colors.grey[300],
-            splashBorderRadius: 50,
-            backgroundColor: Styles.primaryColor,
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            onTap: (value) {
-              setState(() {});
+          paddingR: const EdgeInsets.symmetric(
+              vertical: 8), // Ajusta el espacio entre los botones
+          dotIndicatorColor: Colors.white,
+          unselectedItemColor: Colors.grey[300],
+          splashBorderRadius: 50,
+          backgroundColor: Styles.primaryColor,
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          onTap: (value) {
+            setState(() {
               currentPageIndex = value;
-              print(currentPageIndex);
-            },
-            currentIndex: currentPageIndex,
-            // onDestinationSelected: (int index) {
-            //  setState(() {
-            //   currentPageIndex = index;
-            // });
-            // },
-            //selectedIndex: currentPageIndex,
-            items: [
-              DotNavigationBarItem(
-                  icon: const Icon(
-                    Icons.message_outlined,
-                    color: Colors.white,
-                  ),
-                  selectedColor: Styles.primaryColor),
-              DotNavigationBarItem(
-                  icon: const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                  ),
-                  selectedColor: Styles.primaryColor),
-              DotNavigationBarItem(
-                  icon: const Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                  ),
-                  selectedColor: Styles.primaryColor),
-            ]),
+            });
+          },
+          currentIndex: currentPageIndex,
+          items: [
+            DotNavigationBarItem(
+              icon: const Icon(
+                Icons.message_outlined,
+                color: Colors.white,
+              ),
+              selectedColor: Styles.primaryColor,
+            ),
+            DotNavigationBarItem(
+              icon: const Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
+              selectedColor: Styles.primaryColor,
+            ),
+            DotNavigationBarItem(
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              selectedColor: Styles.primaryColor,
+            ),
+          ],
+        ),
       ),
       body: SafeArea(
-        child: <Widget>[
+        child: [
           const ChatsScreen(),
           const PeopleScreen(),
-          const SettingsScreens()
+          const SettingsScreens(),
         ][currentPageIndex],
       ),
     );
