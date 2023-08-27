@@ -1,26 +1,18 @@
 import 'package:ariapp/app/domain/entities/message.dart';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../../../domain/entities/user_aria.dart';
-
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.user});
-  final UserAria user;
+class Chat extends StatefulWidget {
+  const Chat({super.key});
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<Chat> createState() => _ChatState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatState extends State<Chat> {
   final TextEditingController _textController = TextEditingController();
-  final WebSocketChannel _channel =
-      IOWebSocketChannel.connect('ws://localhost:8085/chat-aria');
 
   @override
   void dispose() {
     _textController.dispose();
-    _channel.sink.close();
     super.dispose();
   }
 
@@ -116,7 +108,7 @@ class _ChatScreenState extends State<ChatScreen> {
         title: const Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage('widget.user.imageUrl'),
+              backgroundImage: AssetImage('assets/images/1.jpg'),
             ),
             SizedBox(width: 18),
             Column(
@@ -174,7 +166,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       //final Message message = messages[index];
                       //bool isMe = message.sender.id == currentUser.id;
-                      return const CircularProgressIndicator(); //_buildMessage(message, isMe);
+                      return const Center(
+                          child:
+                              CircularProgressIndicator()); //_buildMessage(message, isMe);
                     },
                   ),
                 ),

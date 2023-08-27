@@ -13,7 +13,7 @@ class SignUpScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white10,
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
             color: Colors.black), // Cambia el color del icono de regresar
       ),
       body: Padding(
@@ -29,26 +29,41 @@ class SignUpScreen extends StatelessWidget {
                     fontSize: 32,
                     color: Styles.primaryColor),
               ),
+              const SizedBox(
+                height: 25,
+              ),
               SignUpTextInput(
                 title: 'Nombres',
                 prefixIcon: Icons.person,
                 labelText: 'Ingresa tus nombres',
+              ),
+              const SizedBox(
+                height: 20,
               ),
               SignUpTextInput(
                 title: 'Apellidos',
                 prefixIcon: Icons.person,
                 labelText: 'Ingresa tus apellidos',
               ),
+              const SizedBox(
+                height: 20,
+              ),
               SignUpTextInput(
                 title: 'Correo',
                 prefixIcon: Icons.mail,
                 labelText: 'Ingresa tu correo',
+              ),
+              const SizedBox(
+                height: 20,
               ),
               SignUpTextInput(
                 title: 'Contraseña',
                 prefixIcon: Icons.lock,
                 labelText: 'Ingresa tu contraseña',
                 suffixIcon: Icons.visibility_off,
+              ),
+              const SizedBox(
+                height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,6 +90,9 @@ class SignUpScreen extends StatelessWidget {
                         suffixIcon: Icons.arrow_drop_down,
                       ))
                 ],
+              ),
+              const SizedBox(
+                height: 20,
               ),
               SizedBox(
                   width: double.infinity,

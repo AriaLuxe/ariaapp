@@ -1,4 +1,5 @@
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
+import 'package:ariapp/app/presentation/futures/chats/widgets/chat.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../infrastructure/models/chat_model.dart';
@@ -36,12 +37,12 @@ class ChatsList extends StatelessWidget {
                       final ChatModel chat = chats1[index];
 
                       return GestureDetector(
-                        // onTap: () =>// Navigator.push(
-                        // context,
-                        //MaterialPageRoute(
-                        //builder: (_) => ChatScreen(user: chat.sender),
-                        //),
-                        // ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Chat()));
+                        },
                         child: Container(
                           margin: const EdgeInsets.only(
                               top: 5.0, bottom: 5.0, right: 20.0),
