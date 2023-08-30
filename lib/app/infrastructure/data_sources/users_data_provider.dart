@@ -4,7 +4,7 @@ import '../../config/base_url_config.dart';
 import '../models/user_aria_model.dart';
 
 class UsersDataProvider {
-  String endPoint = 'users-aria';
+  String endPoint = 'users';
   Future<List<UserAriaModel>> getUsers() async {
     try {
       final response =

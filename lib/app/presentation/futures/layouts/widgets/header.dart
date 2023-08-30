@@ -14,8 +14,9 @@ class Header extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.purple,
+            radius: 20,
+            backgroundImage: NetworkImage(
+                'https://raw.githubusercontent.com/AriaLuxe/AriaChat/main/uploads/0743327a-ae64-4c4c-b9e1-9bed7a149e89_cf9b3928-c22e-42d7-a920-0a8e912657df_1.jpg?token=GHSAT0AAAAAACFJZURNOG4UIAC4CL4MGLFIZHOHNAA'),
           ),
         ),
         Text(
@@ -33,3 +34,4 @@ class Header extends StatelessWidget {
     );
   }
 }
+//https://raw.githubusercontent.com/AriaLuxe/AriaChat/main/uploads/0743327a-ae64-4c4c-b9e1-9bed7a149e89_cf9b3928-c22e-42d7-a920-0a8e912657df_1.jpg?token=GHSAT0AAAAAACFJZURNOG4UIAC4CL4MGLFIZHOHNAA

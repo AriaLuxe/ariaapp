@@ -26,7 +26,7 @@ class ChatsList extends StatelessWidget {
             topRight: Radius.circular(30.0),
           ),
           child: FutureBuilder(
-              future: chatsDataProvider.getAllChatsByUserId(1),
+              future: chatsDataProvider.getAllChatsByUserId(3),
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final chats1 = snapshot.data!;
@@ -35,7 +35,6 @@ class ChatsList extends StatelessWidget {
                     itemCount: chats1.length,
                     itemBuilder: (BuildContext context, int index) {
                       final ChatModel chat = chats1[index];
-
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -43,97 +42,109 @@ class ChatsList extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) => const Chat()));
                         },
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              top: 5.0, bottom: 5.0, right: 20.0),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 10.0),
-                          decoration: BoxDecoration(
-                            color: chat.unread
-                                ? const Color(0xffF5F5FF)
-                                : Colors.white,
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(20.0),
-                              bottomRight: Radius.circular(20.0),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 35.0,
-                                    backgroundImage: AssetImage(
-                                        'assets/images/${index + 1}.jpg'),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 0.0),
+                                decoration: BoxDecoration(
+                                  color: chat.unread
+                                      ? const Color(0xffF5F5FF)
+                                      : Colors.white,
+                                  borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0),
                                   ),
-                                  const SizedBox(width: 10.0),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        chat.receptor.nameUser,
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.bold,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 35.0,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/${index + 1}.jpg'),
                                         ),
-                                      ),
-                                      const SizedBox(height: 5.0),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.45,
-                                        child: Text(
-                                          chat.lastMessage,
-                                          style: const TextStyle(
-                                            color: Colors.blueGrey,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text(
-                                    '15:35',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  chat.unread
-                                      ? Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 7.0, vertical: 3),
-                                          width: 40.0,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                          ),
-                                          child: const Text(
-                                            'NEW',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
+                                        const SizedBox(width: 10.0),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${chat.nameUser} ${chat.lastName}',
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
+                                            const SizedBox(height: 5.0),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.45,
+                                              child: Text(
+                                                chat.lastMessage,
+                                                style: const TextStyle(
+                                                  color: Colors.blueGrey,
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          '${chat.dateLastMessage.hour}:${chat.dateLastMessage.minute}',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        )
-                                      : const Text(''),
-                                ],
+                                        ),
+                                        const SizedBox(height: 5),
+                                        chat.unread
+                                            ? Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 7.0,
+                                                        vertical: 3),
+                                                width: 40.0,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                ),
+                                                child: const Text(
+                                                  'NEW',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              )
+                                            : const Text(''),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
+                              const Divider(
+                                thickness: 1,
+                              )
                             ],
                           ),
                         ),

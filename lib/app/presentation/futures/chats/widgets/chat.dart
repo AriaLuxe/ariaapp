@@ -1,5 +1,6 @@
 import 'package:ariapp/app/domain/entities/message.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -9,6 +10,9 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController _textController = TextEditingController();
+  final channel = WebSocketChannel.connect(
+    Uri.parse('wss://ariachat-production-5c58.up.railway.app/messages/1'),
+  );
 
   @override
   void dispose() {
@@ -174,6 +178,11 @@ class _ChatState extends State<Chat> {
                 ),
               ),
             ),
+            StreamBuilder(
+                stream: channel.stream,
+                builder: (context, snapshot) {
+                  return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                }),
             _buildMessageComposer()
           ],
         ),

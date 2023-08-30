@@ -1,6 +1,35 @@
 part of 'sign_in_bloc.dart';
 
-@immutable
-sealed class SignInState {}
+final class SignInState extends Equatable {
+  final EmailInputValidator emailInputValidator;
+  final PasswordInputValidator passwordInputValidator;
+  final FormzSubmissionStatus formStatus;
+  final bool isValid;
+  const SignInState({
+    this.formStatus = FormzSubmissionStatus.initial,
+    this.emailInputValidator = const EmailInputValidator.pure(),
+    this.passwordInputValidator = const PasswordInputValidator.pure(),
+    this.isValid = false,
+  });
 
-final class SignInInitial extends SignInState {}
+  SignInState copyWith({
+    FormzSubmissionStatus? formStatus,
+    EmailInputValidator? emailInputValidator,
+    PasswordInputValidator? passwordInputValidator,
+    bool? isValid,
+  }) =>
+      SignInState(
+        formStatus: formStatus ?? this.formStatus,
+        emailInputValidator: emailInputValidator ?? this.emailInputValidator,
+        passwordInputValidator:
+            passwordInputValidator ?? this.passwordInputValidator,
+        isValid: isValid ?? this.isValid,
+      );
+
+  @override
+  List<Object> get props => [
+        formStatus,
+        emailInputValidator,
+        passwordInputValidator,
+      ];
+}

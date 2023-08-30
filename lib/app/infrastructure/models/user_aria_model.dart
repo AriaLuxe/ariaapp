@@ -10,8 +10,13 @@ class UserAriaModel extends UserAria {
     required String email,
     required String password,
     required String imgProfile,
-    required bool enabled,
+    required DateTime dateBirth,
+    required String gender,
+    required String country,
+    required String city,
     required String registerDate,
+    required bool enabled,
+    required String nickname,
   }) : super(
           id: id,
           nameUser: nameUser,
@@ -19,22 +24,35 @@ class UserAriaModel extends UserAria {
           email: email,
           password: password,
           imgProfile: imgProfile,
+          dateBirth: dateBirth,
+          gender: gender,
+          country: country,
+          city: city,
           registerDate: registerDate,
           enabled: enabled,
+          nickname: nickname,
         );
 
   factory UserAriaModel.fromJson(Map<String, dynamic> json) {
     return UserAriaModel(
-      id: json['id'],
+      id: json['idUser'],
       nameUser: json['nameUser'],
       lastName: json['lastName'],
       email: json['email'],
       password: json['password'],
       imgProfile: json['imgProfile'],
+      dateBirth: json['dateBirth'] != null
+          ? DateTime.parse(json['dateBirth'])
+          : DateTime.now(),
+      gender: json['gender'],
+      country: json['country'],
+      city: json['city'],
       registerDate: json['registerDate'],
       enabled: json['enabled'],
+      nickname: json['nickName'], // Cambiado a 'nickName'
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -43,13 +61,19 @@ class UserAriaModel extends UserAria {
       'email': email,
       'password': password,
       'imgProfile': imgProfile,
+      'dateBirth': dateBirth?.toIso8601String(),
+      'gender': gender,
+      'country': country,
+      'city': city,
       'registerDate': registerDate,
       'enabled': enabled,
+      'nickname': nickname,
     };
   }
 
   static List<UserAriaModel> toUserAriaList(String str) {
+    final Iterable decoded = jsonDecode(str);
     return List<UserAriaModel>.from(
-        jsonDecode(str).map((x) => UserAriaModel.fromJson(x)));
+        decoded.map((x) => UserAriaModel.fromJson(x)));
   }
 }

@@ -1,44 +1,57 @@
 import 'dart:convert';
 
-import 'package:ariapp/app/infrastructure/models/user_aria_model.dart';
-
-import '../../domain/entities/chat.dart';
+import 'package:ariapp/app/domain/entities/chat.dart';
 
 class ChatModel extends Chat {
   ChatModel({
-    required int id,
+    required int chatId,
     required int userId,
-    required UserAriaModel receptor,
-    required String date,
+    required String nameUser,
+    required String lastName,
+    required String imgProfile,
     required String lastMessage,
+    required DateTime dateLastMessage,
     required bool unread,
+    required bool iaChat,
   }) : super(
-          id: id,
+          chatId: chatId,
           userId: userId,
-          receptor: receptor,
-          date: date,
+          nameUser: nameUser,
+          lastName: lastName,
+          imgProfile: imgProfile,
           lastMessage: lastMessage,
+          dateLastMessage: dateLastMessage,
           unread: unread,
+          iaChat: iaChat,
         );
+
   factory ChatModel.fromMap(Map<String, dynamic> json) {
     return ChatModel(
-      id: json['id'],
+      chatId: json['chatId'],
       userId: json['userId'],
-      receptor: UserAriaModel.fromJson(json['receptor']),
-      date: json['date'],
+      nameUser: json['nameUser'],
+      lastName: json['lastName'],
+      imgProfile: json['imgProfile'],
       lastMessage: json['lastMessage'],
+      dateLastMessage: DateTime.parse(
+          json['dateLastMessage']), // Conversión manual si es necesario
       unread: json['unread'],
+      iaChat: json['iaChat'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'chatId': chatId,
       'userId': userId,
-      'receptorId': receptor,
-      'date': date,
+      'nameUser': nameUser,
+      'lastName': lastName,
+      'imgProfile': imgProfile,
       'lastMessage': lastMessage,
+      'dateLastMessage':
+          dateLastMessage.toIso8601String(), // Conversión a ISO 8601
       'unread': unread,
+      'iaChat': iaChat,
     };
   }
 
