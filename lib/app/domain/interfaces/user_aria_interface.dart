@@ -1,6 +1,8 @@
 import '../entities/user_aria.dart';
 
 abstract class UserAriaInterface {
+  Future<void> signUpUser(UserAria user);
+  Future<UserAria> getUserById(int id);
   Future<List<UserAria>> getAllFriends();
   Future<List<UserAria>> getFavoriteUsers();
   Future<void> updateEmail();

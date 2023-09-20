@@ -1,12 +1,16 @@
-import 'package:ariapp/app/presentation/futures/sign_in/sing_in_screen.dart';
+import 'package:ariapp/injections.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+
+import 'app/presentation/get_started/get_started_screen.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   splashSetup();
+  usersDependencies();
+  chatsDependencies();
   runApp(const MyApp());
   /*runApp(
     DevicePreview(
@@ -47,7 +51,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: myCustomColor,
         fontFamily: 'Lato',
       ),
-      home: const SignInScreen(),
+      home: const GetStartedScreen(),
     );
   }
 }

@@ -1,7 +1,11 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/domain/interfaces/user_aria_interface.dart';
+import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
 
 class UserAriaRepository extends UserAriaInterface {
+  final UsersDataProvider usersDataProvider;
+
+  UserAriaRepository({required this.usersDataProvider});
   @override
   Future<List<UserAria>> getAllFriends() {
     // TODO: implement getAllFriends
@@ -42,5 +46,15 @@ class UserAriaRepository extends UserAriaInterface {
   Future<List<UserAria>> getFavoriteUsers() {
     // TODO: implement getFavoriteUsers
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> signUpUser(UserAria user) async {
+    await usersDataProvider.signUp(user);
+  }
+
+  @override
+  Future<UserAria> getUserById(int id) async {
+    return await usersDataProvider.getUserById(id);
   }
 }

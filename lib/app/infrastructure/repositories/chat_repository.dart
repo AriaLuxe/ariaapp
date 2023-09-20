@@ -5,7 +5,7 @@ import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart'
 class ChatRepository extends ChatInterface {
   final ChatsDataProvider chatsDataProvider;
 
-  ChatRepository(this.chatsDataProvider);
+  ChatRepository({required this.chatsDataProvider});
   @override
   Future<void> deleteChat(int id) {
     // TODO: implement deleteChat
@@ -19,8 +19,7 @@ class ChatRepository extends ChatInterface {
   }
 
   @override
-  Future<Chat> createChat() {
-    // TODO: implement createChat
-    throw UnimplementedError();
+  Future<Chat> createChat(int senderId, int receiverId) {
+    return chatsDataProvider.createChat(senderId, receiverId);
   }
 }
