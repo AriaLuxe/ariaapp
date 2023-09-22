@@ -7,10 +7,9 @@ import '../../settings/settings_screen.dart';
 
 class Header extends StatelessWidget {
   final String title;
-  final IconData iconData;
+  final IconData? iconData;
   final void Function()? onPressed;
-  Header(
-      {super.key, required this.title, required this.iconData, this.onPressed});
+  Header({super.key, required this.title, this.iconData, this.onPressed});
 
   final userLogged = GetIt.instance<UserLogged>();
   static const String baseUrlImage =

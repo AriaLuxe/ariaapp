@@ -4,6 +4,12 @@
 	<dict>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Necesitamos acceso a tu microfono para clonar tu voz</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Necesitamos acceso a tu galeria</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Necesitamos acceso a tu camara</string>
 		<key>CFBundleDisplayName</key>
 		<string>Ariapp</string>
 		<key>CFBundleExecutable</key>

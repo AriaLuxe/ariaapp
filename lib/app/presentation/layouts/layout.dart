@@ -1,4 +1,5 @@
 import 'package:ariapp/app/presentation/settings/settings_screen.dart';
+import 'package:ariapp/app/presentation/voice/voice_screen.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,6 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               DotNavigationBarItem(
                 icon: const Icon(
+                  Icons.voice_chat,
+                  color: Colors.white,
+                ),
+                selectedColor: Styles.primaryColor,
+              ),
+              DotNavigationBarItem(
+                icon: const Icon(
                   Icons.settings,
                   color: Colors.white,
                 ),
@@ -82,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const ChatsScreen(),
               const PeopleScreen(),
+              const VoiceScreen(),
               SettingsScreen(),
             ],
           ),
