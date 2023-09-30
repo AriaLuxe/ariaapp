@@ -40,9 +40,7 @@ class _ChatState extends State<Chat> {
   }
 
   _buildMessage(String text, String time, int senderId) {
-    final isMe = senderId ==
-        userLogged.userAria
-            .id; // Replace YOUR_USER_ID with the ID of the current user
+    final isMe = senderId == userLogged.userAria.id;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -123,9 +121,7 @@ class _ChatState extends State<Chat> {
             icon: const Icon(Icons.send),
             iconSize: 25,
             color: Theme.of(context).primaryColor,
-            onPressed: () {
-              // You can handle sending messages in the onSubmitted callback above
-            },
+            onPressed: () {},
           ),
         ],
       ),
