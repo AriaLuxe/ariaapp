@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/styles.dart';
-import '../widgets/chat.dart';
+import '../chat/chat_screen.dart';
 import 'bloc/chat_list_bloc.dart';
 
 class ChatsList extends StatelessWidget {
@@ -72,7 +72,7 @@ class ChatsList extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const Chat(),
+                                builder: (context) => const ChatScreen(),
                               ),
                             );
                           },

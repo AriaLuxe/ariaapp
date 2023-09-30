@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/io.dart';
+
+import '../../../security/user_logged.dart';
+import 'bloc/chat_bloc.dart';
+
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ChatBloc(),
+      child: const Chat(),
+    );
+  }
+}
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -11,18 +27,23 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController _textController = TextEditingController();
-  final WebSocketChannel channel = WebSocketChannel.connect(
-    Uri.parse('wss://ariachat-production-5c58.up.railway.app/messages/1'),
-  );
+  //final WebSocketChannel channel = WebSocketChannel.connect(
+  // Uri.parse('wss://ariachat-production-5c58.up.railway.app/messages/1'),
+  //);
+  final userLogged = GetIt.instance<UserLogged>();
 
   @override
   void dispose() {
     _textController.dispose();
-    channel.sink.close();
+    //channel.sink.close();
     super.dispose();
   }
 
-  _buildMessage(String text, String time, bool isMe) {
+  _buildMessage(String text, String time, int senderId) {
+    final isMe = senderId ==
+        userLogged.userAria
+            .id; // Replace YOUR_USER_ID with the ID of the current user
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -70,7 +91,7 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  _buildMessageComposer() {
+  Widget _buildMessageComposer(ChatBloc chatBloc) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       height: 70,
@@ -84,12 +105,18 @@ class _ChatState extends State<Chat> {
             onPressed: () {},
           ),
           Expanded(
-            child: TextField(
-              controller: _textController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration.collapsed(
-                hintText: 'Send a message...',
-              ),
+            child: BlocBuilder<ChatBloc, ChatState>(
+              builder: (context, state) {
+                return TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration.collapsed(
+                    hintText: 'Send a message...',
+                  ),
+                  onSubmitted: (message) {
+                    // chatBloc.add(MessageSent(message));
+                  },
+                );
+              },
             ),
           ),
           IconButton(
@@ -97,12 +124,7 @@ class _ChatState extends State<Chat> {
             iconSize: 25,
             color: Theme.of(context).primaryColor,
             onPressed: () {
-              String message = _textController.text;
-              if (message.isNotEmpty) {
-                // Enviar el mensaje a través del canal WebSocket
-                channel.sink.add(message);
-                _textController.clear();
-              }
+              // You can handle sending messages in the onSubmitted callback above
             },
           ),
         ],
@@ -112,8 +134,9 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    final chatBloc = BlocProvider.of<ChatBloc>(context);
+    chatBloc.messageFetched(1);
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: const Text('Chat Title'),
         elevation: 0,
@@ -126,36 +149,40 @@ class _ChatState extends State<Chat> {
           ),
         ],
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
+      body: BlocBuilder<ChatBloc, ChatState>(
+        builder: (context, state) {
+          if (state.chatStatus == ChatStatus.loading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state.chatStatus == ChatStatus.error) {
+            return Center(child: Text('Error fetching messages'));
+          } else {
+            final messages = state.messages;
+            return Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      ),
+                    ),
+                    child: ListView.builder(
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        return _buildMessage(message.content,
+                            message.date.toString(), message.sender);
+                      },
+                    ),
                   ),
                 ),
-                child: StreamBuilder(
-                  stream: channel.stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      String message = snapshot.data.toString();
-                      // Analizar el mensaje si es necesario
-                      return _buildMessage(message, 'Time', false);
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
-              ),
-            ),
-            _buildMessageComposer()
-          ],
-        ),
+                _buildMessageComposer(chatBloc),
+              ],
+            );
+          }
+        },
       ),
     );
   }

@@ -11,6 +11,7 @@ void main() {
   splashSetup();
   usersDependencies();
   chatsDependencies();
+  messagesDependencies();
   runApp(const MyApp());
   /*runApp(
     DevicePreview(

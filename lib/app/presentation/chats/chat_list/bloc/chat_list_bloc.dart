@@ -1,8 +1,7 @@
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
-import 'package:web_socket_channel/io.dart';
 
 import '../../../../domain/entities/chat.dart';
 import '../../../../security/user_logged.dart';

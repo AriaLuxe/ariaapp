@@ -2,18 +2,22 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 
 class Message {
-  final UserAria receptor;
+  final int id;
+  final int sender;
+  final String content;
   final DateTime date;
-  final String message;
-  final bool isLiked;
   final bool unread;
+  final bool isLiked;
+  final int chat;
 
   Message({
-    required this.receptor,
+    required this.id,
+    required this.sender,
+    required this.content,
     required this.date,
-    required this.message,
-    required this.isLiked,
     required this.unread,
+    required this.isLiked,
+    required this.chat,
   });
 }
 

@@ -1,9 +1,7 @@
-import 'package:ariapp/app/config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../security/user_logged.dart';
-import '../../settings/settings_screen.dart';
 
 class Header extends StatelessWidget {
   final String title;

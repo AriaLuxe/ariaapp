@@ -1,6 +1,8 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
+import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:get_it/get_it.dart';
 
@@ -22,6 +24,14 @@ void chatsDependencies() {
       .registerLazySingleton<ChatsDataProvider>(() => ChatsDataProvider());
   serviceLocator.registerLazySingleton<ChatRepository>(() =>
       ChatRepository(chatsDataProvider: serviceLocator<ChatsDataProvider>()));
+}
+
+void messagesDependencies() {
+  serviceLocator
+      .registerLazySingleton<MessageDataProvider>(() => MessageDataProvider());
+  serviceLocator.registerLazySingleton<MessageRepository>(() =>
+      MessageRepository(
+          messageDataProvider: serviceLocator<MessageDataProvider>()));
 }
 
 void userLogged(UserAria user, String token) {

@@ -11,7 +11,6 @@ class ChatsDataProvider {
     try {
       final response =
           await http.get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/$id'));
-      print(response.body);
       List<ChatModel> chats = ChatModel.toChatsList(response.body);
       return chats;
     } catch (error) {
