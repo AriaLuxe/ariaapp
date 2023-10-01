@@ -52,7 +52,7 @@ class UsersDataProvider {
   Future<UserAria> getUserById(int userId) async {
     try {
       final response = await http
-          .get(Uri.parse('${BaseUrlConfig.baseUrl}/${endPoint}/data/$userId'));
+          .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/data/$userId'));
       if (response.statusCode == 200) {
         final UserAriaModel user =
             UserAriaModel.fromJson(jsonDecode(response.body));

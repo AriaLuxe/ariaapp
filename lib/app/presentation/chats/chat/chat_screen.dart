@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../security/user_logged.dart';
 import 'bloc/chat_bloc.dart';
@@ -27,9 +26,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController _textController = TextEditingController();
-  //final WebSocketChannel channel = WebSocketChannel.connect(
-  // Uri.parse('wss://ariachat-production-5c58.up.railway.app/messages/1'),
-  //);
+
   final userLogged = GetIt.instance<UserLogged>();
 
   @override
@@ -148,9 +145,9 @@ class _ChatState extends State<Chat> {
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           if (state.chatStatus == ChatStatus.loading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state.chatStatus == ChatStatus.error) {
-            return Center(child: Text('Error fetching messages'));
+            return const Center(child: Text('Error fetching messages'));
           } else {
             final messages = state.messages;
             return Column(

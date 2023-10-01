@@ -1,6 +1,3 @@
-//import 'package:ariapp/app/domain/models/user_aria_model.dart';
-import 'package:ariapp/app/domain/entities/user_aria.dart';
-
 class Message {
   final int id;
   final int sender;
