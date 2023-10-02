@@ -11,7 +11,6 @@ class MessageDataProvider {
       final response = await http
           .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/$chatId/$userId'));
       List<MessageModel> messages = MessageModel.fromJsonList(response.body);
-      print(response.body);
       return messages;
     } catch (e) {
       print(e);

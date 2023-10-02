@@ -1,56 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../security/user_logged.dart';
 import '../chat_screen.dart';
 
-class Messages extends StatefulWidget {
-  const Messages({super.key, required this.audioPath, required this.time, required this.senderId});
+class AudioMessage extends StatefulWidget {
   final String audioPath;
   final DateTime time;
   final int senderId;
+  final bool isMe;
+  //final AudioPlayer audioPlayer;
+  final String url;
+
+  const AudioMessage({
+    Key? key,
+    required this.audioPath,
+    required this.time,
+    required this.senderId,
+    required this.isMe,
+  //  required this.audioPlayer,
+    required this.url,
+  }) : super(key: key);
+
   @override
-  State<Messages> createState() => _MessagesState();
+  _AudioMessageState createState() => _AudioMessageState();
 }
 
-class _MessagesState extends State<Messages> {
-  final userLogged = GetIt.instance<UserLogged>();
+class _AudioMessageState extends State<AudioMessage> {
+  late Stream<PositionData> positionDataStream;
+late final AudioPlayer audioPlayer;
 
-  late final AudioPlayer audioPlayer;
-  final isMe = true;
-  String url = 'https://uploadsaria.blob.core.windows.net/files/';
-
-  Stream<PositionData> get positionDataStream => Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-    audioPlayer.positionStream,
-    audioPlayer.bufferedPositionStream,
-    audioPlayer.durationStream,
-        (position, bufferedPosition, duration) {
-      final validDuration = duration ?? Duration.zero;
-      return PositionData(position, bufferedPosition, validDuration);
-    },
-  );
-@override
-  void initState() async{
-    // TODO: implement initState
- audioPlayer = AudioPlayer()..setUrl('$url${widget.audioPath}');
-  super.initState();
-  }
 
 
   @override
+  void initState() {
+    super.initState();
+    audioPlayer = AudioPlayer();
+
+    positionDataStream = Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+      audioPlayer.positionStream,
+      audioPlayer.bufferedPositionStream,
+      audioPlayer.durationStream,
+          (position, bufferedPosition, duration) {
+        final validDuration = duration ?? Duration.zero;
+        return PositionData(position, bufferedPosition, validDuration);
+      },
+    );
+    audioPlayer.setUrl('${widget.url}${widget.audioPath}');
+  }
+@override
+  void dispose() {
+  audioPlayer.dispose();
+
+  super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    return  Padding(
+
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
-        margin: isMe
+        margin: widget.isMe
             ? const EdgeInsets.only(top: 8, bottom: 8, left: 80)
             : const EdgeInsets.only(top: 8, bottom: 8, right: 80),
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         decoration: BoxDecoration(
-          color: isMe ? const Color(0xFF202248) : const Color(0xffF5F5FF),
-          borderRadius: isMe
+          color: widget.isMe ? const Color(0xFF202248) : const Color(0xffF5F5FF),
+          borderRadius: widget.isMe
               ? const BorderRadius.only(
             topLeft: Radius.circular(15),
             bottomLeft: Radius.circular(15),
@@ -80,8 +96,6 @@ class _MessagesState extends State<Messages> {
                             if (audioPlayer.playing) {
                               await audioPlayer.pause();
                             } else {
-                              await audioPlayer.setUrl('$url+${widget.audioPath}');
-
                               await audioPlayer.play();
                             }
                           },
@@ -108,9 +122,11 @@ class _MessagesState extends State<Messages> {
                     stream: positionDataStream,
                     builder: (_, snapshot) {
                       if (!snapshot.hasData) {
-                        return const LinearProgressIndicator();
+                        return  LinearProgressIndicator(
+                          backgroundColor: widget.isMe ? Colors.white : Theme.of(context).primaryColor,
+                          value: 0.0,
+                        );
                       }
-
                       final positionData = snapshot.data!;
                       final durationMilliseconds = positionData.duration.inMilliseconds;
                       final positionMilliseconds = positionData.position.inMilliseconds;
@@ -123,21 +139,19 @@ class _MessagesState extends State<Messages> {
 
                       return LinearProgressIndicator(
                         value: progressValue,
-                        color: isMe ? Theme.of(context).primaryColor: Colors.white,
-                        backgroundColor: isMe ? Colors.white : Theme.of(context).primaryColor,
-
+                        color: widget.isMe ? Theme.of(context).primaryColor : Colors.white,
+                        backgroundColor: widget.isMe ? Colors.white : Theme.of(context).primaryColor,
                       );
                     },
                   ),
                 ),
-
               ],
             ),
             const SizedBox(height: 8),
             Text(
               '${widget.time.hour}:${widget.time.minute}',
               style: TextStyle(
-                color: isMe ? Colors.white : const Color(0xFF202248),
+                color: widget.isMe ? Colors.white : const Color(0xFF202248),
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

@@ -1,11 +1,20 @@
+
+import 'dart:async';
+
+import 'package:ariapp/app/presentation/chats/chat/widgets/audio_recorder.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:record/record.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
 import '../../../security/user_logged.dart';
 import 'bloc/chat_bloc.dart';
-import 'widgets/message.dart';
+import 'widgets/audio_message.dart';
+
+
+import 'package:audioplayers/audioplayers.dart';
+
 
 class PositionData {
   const PositionData(
@@ -40,188 +49,18 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   final TextEditingController _textController = TextEditingController();
   final userLogged = GetIt.instance<UserLogged>();
-  late final AudioPlayer audioPlayer;
   late final String url;
+  AudioPlayer audioPlayer = AudioPlayer();
+
+
+
+  bool showPlayer = false;
+  String? audioPath;
 
   @override
   void initState() {
-    audioPlayer = AudioPlayer();
-    url = 'https://uploadsaria.blob.core.windows.net/files/';
+    showPlayer = false;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    audioPlayer.dispose(); // Liberar recursos del AudioPlayer
-    super.dispose();
-  }
-
-  Widget _buildMessage(String audioPath, DateTime time, int senderId) {
-    final isMe = senderId == userLogged.userAria.id;
-    final audioUrl = '$url$audioPath';
-
-    Stream<PositionData> positionDataStream = Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-      audioPlayer.positionStream,
-      audioPlayer.bufferedPositionStream,
-      audioPlayer.durationStream,
-          (position, bufferedPosition, duration) {
-        final validDuration = duration ?? Duration.zero;
-        return PositionData(position, bufferedPosition, validDuration);
-      },
-    );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        margin: isMe
-            ? const EdgeInsets.only(top: 8, bottom: 8, left: 80)
-            : const EdgeInsets.only(top: 8, bottom: 8, right: 80),
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-        decoration: BoxDecoration(
-          color: isMe ? const Color(0xFF202248) : const Color(0xffF5F5FF),
-          borderRadius: isMe
-              ? const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-          )
-              : const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-            bottomRight: Radius.circular(15),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: StreamBuilder<PlayerState?>(
-                    stream: audioPlayer.playerStateStream,
-                    builder: (_, snapshot) {
-                      final playerState = snapshot.data;
-                      final processingState = playerState?.processingState;
-                      final playing = playerState?.playing;
-                      if (!(playing ?? false)) {
-                        return IconButton(
-                          onPressed: () async {
-                            if (audioPlayer.playing) {
-                              await audioPlayer.pause();
-                            } else {
-                              await audioPlayer.setUrl(audioUrl);
-                              await audioPlayer.play();
-                            }
-                          },
-                          icon: const Icon(Icons.play_arrow_rounded),
-                        );
-                      } else if (processingState != ProcessingState.completed) {
-                        return IconButton(
-                          onPressed: () async {
-                            await audioPlayer.pause();
-                          },
-                          icon: const Icon(Icons.pause_rounded),
-                        );
-                      }
-                      return const Icon(
-                        Icons.play_arrow_rounded,
-                        size: 40,
-                        color: Colors.yellow,
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: StreamBuilder<PositionData>(
-                    stream: positionDataStream,
-                    builder: (_, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const LinearProgressIndicator();
-                      }
-
-                      final positionData = snapshot.data!;
-                      final durationMilliseconds = positionData.duration.inMilliseconds;
-                      final positionMilliseconds = positionData.position.inMilliseconds;
-
-                      if (durationMilliseconds == 0) {
-                        return const LinearProgressIndicator(value: 0.0);
-                      }
-
-                      double progressValue = positionMilliseconds / durationMilliseconds;
-
-                      return LinearProgressIndicator(
-                        value: progressValue,
-                        color: isMe ? Theme.of(context).primaryColor : Colors.white,
-                        backgroundColor: isMe ? Colors.white : Theme.of(context).primaryColor,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${time.hour}:${time.minute}',
-              style: TextStyle(
-                color: isMe ? Colors.white : const Color(0xFF202248),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMessageComposer(ChatBloc chatBloc) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      height: 70,
-      color: Colors.white,
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.photo),
-            iconSize: 25,
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              // Implement logic to send photos.
-            },
-          ),
-          Expanded(
-            child: BlocBuilder<ChatBloc, ChatState>(
-              builder: (context, state) {
-                return TextField(
-                  controller: _textController,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration.collapsed(
-                    hintText: 'Send a message...',
-                  ),
-                  onSubmitted: (message) {
-                    //chatBloc.add(MessageSent(message)); // Descomentar para enviar mensajes
-                    _textController.clear();
-                  },
-                );
-              },
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            iconSize: 25,
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              final message = _textController.text;
-              if (message.isNotEmpty) {
-                //chatBloc.add(MessageSent(message)); // Descomentar para enviar mensajes
-                _textController.clear();
-              }
-            },
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -264,16 +103,33 @@ class _ChatState extends State<Chat> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final message = messages[index];
-                        return _buildMessage(
-                          message.content,
-                          message.date,
-                          message.sender,
+                        final isMe = message.sender == userLogged.userAria.id;
+                        return AudioMessage(
+                          audioPath: message.content,
+                          time: DateTime.now(),
+                          senderId: 1,
+                          isMe: isMe,
+                         // audioPlayer: audioPlayer, // Debes pasar la instancia de AudioPlayer aquí
+                          url: 'https://uploadsaria.blob.core.windows.net/files/',
                         );
+
                       },
                     ),
                   ),
                 ),
-                _buildMessageComposer(chatBloc),
+
+                   Expanded(
+                     child: AudioRecorder(
+                        onStop: (path) {
+                          if (kDebugMode) print('Recorded file path: $path');
+                          setState(() {
+                            audioPath = path;
+                            showPlayer = true;
+                          });
+                        },
+                      ),
+                   ),
+
               ],
             );
           }
