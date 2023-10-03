@@ -67,12 +67,13 @@ class ChatsList extends StatelessWidget {
                       itemCount: state.chats.length,
                       itemBuilder: (context, index) {
                         final chat = state.chats[index];
+                        print('ididi${chat.chatId}');
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>  ChatScreen(),
+                                builder: (context) =>  ChatScreen(chatId: chat.chatId!,),
                               ),
                             );
                           },

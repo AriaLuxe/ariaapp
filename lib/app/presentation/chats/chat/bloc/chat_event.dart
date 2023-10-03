@@ -12,3 +12,11 @@ class MessageFetched extends ChatEvent {
 
   const MessageFetched(this.chatId);
 }
+class MessageSent extends ChatEvent {
+  final int chatId;
+  final String audioPath;
+
+  const MessageSent( this.chatId, this.audioPath);
+
+
+}

@@ -9,9 +9,9 @@ class MessageRepository extends MessageInterface {
     required this.messageDataProvider,
   });
   @override
-  Future<Message> addMessage() {
-    // TODO: implement addMessage
-    throw UnimplementedError();
+  Future<Message> createMessage(int chatId, int userId, String audioPath) {
+    final response = messageDataProvider.createMessage(chatId, userId, audioPath);
+  return response;
   }
 
   @override
