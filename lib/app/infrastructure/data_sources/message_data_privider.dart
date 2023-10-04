@@ -32,18 +32,15 @@ class MessageDataProvider {
         Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/add'),
       );
 
-      // Adjunta el archivo al campo "audio" en la solicitud.
       request.files.add(await http.MultipartFile.fromPath(
         'audio',
         audioPath,
-        contentType: MediaType('audio', 'mpeg'), // Especifica el tipo de contenido del archivo.
+        contentType: MediaType('audio', 'mpeg'),
       ));
 
-      // Agrega otros campos de datos si es necesario.
       request.fields['sender'] = userId.toString();
       request.fields['chatId'] = chatId.toString();
 
-      // Envía la solicitud y espera la respuesta.
       var streamedResponse = await request.send();
 
       if (streamedResponse.statusCode == 200) {
