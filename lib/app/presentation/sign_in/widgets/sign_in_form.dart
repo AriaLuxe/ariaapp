@@ -99,6 +99,7 @@ class _SignInFormState extends State<SignInForm> {
 
                   if (isSignedIn) {
                     int? userId = await SharedPreferencesManager.getUserId();
+                    print('id usuaio logueado: $userId');
                     String token = 'asd';
                     final user = await usersRepository.getUserById(userId!);
                     userLogged(user, token);

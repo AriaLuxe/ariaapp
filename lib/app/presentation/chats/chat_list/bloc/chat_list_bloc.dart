@@ -27,6 +27,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     Emitter<ChatListState> emit,
   ) async {
     emit(state.copyWith(chatListStatus: ChatListStatus.loading));
+    print(userLogged.userAria.id!);
     try {
       final List<Chat> chats =
           await chatRepository.getAllChatsByUserId(userLogged.userAria.id!);

@@ -101,8 +101,8 @@ class ChatsList extends StatelessWidget {
                                           children: [
                                             CircleAvatar(
                                               radius: 35.0,
-                                              backgroundImage: AssetImage(
-                                                'assets/images/${index + 1}.jpg',
+                                              backgroundImage: NetworkImage(
+                                                'https://uploadsaria.blob.core.windows.net/files/${chat.imgProfile}',
                                               ),
                                             ),
                                             const SizedBox(width: 10.0),
