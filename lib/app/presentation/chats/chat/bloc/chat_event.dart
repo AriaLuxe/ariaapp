@@ -20,3 +20,15 @@ class MessageSent extends ChatEvent {
 
 
 }
+
+class ShowPlayer extends ChatEvent {
+  final bool isRecording;
+
+  const ShowPlayer( this.isRecording);
+}
+
+class AudioPathToSent extends ChatEvent {
+  final String path;
+
+  const AudioPathToSent( this.path);
+}

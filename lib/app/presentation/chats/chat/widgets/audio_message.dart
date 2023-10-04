@@ -28,7 +28,7 @@ class AudioMessage extends StatefulWidget {
 
 class _AudioMessageState extends State<AudioMessage> {
   late Stream<PositionData> positionDataStream;
-late final AudioPlayer audioPlayer;
+late final AudioPlayer audioPlayer; //= AudioPlayer();
 
 
 
@@ -54,8 +54,16 @@ late final AudioPlayer audioPlayer;
 
   super.dispose();
   }
+
+  @override
+  void didUpdateWidget(covariant AudioMessage oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    audioPlayer.setUrl('${widget.url}${widget.audioPath}');
+  }
   @override
   Widget build(BuildContext context) {
+    //audioPlayer.setUrl('${widget.url}${widget.audioPath}');
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -92,6 +100,8 @@ late final AudioPlayer audioPlayer;
                       final playing = playerState?.playing;
                       if (!(playing ?? false)) {
                         return IconButton(
+                          iconSize: 40.0,
+
                           onPressed: () async {
                             if (audioPlayer.playing) {
                               await audioPlayer.pause();
@@ -103,17 +113,21 @@ late final AudioPlayer audioPlayer;
                         );
                       } else if (processingState != ProcessingState.completed) {
                         return IconButton(
+                          iconSize: 40.0,
+
                           onPressed: () async {
                             await audioPlayer.pause();
                           },
                           icon: const Icon(Icons.pause_rounded),
                         );
-                      }
-                      return const Icon(
-                        Icons.play_arrow_rounded,
-                        size: 40,
-                        color: Colors.yellow,
+                      }else {return IconButton(
+                        icon: const Icon(Icons.replay),
+                        iconSize: 40.0,
+                        onPressed: () async {
+                          await audioPlayer.seek(Duration.zero);},
                       );
+                      }
+
                     },
                   ),
                 ),

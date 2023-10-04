@@ -21,6 +21,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<MessageFetched>(_onMessageFetched);
     on<MessageSent>(_onMessageSent);
+    on<ShowPlayer>(_onShowPlayer);
+    on<AudioPathToSent>(_onAudioPath);
+
 
   }
 
@@ -55,9 +58,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final userLogged = GetIt.instance<UserLogged>();
 
       final message = await messageRepository.createMessage(event.chatId, userLogged.userAria.id!, event.audioPath);
-
-      print(message);
+      print('bloc');
+      print(message.content);
       final List<Message>updatedMessages = List.from(state.messages)..add(message);
+      print('mensaje actualizado');
+
       emit(state.copyWith(chatStatus: ChatStatus.success, messages: updatedMessages));
     } catch (e) {
 emit(state.copyWith(chatStatus: ChatStatus.error));    }
@@ -66,4 +71,41 @@ emit(state.copyWith(chatStatus: ChatStatus.error));    }
   void messageSent(int chatId,  String audioPath) {
     add(MessageSent(chatId,audioPath));
   }
+
+  Future<void> _onShowPlayer(
+  ShowPlayer event,
+      Emitter<ChatState> emit
+      ) async
+  {
+    try {
+      if (event.isRecording) {
+        emit(state.copyWith(isRecording: true));
+      } else {
+        emit(state.copyWith(isRecording: false));
+      }
+      print(event.isRecording);
+
+    } catch (e) {
+      emit(state.copyWith(isRecording: false));
+    }
+  }
+  void isRecording(bool isRecording) {
+    add(ShowPlayer(isRecording));
+  }
+
+  Future<void> _onAudioPath(
+      AudioPathToSent event,
+      Emitter<ChatState> emit
+      ) async
+  {
+    try {
+      emit(state.copyWith(path: event.path));
+    } catch (e) {
+      emit(state.copyWith(isRecording: false));
+    }
+  }
+  void audioPath(String path) {
+    add(AudioPathToSent(path));
+  }
+
 }

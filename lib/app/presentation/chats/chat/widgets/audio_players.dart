@@ -16,10 +16,13 @@ class AudioPlayers extends StatefulWidget {
   /// Setting this to null hides the delete button
   final VoidCallback onDelete;
 
+  final void Function() onSent;
+
+
   const AudioPlayers({
     Key? key,
     required this.source,
-    required this.onDelete, required this.chatId,
+    required this.onDelete, required this.chatId, required this.onSent,
   }) : super(key: key);
 
   @override
@@ -78,6 +81,7 @@ class AudioPlayersState extends State<AudioPlayers> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                IconButton(onPressed: widget.onSent, icon: const Icon(Icons.send)),
                 _buildControl(),
                 _buildSlider(constraints.maxWidth),
                 IconButton(
@@ -91,14 +95,11 @@ class AudioPlayersState extends State<AudioPlayers> {
                     }
                   },
                 ),
+
               ],
             ),
             Text('${_duration ?? 0.0}'),
-            IconButton(onPressed: (){
-              print('blocklboc');
-              final chatBloc = BlocProvider.of<ChatBloc>(context);
-              chatBloc.messageSent(widget.chatId,  widget.source);
-            }, icon: const Icon(Icons.send))
+
           ],
         );
       },
@@ -150,7 +151,7 @@ class AudioPlayersState extends State<AudioPlayers> {
     width -= _deleteBtnSize;
 
     return SizedBox(
-      width: width,
+      width: MediaQuery.of(context).size.width/2,
       child: Slider(
         activeColor: Theme.of(context).primaryColor,
         inactiveColor: Theme.of(context).colorScheme.secondary,

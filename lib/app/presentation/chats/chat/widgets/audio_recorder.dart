@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:record/record.dart';
+
+import '../bloc/chat_bloc.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(String path) onStop;
 
-  const AudioRecorder({Key? key, required this.onStop}) : super(key: key);
+  const AudioRecorder({Key? key, required this.onStop,}) : super(key: key);
 
   @override
   State<AudioRecorder> createState() => _AudioRecorderState();
@@ -62,6 +65,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   Future<void> _stop() async {
+
     _timer?.cancel();
     _recordDuration = 0;
 
@@ -90,6 +94,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
             _buildRecordStopControl(),
             const SizedBox(width: 20),
             _buildPauseResumeControl(),
@@ -97,11 +102,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
             _buildText(),
           ],
         ),
-        if (_amplitude != null) ...[
-          const SizedBox(height: 40),
-          Text('Current: ${_amplitude?.current ?? 0.0}'),
-          Text('Max: ${_amplitude?.max ?? 0.0}'),
-        ],
+       // if (_amplitude != null) ...[
+        //  const SizedBox(height: 40),
+        //  Text('Current: ${_amplitude?.current ?? 0.0}'),
+        //  Text('Max: ${_amplitude?.max ?? 0.0}'),
+        //],
       ],
     );
   }

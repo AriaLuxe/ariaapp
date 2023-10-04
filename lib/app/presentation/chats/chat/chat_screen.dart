@@ -49,6 +49,8 @@ class _ChatState extends State<Chat> {
   bool showPlayer = false;
   String? audioPath;
 
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     showPlayer = false;
@@ -80,6 +82,7 @@ class _ChatState extends State<Chat> {
             return const Center(child: Text('Error fetching messages'));
           } else {
             final messages = state.messages;
+            //var messagesOrder = messages.reversed.toList();
             return Column(
               children: [
                 Expanded(
@@ -92,13 +95,16 @@ class _ChatState extends State<Chat> {
                       ),
                     ),
                     child: ListView.builder(
+                      reverse: true,
+                      controller: _scrollController, // Asigna el controlador al ListView
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
-                        final message = messages[index];
+                        final message = messages[messages.length-1- index];
+                        print(message.id);
                         final isMe = message.sender == userLogged.userAria.id;
                         return AudioMessage(
                           audioPath: message.content,
-                          time: DateTime.now(),
+                          time: message.date,
                           senderId: 1,
                           isMe: isMe,
                           url: 'https://uploadsaria.blob.core.windows.net/files/',
@@ -108,25 +114,37 @@ class _ChatState extends State<Chat> {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: showPlayer
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: state.isRecording
                       ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: AudioPlayers(
+                      onSent: (){
+                        print('aaa');                        print(audioPath!);
+                        chatBloc.messageSent(widget.chatId,audioPath!);
+                        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                        chatBloc.isRecording(false);
+
+                      },
                       chatId: widget.chatId,
                       source: audioPath!,
                       onDelete: () {
-                        setState(() => showPlayer = false);
+                      //showPlayer = false;
+                      chatBloc.isRecording(false);
+
                       },
                     ),
                   )
                       : AudioRecorder(
                     onStop: (path) {
+                      print('path enviado');
+                      print(path);
                       if (kDebugMode) print('Recorded file path: $path');
-                      setState(() {
                         audioPath = path;
-                        showPlayer = true;
-                      });
+
+                      chatBloc.isRecording(true);
+
+                      //showPlayer = true;
                     },
                   ),
                 ),
