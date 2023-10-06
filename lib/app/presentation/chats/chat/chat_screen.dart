@@ -135,7 +135,7 @@ class _ChatState extends State<Chat> {
                       },
                     ),
                   )
-                      : AudioRecorder(
+                      : AudioRecorder(iconSize: 30,
                     onStop: (path) {
                       print('path enviado');
                       print(path);

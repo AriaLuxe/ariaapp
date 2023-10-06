@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/infrastructure/services/camera_gallery_service_impl.dart';
 import 'package:ariapp/app/presentation/layouts/widgets/header.dart';
+import 'package:ariapp/app/presentation/voice/widgets/question_scrollable_view.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
@@ -49,7 +50,9 @@ class _VoiceScreenState extends State<VoiceScreen> {
           ),
           child: Column(
             children: [
-             FilledButton(onPressed: (){}, child: Text('clonar'))
+             FilledButton(onPressed: (){
+               Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionScrollableView()));
+             }, child: Text('clonar'))
 
             ],
           ),

@@ -9,8 +9,8 @@ import '../bloc/chat_bloc.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(String path) onStop;
-
-  const AudioRecorder({Key? key, required this.onStop,}) : super(key: key);
+  final double iconSize;
+  const AudioRecorder({Key? key, required this.onStop, required this.iconSize,}) : super(key: key);
 
   @override
   State<AudioRecorder> createState() => _AudioRecorderState();
@@ -125,11 +125,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
     late Color color;
 
     if (_recordState != RecordState.stop) {
-      icon = const Icon(Icons.stop, color: Colors.red, size: 30);
+      icon =  Icon(Icons.stop, color: Colors.red, size: widget.iconSize);
       color = Colors.red.withOpacity(0.1);
     } else {
       final theme = Theme.of(context);
-      icon = Icon(Icons.mic, color: theme.primaryColor, size: 30);
+      icon = Icon(Icons.mic, color: Colors.grey, size: widget.iconSize);
       color = theme.primaryColor.withOpacity(0.1);
     }
 
@@ -155,11 +155,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
     late Color color;
 
     if (_recordState == RecordState.record) {
-      icon = const Icon(Icons.pause, color: Colors.red, size: 30);
+      icon =  Icon(Icons.pause, color: Colors.red, size: widget.iconSize);
       color = Colors.red.withOpacity(0.1);
     } else {
       final theme = Theme.of(context);
-      icon = const Icon(Icons.play_arrow, color: Colors.red, size: 30);
+      icon =  Icon(Icons.play_arrow, color: Colors.red, size: widget.iconSize);
       color = theme.primaryColor.withOpacity(0.1);
     }
 
@@ -181,7 +181,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       return _buildTimer();
     }
 
-    return const Text("Waiting to record");
+    return const Text("");
   }
 
   Widget _buildTimer() {
