@@ -17,7 +17,7 @@ class _QuestionToCloneState extends State<QuestionToClone> {
     @override
     Widget build(BuildContext context) {
       return Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/future.jpeg'),
             fit: BoxFit.cover

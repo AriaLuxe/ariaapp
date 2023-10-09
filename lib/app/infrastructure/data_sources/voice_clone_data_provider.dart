@@ -3,42 +3,36 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class VoiceCloneDataProvider {
-  Future<void> cloneVoice(File audio, File file) async {
+
+
+  Future<void> cloneVoice(List<String> audioPaths, String imgPath, String name, String description) async {
+    final url = 'https://ariachat-production.up.railway.app/voice/add';
+
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.files.add(await http.MultipartFile.fromPath('image', imgPath));
+
+    request.fields['name'] = name;
+    request.fields['description'] = description;
+
+    for (int i = 0; i < audioPaths.length; i++) {
+      final audioPath = audioPaths[i];
+      request.files.add(await http.MultipartFile.fromPath('audio', audioPath));
+    }
+
     try {
-      final uri =
-          Uri.parse('https://ariachat-production.up.railway.app/voice/add');
-      final request = http.MultipartRequest('POST', uri);
+      final response = await request.send();
 
-      // Agrega el archivo de audio a la solicitud
-      request.files.add(
-        http.MultipartFile(
-          'audio',
-          audio.readAsBytes().asStream(),
-          audio.lengthSync(),
-          filename: 'audio.mp3',
-        ),
-      );
+      final responseString = await response.stream.bytesToString();
 
-      // Agrega el archivo de imagen a la solicitud
-      request.files.add(
-        http.MultipartFile(
-          'file',
-          file.readAsBytes().asStream(),
-          file.lengthSync(),
-          filename: 'image.jpg',
-        ),
-      );
-
-      request.fields['owner'] = '1';
-      request.fields['name'] = 'sadasd';
-      request.fields['description'] = 'asd asd asd sad';
-
-      final response = await http.Response.fromStream(await request.send());
-
-      print('clonado');
-      print(response.body);
+      if (response.statusCode == 200) {
+        print('Solicitud exitosa: $responseString');
+      } else {
+        print('Error en la solicitud: $responseString');
+      }
     } catch (e) {
-      print(e);
+      print('Error al enviar la solicitud: $e');
     }
   }
+
 }
