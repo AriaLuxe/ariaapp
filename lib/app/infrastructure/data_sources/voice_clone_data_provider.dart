@@ -6,7 +6,7 @@ class VoiceCloneDataProvider {
 
 
   Future<void> cloneVoice(List<String> audioPaths, String imgPath, String name, String description) async {
-    final url = 'https://ariachat-production.up.railway.app/voice/add';
+    const url = 'https://ariachat-production.up.railway.app/voice/add';
 
     final request = http.MultipartRequest('POST', Uri.parse(url));
 
