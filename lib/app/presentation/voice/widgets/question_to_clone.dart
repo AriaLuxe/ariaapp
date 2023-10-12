@@ -1,7 +1,10 @@
 import 'package:ariapp/app/presentation/chats/chat/widgets/audio_recorder.dart';
+import 'package:ariapp/app/presentation/voice/bloc/voice_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../chats/chat/widgets/audio_players.dart';
 import 'question_background.dart';
 
 class QuestionToClone extends StatefulWidget {
@@ -13,10 +16,14 @@ class QuestionToClone extends StatefulWidget {
 
 class _QuestionToCloneState extends State<QuestionToClone> {
 
-   String? audioPath = '';
+   String? audioPath;
     @override
     Widget build(BuildContext context) {
-      return Container(
+      final voiceBloc = BlocProvider.of<VoiceBloc>(context);
+
+      return BlocBuilder<VoiceBloc, VoiceState>(
+  builder: (context, state) {
+    return Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/future.jpeg'),
@@ -38,24 +45,37 @@ class _QuestionToCloneState extends State<QuestionToClone> {
                const SizedBox(
                  height: 50,
                ),
-               AudioRecorder(iconSize: 60,onStop: (path){
+              state.isRecording ? AudioPlayers(onSent: (){
+                voiceBloc.isRecording(false);
 
-                      print('path enviado');
-                      print(path);
-                      if (kDebugMode) print('Recorded file path: $path');
-                      audioPath = path;
+                print('aaa');                        print(audioPath!);
+               voiceBloc.isRecording(false);
 
-                     // chatBloc.isRecording(true);
 
-                      //showPlayer = true;
+              },
+                source: audioPath!,
+                onDelete: () {
 
-                  }),
+
+                },)
+                : AudioRecorder(iconSize: 60,onStop: (path){
+
+                print('path enviado');
+                print(path);
+                if (kDebugMode) print('Recorded file path: $path');
+                audioPath = path;
+                voiceBloc.isRecording(true);
+
+
+              }),
 
               ],
             ),
           ],
         ),
       );
+  },
+);
     }
 }
 

@@ -126,7 +126,7 @@ class _ChatState extends State<Chat> {
                         chatBloc.isRecording(false);
 
                       },
-                      chatId: widget.chatId,
+                      //chatId: widget.chatId,
                       source: audioPath!,
                       onDelete: () {
                       //showPlayer = false;

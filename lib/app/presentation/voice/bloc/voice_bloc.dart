@@ -26,7 +26,9 @@ class VoiceBloc extends Bloc<VoiceEvent, VoiceState> {
         emit(state.copyWith(isRecording: true));
       } else {
         emit(state.copyWith(isRecording: false));
+
       }
+      print('event.isRecording');
       print(event.isRecording);
 
     } catch (e) {

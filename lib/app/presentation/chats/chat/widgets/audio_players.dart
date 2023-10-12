@@ -11,7 +11,7 @@ import '../bloc/chat_bloc.dart';
 class AudioPlayers extends StatefulWidget {
   /// Path from where to play recorded audio
   final String source;
-  final int chatId;
+ // final int chatId;
   /// Callback when audio file should be removed
   /// Setting this to null hides the delete button
   final VoidCallback onDelete;
@@ -22,7 +22,7 @@ class AudioPlayers extends StatefulWidget {
   const AudioPlayers({
     Key? key,
     required this.source,
-    required this.onDelete, required this.chatId, required this.onSent,
+    required this.onDelete,  required this.onSent,
   }) : super(key: key);
 
   @override

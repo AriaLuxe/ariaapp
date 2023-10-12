@@ -1,9 +1,23 @@
-import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
+import 'package:ariapp/app/presentation/voice/bloc/voice_bloc.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_to_clone.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+
 
 class QuestionScrollableView extends StatelessWidget {
   const QuestionScrollableView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => VoiceBloc(),
+      child: const QuestionScrollable(),);
+  }
+}
+
+class QuestionScrollable extends StatelessWidget {
+  const QuestionScrollable({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,14 +1,9 @@
-import 'dart:io';
 
 import 'package:ariapp/app/config/styles.dart';
-import 'package:ariapp/app/infrastructure/services/camera_gallery_service_impl.dart';
 import 'package:ariapp/app/presentation/layouts/widgets/header.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_scrollable_view.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:record/record.dart';
 
-import '../../infrastructure/data_sources/voice_clone_data_provider.dart';
 
 class VoiceScreen extends StatefulWidget {
   const VoiceScreen({super.key});
@@ -52,7 +47,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
             children: [
              FilledButton(onPressed: (){
                Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionScrollableView()));
-             }, child: Text('clonar'))
+             }, child: const Text('clonar'))
 
             ],
           ),
