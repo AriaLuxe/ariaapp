@@ -119,6 +119,7 @@ class _ChatState extends State<Chat> {
                       ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: AudioPlayers(
+                      isChat: true,
                       onSent: (){
                         print('aaa');                        print(audioPath!);
                         chatBloc.messageSent(widget.chatId,audioPath!);
@@ -130,8 +131,7 @@ class _ChatState extends State<Chat> {
                       source: audioPath!,
                       onDelete: () {
                       //showPlayer = false;
-                      chatBloc.isRecording(false);
-
+                        chatBloc.isRecording(false);
                       },
                     ),
                   )

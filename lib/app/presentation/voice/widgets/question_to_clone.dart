@@ -45,16 +45,18 @@ class _QuestionToCloneState extends State<QuestionToClone> {
                const SizedBox(
                  height: 50,
                ),
-              state.isRecording ? AudioPlayers(onSent: (){
-                voiceBloc.isRecording(false);
+              state.isRecording ? AudioPlayers(
+                isChat: false,
+                onSent: (){
+                 voiceBloc.isRecording(false);
 
-                print('aaa');                        print(audioPath!);
-               voiceBloc.isRecording(false);
+                                print(audioPath!);
 
 
               },
                 source: audioPath!,
                 onDelete: () {
+                  voiceBloc.isRecording(false);
 
 
                 },)
@@ -64,6 +66,7 @@ class _QuestionToCloneState extends State<QuestionToClone> {
                 print(path);
                 if (kDebugMode) print('Recorded file path: $path');
                 audioPath = path;
+                voiceBloc.collectAudio(path);
                 voiceBloc.isRecording(true);
 
 

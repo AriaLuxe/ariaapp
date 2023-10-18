@@ -17,12 +17,15 @@ class AudioPlayers extends StatefulWidget {
   final VoidCallback onDelete;
 
   final void Function() onSent;
+  final bool isChat; // Agrega la variable isChat
 
 
   const AudioPlayers({
     Key? key,
     required this.source,
     required this.onDelete,  required this.onSent,
+    required this.isChat, // Incluye isChat en el constructor
+
   }) : super(key: key);
 
   @override
@@ -81,7 +84,12 @@ class AudioPlayersState extends State<AudioPlayers> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(onPressed: widget.onSent, icon: const Icon(Icons.send)),
+                widget.isChat
+                    ? IconButton(
+                  onPressed: widget.onSent,
+                  icon: const Icon(Icons.send),
+                )
+                    : SizedBox(), // Botón de enviar condicional
                 _buildControl(),
                 _buildSlider(constraints.maxWidth),
                 IconButton(
@@ -95,7 +103,6 @@ class AudioPlayersState extends State<AudioPlayers> {
                     }
                   },
                 ),
-
               ],
             ),
             Text('${_duration ?? 0.0}'),
