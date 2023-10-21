@@ -1,21 +1,19 @@
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../domain/entities/chat.dart';
-import '../../../../security/user_logged.dart';
 
 part 'chat_list_event.dart';
 part 'chat_list_state.dart';
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final ChatRepository chatRepository;
-  final UserLogged userLogged;
 
   ChatListBloc()
       : chatRepository = GetIt.instance<ChatRepository>(),
-        userLogged = GetIt.instance<UserLogged>(),
         super(const ChatListState()) {
     on<ChatListEvent>((event, emit) {});
     on<ChatsFetched>(_onChatsFetched);
@@ -27,10 +25,11 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     Emitter<ChatListState> emit,
   ) async {
     emit(state.copyWith(chatListStatus: ChatListStatus.loading));
-    print(userLogged.userAria.id!);
+   // print(userLogged.userAria.id!);
     try {
+      int? userId = await  SharedPreferencesManager.getUserId();
       final List<Chat> chats =
-          await chatRepository.getAllChatsByUserId(userLogged.userAria.id!);
+          await chatRepository.getAllChatsByUserId(userId!);
       List<Chat> chatsUpdated = [];
 
       for (final chat in chats) {

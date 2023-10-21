@@ -48,8 +48,8 @@ class ChatsList extends StatelessWidget {
               return const Expanded(
                 child: Center(
                   child: Text(
-                    'Aún no hay chats',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    'No tienes chats',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,color: Colors.white),
                   ),
                 ),
               );

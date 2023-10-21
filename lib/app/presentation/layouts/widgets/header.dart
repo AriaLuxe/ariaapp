@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../security/user_logged.dart';
 
 class Header extends StatelessWidget {
   final String title;
@@ -9,7 +8,7 @@ class Header extends StatelessWidget {
   final void Function()? onPressed;
   Header({super.key, required this.title, this.iconData, this.onPressed});
 
-  final userLogged = GetIt.instance<UserLogged>();
+ // final userLogged = GetIt.instance<UserLogged>();
   static const String baseUrlImage =
       'https://uploadsaria.blob.core.windows.net/files/';
 
@@ -26,7 +25,7 @@ class Header extends StatelessWidget {
             child: CircleAvatar(
               radius: 20,
               backgroundImage: NetworkImage(
-                  '$baseUrlImage${userLogged.userAria.imgProfile}'),
+                  'baseUrlImage{userLogged.userAria.imgProfile}'),
             ),
           ),
         ),

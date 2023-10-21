@@ -12,6 +12,8 @@ class UserAria {
   final String? registerDate;
   final bool? enabled;
   final String nickname;
+  final String? role;
+  final String? state;
 
   UserAria(
       {this.id,
@@ -26,5 +28,7 @@ class UserAria {
       required this.city,
       this.enabled,
       this.registerDate,
-      required this.nickname});
+      required this.nickname,
+      this.role,
+      this.state});
 }

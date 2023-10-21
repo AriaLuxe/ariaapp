@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../../config/styles.dart';
+import 'package:flutter/services.dart';
+import '../../config/styles.dart';
 
-class TextInput extends StatelessWidget {
-  TextInput({
-    super.key,
+class CodeInput extends StatelessWidget {
+  CodeInput({
+    Key? key,
     required this.label,
-    required this.verticalPadding,
     this.errorMessage,
     this.onChanged,
     this.validator,
     this.controller,
     this.textInputType,
-    this.prefixIcon,
-    this.suffixIcon,
     this.obscureText = false,
     this.readOnly = false,
     this.enabled = true,
     this.isAnimated = FloatingLabelBehavior.never,
-    this.onTap,
   });
 
   final String label;
@@ -28,44 +25,33 @@ class TextInput extends StatelessWidget {
   final bool readOnly;
   final bool enabled;
   final FloatingLabelBehavior isAnimated;
-  void Function()? onTap;
   final TextInputType? textInputType;
-  final IconData? prefixIcon;
-  final Widget? suffixIcon;
   final bool obscureText;
-  final double verticalPadding;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       cursorColor: Colors.white,
-
-      onTap: onTap,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter (6),
+      ],
       enabled: enabled,
       obscureText: obscureText,
       readOnly: readOnly,
-      keyboardType: textInputType,
+      keyboardType: TextInputType.number,
       controller: controller,
       onChanged: onChanged,
       validator: validator,
-style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
+      textAlign: TextAlign.center,
       decoration: InputDecoration(
 
         fillColor: Styles.inputColor,
         floatingLabelBehavior: isAnimated,
-        prefixIcon: Icon(
-          prefixIcon,
-          color: Colors.white
-          ,
-        ),
-        suffixIcon: suffixIcon,
-        hintStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-        ),
-        labelText: label,
-        labelStyle: const TextStyle(color: Color(0xFFc0c0c0)),
+        label: Center(child: Text(label),),
+        labelStyle: const TextStyle(color: Colors.white),
         filled: true,
-        contentPadding:  EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 15),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Styles.inputColor,
@@ -73,7 +59,9 @@ style: const TextStyle(color: Colors.white),
           borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
+
           borderSide: BorderSide(
+
             color: Styles.inputColor,
           ),
           borderRadius: BorderRadius.circular(15),
@@ -86,11 +74,13 @@ style: const TextStyle(color: Colors.white),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: Colors.red, // Cambiar el color del borde de error enfocado a rojo
+            color: Colors.red,
           ),
           borderRadius: BorderRadius.circular(15),
         ),
         errorText: errorMessage,
+        alignLabelWithHint: true,
+
       ),
     );
   }

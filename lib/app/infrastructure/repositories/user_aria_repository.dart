@@ -7,9 +7,9 @@ class UserAriaRepository extends UserAriaInterface {
 
   UserAriaRepository({required this.usersDataProvider});
   @override
-  Future<List<UserAria>> getAllFriends() {
-    // TODO: implement getAllFriends
-    throw UnimplementedError();
+  Future<List<UserAria>> getAllFriends() async {
+    final response = await usersDataProvider.getUsers();
+    return response;
   }
 
   @override
@@ -56,5 +56,10 @@ class UserAriaRepository extends UserAriaInterface {
   @override
   Future<UserAria> getUserById(int id) async {
     return await usersDataProvider.getUserById(id);
+  }
+
+  @override
+  Future<List<UserAria>> searchUser(String keyword) async {
+    return await usersDataProvider.searchUsers(keyword);
   }
 }

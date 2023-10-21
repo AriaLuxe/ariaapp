@@ -16,11 +16,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white10,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
+
       body: BlocProvider(
         create: (context) => SignUpBloc(),
         child: Center(

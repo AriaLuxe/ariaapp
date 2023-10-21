@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
 
-class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key, this.onChanged});
-  final Function(String)? onChanged;
+import '../../config/styles.dart';
 
+class CustomSearchBar extends StatelessWidget {
+  const CustomSearchBar({super.key, this.onChanged, required this.title});
+  final Function(String)? onChanged;
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: TextField(
+        style: const TextStyle(color: Colors.white),
+        cursorColor: Colors.white,
         onChanged: onChanged,
-        decoration: const InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        decoration: InputDecoration(
+          fillColor: Styles.inputColor,
+          filled: true,
+
+          enabledBorder:  OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(
-              color: Colors.grey,
-              width: 1.5,
+              color: Styles.inputColor,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
               borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1.5,
+                color: Styles.inputColor,
               )),
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          contentPadding: EdgeInsets.symmetric(vertical: 8.0),
-          labelText: 'Buscar chat...',
+          contentPadding: EdgeInsets.symmetric(vertical: 3.0),
+          labelText: title,
           prefixIcon: Icon(Icons.search, color: Colors.grey),
           labelStyle: TextStyle(color: Colors.grey),
         ),

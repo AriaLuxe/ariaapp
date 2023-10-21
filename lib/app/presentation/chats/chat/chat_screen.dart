@@ -1,9 +1,9 @@
+import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../../../security/user_logged.dart';
 import 'bloc/chat_bloc.dart';
 import 'widgets/audio_message.dart';
 import 'widgets/audio_players.dart';
@@ -42,18 +42,20 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final TextEditingController _textController = TextEditingController();
-  final userLogged = GetIt.instance<UserLogged>();
+  //final userLogged = GetIt.instance<UserLogged>();
+
   late final String url;
   AudioPlayer audioPlayer = AudioPlayer();
 
   bool showPlayer = false;
   String? audioPath;
-
+  int? userId;
   ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
+  void initState() async{
     showPlayer = false;
+    userId = await SharedPreferencesManager.getUserId();
     super.initState();
   }
 
@@ -98,10 +100,10 @@ class _ChatState extends State<Chat> {
                       reverse: true,
                       controller: _scrollController, // Asigna el controlador al ListView
                       itemCount: messages.length,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (context, index)  {
                         final message = messages[messages.length-1- index];
                         print(message.id);
-                        final isMe = message.sender == userLogged.userAria.id;
+                        final isMe = message.sender == userId;
                         return AudioMessage(
                           audioPath: message.content,
                           time: message.date,

@@ -49,46 +49,13 @@ class ChatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
     chatListBloc.chatsFetched();
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Styles.primaryColor,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30.0),
-              bottomRight: Radius.circular(30.0),
+    return  const SafeArea(
+      child:  Column(
+                children: [
+                  CustomSearchBar(title:'Buscar chat'),
+                  ChatsList(),
+                ],
             ),
-          ),
-          child: Column(
-            children: [
-              Header(
-                title: 'Chats',
-                iconData: Icons.chat,
-                onPressed: () {
-                  _newMessage(context, chatListBloc);
-                },
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0),
-              ),
-            ),
-            child: const Column(
-              children: [
-                CustomSearchBar(),
-                ChatsList(),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

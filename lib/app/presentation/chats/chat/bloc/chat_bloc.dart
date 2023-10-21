@@ -1,11 +1,11 @@
 
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
+import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../domain/entities/message.dart';
-import '../../../../security/user_logged.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -33,10 +33,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     emit(state.copyWith(chatStatus: ChatStatus.loading));
     try {
-      final userLogged = GetIt.instance<UserLogged>();
-
+      //final userLogged = GetIt.instance<UserLogged>();
+      int? userId = await SharedPreferencesManager.getUserId();
       final List<Message> messages = await messageRepository
-          .getMessagesByChatId(event.chatId, userLogged.userAria.id!);
+          .getMessagesByChatId(event.chatId, userId!);
       print(messages);
       emit(state.copyWith(messages: messages, chatStatus: ChatStatus.success));
     } catch (e) {
@@ -55,9 +55,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       )async {
     try {
-      final userLogged = GetIt.instance<UserLogged>();
+      //final userLogged = GetIt.instance<UserLogged>();
+      int? userId = await SharedPreferencesManager.getUserId();
 
-      final message = await messageRepository.createMessage(event.chatId, userLogged.userAria.id!, event.audioPath);
+      final message = await messageRepository.createMessage(event.chatId, userId!, event.audioPath);
       print('bloc');
       print(message.content);
       final List<Message>updatedMessages = List.from(state.messages)..add(message);

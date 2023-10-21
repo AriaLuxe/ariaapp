@@ -2,13 +2,17 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import '../../security/shared_preferences_manager.dart';
+
 class VoiceCloneDataProvider {
 
 
   Future<void> cloneVoice(List<String> audioPaths, String imgPath, String name, String description) async {
     const url = 'https://ariachat-production.up.railway.app/voice/add';
+    String? token = await SharedPreferencesManager.getToken();
 
     final request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers['Authorization'] = 'Bearer $token';
 
     request.files.add(await http.MultipartFile.fromPath('image', imgPath));
 

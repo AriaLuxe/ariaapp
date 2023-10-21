@@ -1,20 +1,16 @@
 import '../domain/entities/user_aria.dart';
 
 class UserLogged {
-  final UserAria userAria;
-  final String authToken;
+  final UserAria user;
 
   UserLogged({
-    required this.userAria,
-    required this.authToken,
+    required this.user,
   });
 
   UserLogged copyWith({
     UserAria? user,
-    String? authToken,
   }) =>
       UserLogged(
-        userAria: userAria ?? this.userAria,
-        authToken: authToken ?? this.authToken,
+        user: user ?? this.user,
       );
 }

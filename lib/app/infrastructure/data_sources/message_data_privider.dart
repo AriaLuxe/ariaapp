@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import '../../config/base_url_config.dart';
+import '../../security/shared_preferences_manager.dart';
 import '../models/message_model.dart';
 
 class MessageDataProvider {
@@ -12,8 +13,12 @@ class MessageDataProvider {
     try {
       print('chat: $chatId');
       print('user: $userId');
+      String? token = await SharedPreferencesManager.getToken();
+
       final response = await http
-          .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/$chatId/$userId'));
+          .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/$chatId/$userId'),headers: {
+        'Authorization': 'Bearer $token',
+      },);
       print(response.body);
 
       List<MessageModel> messages = MessageModel.fromJsonList(response.body);
@@ -27,10 +32,14 @@ class MessageDataProvider {
 
   Future<MessageModel> createMessage(int chatId, int userId, String audioPath) async {
     try {
+      String? token = await SharedPreferencesManager.getToken();
+
       var request = http.MultipartRequest(
         'POST',
         Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/add'),
+
       );
+      request.headers['Authorization'] = 'Bearer $token';
 
       request.files.add(await http.MultipartFile.fromPath(
         'audio',

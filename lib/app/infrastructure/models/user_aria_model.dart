@@ -17,6 +17,8 @@ class UserAriaModel extends UserAria {
     required String registerDate,
     required bool enabled,
     required String nickname,
+    required String role,
+    required String state,
   }) : super(
           id: id,
           nameUser: nameUser,
@@ -31,27 +33,32 @@ class UserAriaModel extends UserAria {
           registerDate: registerDate,
           enabled: enabled,
           nickname: nickname,
+          role: role,
+      state:state
         );
 
   factory UserAriaModel.fromJson(Map<String, dynamic> json) {
     return UserAriaModel(
-      id: json['idUser'],
-      nameUser: json['nameUser'],
-      lastName: json['lastName'],
-      email: json['email'],
-      password: json['password'],
-      imgProfile: json['imgProfile'],
-      dateBirth: json['dateBirth'] != null
-          ? DateTime.parse(json['dateBirth'])
-          : DateTime.now(),
-      gender: json['gender'],
-      country: json['country'],
-      city: json['city'],
-      registerDate: json['registerDate'],
-      enabled: json['enabled'],
-      nickname: json['nickName'], // Cambiado a 'nickName'
+        id: json['idUser'] ?? 0,
+        nameUser: json['nameUser'] ?? '',
+        lastName: json['lastName'] ?? '',
+        email: json['email'] ?? '',
+        password: json['password'] ?? '',
+        imgProfile: json['imgProfile'] ?? '',
+        dateBirth: json['dateBirth'] != null
+            ? DateTime.parse(json['dateBirth'])
+            : DateTime.now(),
+        gender: json['gender'] ?? '',
+        country: json['country'] ?? '',
+        city: json['city'] ?? '',
+        registerDate: json['registerDate'] ?? '',
+        enabled: json['enabled'] ?? false,
+        nickname: json['nickName'] ?? '',
+        role: json['role'] ?? '',
+        state: json['state'] ?? '',
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {
@@ -68,6 +75,7 @@ class UserAriaModel extends UserAria {
       'registerDate': registerDate,
       'enabled': enabled,
       'nickname': nickname,
+      'role': role
     };
   }
 

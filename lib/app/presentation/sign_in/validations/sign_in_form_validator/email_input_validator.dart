@@ -34,7 +34,7 @@ class EmailInputValidator extends FormzInput<String, EmailInputError> {
       return 'Este campo es requerido';
     }
     if (displayError == EmailInputError.invalidEmail) {
-      return 'Formato de correo invalido';
+      return 'Ingrese un correo valido';
     }
     return null;
   }

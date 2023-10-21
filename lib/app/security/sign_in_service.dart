@@ -1,37 +1,38 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
+import 'package:http/http.dart' as http;
 
 import '../config/base_url_config.dart';
 import '../domain/entities/user_aria.dart';
-import 'package:http/http.dart' as http;
 
 class SignInService {
-  Future<bool> signIn(String email, String password) async {
+  Future<Map<String, dynamic>> signIn(String email, String password) async {
     try {
-      String url = "${BaseUrlConfig.baseUrl}/auth/auth/login";
       final headers = {'Content-Type': 'application/json'};
       final body = {
-        "username": email,
+        "email": email,
         "password": password,
       };
-      //  final response = await http.post(Uri.parse(url),
-      //  body: jsonEncode(body), headers: headers);
 
-      int idLogged = 1;
-      SharedPreferencesManager.saveUserId(idLogged);
+      final response = await http.post(
+        Uri.parse('${BaseUrlConfig.baseUrl}/api/auth/login'),
+        body: jsonEncode(body),
+        headers: headers,
+      );
+print(response.body);
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        return responseBody;
+      } else if (response.statusCode == 401) {
+        final responseBody = jsonDecode(response.body);
+        return responseBody;
+      } else {
 
-      //if (response.statusCode == 200) {
-      //var decodedJson = json.decode(response.body);
-      //print(decodedJson);
-
-      //return true;
-      //} else {
-      // return false;
-      //}
-      return true;
+        throw HttpException('Código de estado inesperado: ${response.statusCode}');
+      }
     } catch (error) {
-      throw Exception('Failed to fetch offers: $error');
+      throw HttpException('Error de red: $error');
     }
   }
 }

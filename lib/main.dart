@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/injections.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
@@ -28,18 +29,6 @@ void splashSetup() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  final MaterialColor myCustomColor = const MaterialColor(0xFF202248, {
-    50: Color(0xFF202248),
-    100: Color(0xFF202248),
-    200: Color(0xFF202248),
-    300: Color(0xFF202248),
-    400: Color(0xFF202248),
-    500: Color(0xFF202248),
-    600: Color(0xFF202248),
-    700: Color(0xFF202248),
-    800: Color(0xFF202248),
-    900: Color(0xFF202248),
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +38,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: false,
-        primarySwatch: myCustomColor,
-        fontFamily: 'Lato',
+        iconTheme: const IconThemeData(color: Colors.white) ,
+        scaffoldBackgroundColor: Styles.primaryColor,
+        appBarTheme: AppBarTheme(backgroundColor: Styles.primaryColor),
+        fontFamily: 'Poppins',
       ),
       home: const GetStartedScreen(),
     );

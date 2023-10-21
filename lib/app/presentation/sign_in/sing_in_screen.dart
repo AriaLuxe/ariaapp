@@ -17,33 +17,22 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+
       backgroundColor: Styles.primaryColor,
       body: BlocProvider(
         create: (context) => SignInBloc(),
-        child: SafeArea(
-            child: Column(
-          children: [
-            Image.asset(
-              'assets/images/messi.jpg',
-              width: MediaQuery.of(context).size.height * 0.2,
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width *1,
+
+            child: const SingleChildScrollView(
+              child:  SignInForm(),
+
+
             ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40))),
-                child: const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: SingleChildScrollView(
-                    child: SignInForm(),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )),
+          ),
+        ),
       ),
     );
   }

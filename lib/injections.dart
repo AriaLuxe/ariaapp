@@ -34,7 +34,9 @@ void messagesDependencies() {
           messageDataProvider: serviceLocator<MessageDataProvider>()));
 }
 
-void userLogged(UserAria user, String token) {
+void userLogged(UserAria user) {
   serviceLocator.registerLazySingleton<UserLogged>(
-      () => UserLogged(userAria: user, authToken: token));
+          () => UserLogged( user:user));
 }
+
+
