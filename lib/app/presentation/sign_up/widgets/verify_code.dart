@@ -4,6 +4,7 @@ import 'package:ariapp/app/presentation/sign_up/widgets/reset_password.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:async';
 
 import '../../../domain/entities/user_aria.dart';
@@ -239,7 +240,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                       setState(()  {
                         isLoading = false;
                       });
-
+                      //context.pushNamed('/reset_password',pathParameters: {'email':widget.email.trim() });
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPassword(email: widget.email.trim(),)));
                       setState(() {
                         isLoading = false;
@@ -302,11 +303,9 @@ class _VerifyCodeState extends State<VerifyCode> {
                       await usersRepository.signUpUser(user);
                       print('register');
 
-
                       ScaffoldMessenger.of(context)
                           .showSnackBar(successSnackBar)
                           .closed;
-
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

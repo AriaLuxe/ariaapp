@@ -37,10 +37,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
-  flutter_native_splash: ^2.3.1
   flutter_sound: ^9.2.13
   formz: ^0.6.0
   get_it: ^7.6.4
+  go_router: ^12.0.0
   http: ^1.1.0
   image_picker: ^1.0.4
   just_audio: ^0.9.35
@@ -57,9 +57,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter_native_splash:
-  color: "#202248"
-  image: "assets/images/messi.jpg"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.

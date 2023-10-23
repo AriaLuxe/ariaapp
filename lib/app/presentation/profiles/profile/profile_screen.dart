@@ -9,8 +9,8 @@ import '../../../domain/entities/user_aria.dart';
 import '../widgets/settings_option.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({super.key, required this.user});
-  final UserAria user;
+  const ProfileScreen( this.user, {super.key});
+  final UserAria? user;
   //final userLogged = GetIt.instance<UserLogged>();
 
   @override
@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.4,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage("${BaseUrlConfig.baseUrlImage}${user.imgProfile}"),
+                      image: NetworkImage("${BaseUrlConfig.baseUrlImage}${user?.imgProfile}"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -107,16 +107,16 @@ class ProfileScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(32),
 
                           child: Image.network(
-                            '${BaseUrlConfig.baseUrlImage}${user.imgProfile}',
+                            '${BaseUrlConfig.baseUrlImage}${user?.imgProfile}',
                             fit: BoxFit.cover, // Puedes usar BoxFit.fill si prefieres llenar el contenedor sin recortar
                           ),
                         ),
                       ),
                       SizedBox(height: 10,),
 
-                      Text('${user.nameUser} ${user.lastName}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 21),),
+                      Text('${user?.nameUser} ${user?.lastName}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 21),),
 
-                      Text('${user.nickname}',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      Text('${user?.nickname}',style: TextStyle(color: Colors.white,fontSize: 18),),
                       SizedBox(height: 10,),
                       Container(
                         width: MediaQuery.of(context).size.width*.8,
@@ -182,7 +182,7 @@ class ProfileScreen extends StatelessWidget {
                           tileColor: const Color(0xFF354271).withOpacity(0.97),
                           textColor: Colors.white,
                           title: const Text('Pais'),
-                          subtitle: Text('${user.country}'),
+                          subtitle: Text('${user?.country}'),
                         ),
                       ),
                       SizedBox(

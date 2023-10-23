@@ -1,5 +1,6 @@
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
+import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/sign_in_service.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../../../config/styles.dart';
@@ -53,7 +55,7 @@ class _SignInFormState extends State<SignInForm> {
   );
 
   final  credentialsSnackBar = const SnackBar(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.red,
       content: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -82,26 +84,11 @@ class _SignInFormState extends State<SignInForm> {
           child: Column(
             children: [
 
-              Padding(
-                padding: const EdgeInsets.symmetric( horizontal: 20.0, vertical: 0),
+              const Padding(
+                padding:  EdgeInsets.symmetric( horizontal: 20.0, vertical: 0),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF354271),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  child: ArrowBack(),
                 ),
               ),
 
@@ -177,6 +164,9 @@ class _SignInFormState extends State<SignInForm> {
                           print('response');
                           print(response);
                           if(response == 'Email sent sucessfully'){
+                           // context.goNamed(
+                              //  '/verify_code',pathParameters: {'email': email.text.trim(), 'verify': 'Verificar código', 'isResetPassword': 'true'
+                               // });
 
                             Navigator.push(
                               context,
@@ -187,6 +177,10 @@ class _SignInFormState extends State<SignInForm> {
                               context,
                               MaterialPageRoute(builder: (context) => VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
                             );
+                              //context.goNamed(
+                              //  '/verify_code',pathParameters: {'email': email.text.trim(), 'verify': 'Verificar código', 'isResetPassword': 'true'
+                            //});
+
                           }
                           else{
                             ScaffoldMessenger.of(context)
@@ -215,6 +209,7 @@ class _SignInFormState extends State<SignInForm> {
                 child: CustomButton(
                   onPressed: signInBloc.state.isValid
                       ? () async {
+
                     final signInService = SignInService();
                     final response = await signInService.signIn(email.text, password.text);
 
@@ -232,18 +227,12 @@ class _SignInFormState extends State<SignInForm> {
                       final user = await usersRepository.getUserById(userId!);
 
                       userLogged(user);
-
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ),
-                      );
+                      context.go('/chats');
                     } else {
 
 
                       ScaffoldMessenger.of(context)
-                          .showSnackBar(errorSnackBar)
+                          .showSnackBar(credentialsSnackBar)
                           .closed;
                     }
                   }
@@ -259,7 +248,10 @@ class _SignInFormState extends State<SignInForm> {
               SizedBox(
                   width: size.width*0.7,
                   child: CustomButton(
-                     text: 'Crear cuenta', onPressed: () {Navigator.push(
+                     text: 'Crear cuenta', onPressed: () {
+                    //context.push('/sign_up');
+
+                   Navigator.push(
                      context,
                      MaterialPageRoute(
                       builder: (context) => const SignUpScreen()));

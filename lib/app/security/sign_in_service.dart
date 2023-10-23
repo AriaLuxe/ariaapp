@@ -25,8 +25,8 @@ print(response.body);
         final responseBody = jsonDecode(response.body);
         return responseBody;
       } else if (response.statusCode == 401) {
-        final responseBody = jsonDecode(response.body);
-        return responseBody;
+        //final responseBody = jsonDecode(response.body);
+        return { 'Unauthorized' : 'Unauthorized'};
       } else {
 
         throw HttpException('Código de estado inesperado: ${response.statusCode}');

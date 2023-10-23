@@ -1,12 +1,14 @@
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
+import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../config/styles.dart';
@@ -91,22 +93,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10.0), // Espacio entre el ícono y el borde
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF354271), // Color de fondo del ícono
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  const ArrowBack(),
                   Image.asset('assets/images/logo-aia.jpg',width: 60,),
                 ],
               ),

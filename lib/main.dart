@@ -1,15 +1,14 @@
 import 'package:ariapp/app/config/styles.dart';
+import 'package:ariapp/app/presentation/layouts/layout.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/update_information/update_information.dart';
 import 'package:ariapp/injections.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'app/presentation/get_started/get_started_screen.dart';
+import 'app/presentation/layouts/widgets/app_navigation.dart';
 
 void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  splashSetup();
   usersDependencies();
   chatsDependencies();
   messagesDependencies();
@@ -22,17 +21,17 @@ void main() {
   );*/
 }
 
-void splashSetup() async {
-  await Future.delayed(const Duration(seconds: 3));
-  FlutterNativeSplash.remove();
-}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+     title: 'Aia',
+      routerConfig: AppNavigation.router,
+
       builder: DevicePreview.appBuilder,
       locale: DevicePreview.locale(context),
       debugShowCheckedModeBanner: false,
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(backgroundColor: Styles.primaryColor),
         fontFamily: 'Poppins',
       ),
-      home: const GetStartedScreen(),
+      //home: const GetStartedScreen(),
     );
   }
 }

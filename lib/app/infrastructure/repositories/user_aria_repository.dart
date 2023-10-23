@@ -19,9 +19,8 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   @override
-  Future<void> updateEmail() {
-    // TODO: implement updateEmail
-    throw UnimplementedError();
+  Future<String> updateEmail(int userId, String email, String password) async {
+    return await usersDataProvider.updateUserEmail(userId, email, password);
   }
 
   @override
@@ -36,11 +35,7 @@ class UserAriaRepository extends UserAriaInterface {
     throw UnimplementedError();
   }
 
-  @override
-  Future<void> updateUserData() {
-    // TODO: implement updateUserData
-    throw UnimplementedError();
-  }
+
 
   @override
   Future<List<UserAria>> getFavoriteUsers() {
@@ -61,5 +56,21 @@ class UserAriaRepository extends UserAriaInterface {
   @override
   Future<List<UserAria>> searchUser(String keyword) async {
     return await usersDataProvider.searchUsers(keyword);
+  }
+
+  @override
+  Future<void> updateUserData(String userId, String name, String lastName, String nickname, String gender, String date, String country, String city ) async{
+    return await usersDataProvider.updateUserData(userId, name, lastName, nickname, gender, date,country,city);
+
+  }
+
+  @override
+  Future<String> updateUserPassword(int userId, String newPassword, String currentPassword)async {
+    return await usersDataProvider.updateUserPassword(userId, newPassword, currentPassword);
+  }
+
+  @override
+  Future<String> updateUserState(int userId, String state) async {
+    return await usersDataProvider.updateUserState(userId, state);
   }
 }

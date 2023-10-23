@@ -60,7 +60,7 @@ class PeopleList extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: ListTile(
                             onTap: (){
-                              Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen(user: user)));
+                              Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user)));
                             },
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage('${BaseUrlConfig.baseUrlImage}${user.imgProfile}'),

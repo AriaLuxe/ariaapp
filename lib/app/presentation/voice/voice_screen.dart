@@ -1,6 +1,5 @@
 
 import 'package:ariapp/app/config/styles.dart';
-import 'package:ariapp/app/presentation/layouts/widgets/header.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_scrollable_view.dart';
 import 'package:flutter/material.dart';
 
@@ -28,9 +27,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
             ),
             child: Column(
               children: [
-                Header(
-                  title: 'Clona tu voz',
-                ),
+
               ],
             )),
         Expanded(

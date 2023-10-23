@@ -2,11 +2,13 @@ import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/people/people_list/bloc/people_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/update_information/update_information.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../config/styles.dart';
 import '../../domain/entities/user_aria.dart';
@@ -17,7 +19,8 @@ import '../people/people_screen.dart';
 import '../voice/voice_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, required this.navigationShell}) : super(key: key);
+  final StatefulNavigationShell navigationShell;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -26,6 +29,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedIndex = 0;
+
+
+  void _goBranch(int index) {
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
+  }
+
    UserAria? user;
 final userRepository = GetIt.instance<UserAriaRepository>();
   final userLogged = GetIt.instance<UserLogged>();
@@ -65,7 +77,11 @@ final userRepository = GetIt.instance<UserAriaRepository>();
         ),
       ],
       child:  Scaffold(
-          body: _pages[_selectedIndex],
+          body: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: widget.navigationShell,
+          ),//_pages[_selectedIndex],
           bottomNavigationBar: SizedBox(
             height: 80,
             child: Stack(
@@ -128,7 +144,12 @@ final userRepository = GetIt.instance<UserAriaRepository>();
                     ],
 
                     currentIndex: _selectedIndex,
-                    onTap: _onItemTapped,
+                    onTap: (index){
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                      _goBranch(_selectedIndex);
+                    }//_onItemTapped,
                   ),
                 ),
 

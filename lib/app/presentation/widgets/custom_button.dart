@@ -14,11 +14,11 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isButtonEnabled = onPressed != null; // Verifica si la función no es nula
+    final isButtonEnabled = onPressed != null;
     final baseColor = Color(0xFF9269BE);
 
     return GestureDetector(
-      onTap: isButtonEnabled ? onPressed : null, // Si es válido, activa onTap, de lo contrario, lo desactiva
+      onTap: isButtonEnabled ? onPressed : null,
       child:
          Container(
           width: double.infinity,
@@ -26,7 +26,7 @@ class CustomButton extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.centerRight,
               end: Alignment.centerLeft,
-              colors: isButtonEnabled // Cambia los colores si el botón está habilitado o bloqueado
+              colors: isButtonEnabled
                   ? [Color(0xFF9269BE), Color(0xFF5368D6)]
                   : [Color(0xFF9269BE).withOpacity(0.36), Color(0xFF5368D6).withOpacity(0.36)], // Color gris para botón bloqueado
             ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/styles.dart';
-import '../layouts/widgets/header.dart';
 import '../widgets/custom_search_bar.dart';
 import 'chat_list/bloc/chat_list_bloc.dart';
 import 'chat_list/chats_list.dart';

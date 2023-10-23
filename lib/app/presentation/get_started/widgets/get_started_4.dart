@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../sign_in/sing_in_screen.dart';
 import '../../widgets/custom_button.dart';
 
@@ -124,6 +125,7 @@ class _GetStarted4State extends State<GetStarted4> with SingleTickerProviderStat
                                       ),
                                       child: CustomButton(text: 'Comenzar', onPressed: (){
                                         Navigator.push(context,MaterialPageRoute(builder: (context) => const SignInScreen()));
+                                      //  context.push('/sign_in');
 
                                       }, width: 0.4),
                                     ),
