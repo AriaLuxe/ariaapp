@@ -1,3 +1,5 @@
+import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -11,28 +13,38 @@ import '../../../widgets/header.dart';
 import 'bloc/update_state_bloc.dart';
 
 class UpdateState extends StatelessWidget {
-  const UpdateState({super.key});
-
+  const UpdateState({super.key, required this.state});
+  final String state;
   @override
   Widget build(BuildContext context) {
     return  BlocProvider(
-      create: (context) =>  UpdateStateBloc(),
-      child: Center(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: UpdateStateForm()),
-      ),
-    );
+  create: (context) => UpdateStateBloc(),
+  child: Center(
+      child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: UpdateStateForm(state: state,)),
+    ),
+);
   }
 }
 
-class UpdateStateForm extends StatelessWidget {
-  UpdateStateForm({super.key});
+class UpdateStateForm extends StatefulWidget {
+  UpdateStateForm({super.key, required this.state});
+  final String state;
+
+  @override
+  State<UpdateStateForm> createState() => _UpdateStateFormState();
+}
+
+class _UpdateStateFormState extends State<UpdateStateForm> {
   final TextEditingController _stateController = TextEditingController();
 
+  @override
+  void initState() {
+    _stateController.text = widget.state;
 
-
-
+    super.initState();
+  }
   final  successSnackBar = const SnackBar(
       backgroundColor: Colors.green,
       content: Center(
@@ -43,7 +55,7 @@ class UpdateStateForm extends StatelessWidget {
             Column(
               children: [
 
-                Text('Contraseña actualizada', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
+                Text('Estado actualizado', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
               ],
             ),
           ],
@@ -51,6 +63,7 @@ class UpdateStateForm extends StatelessWidget {
       )
 
   );
+
   final  errorSnackBar = const SnackBar(
       backgroundColor: Colors.red,
       content: Center(
@@ -70,22 +83,26 @@ class UpdateStateForm extends StatelessWidget {
 
   );
 
-
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final updateStateBloc = context.watch<UpdateStateBloc>();
 
+   // _stateController.text =  updateStateBloc.state.stateInputValidator.value;
+
     return BlocBuilder<UpdateStateBloc, UpdateStateState>(
       builder: (context, state) {
+
         return Scaffold(
           body: SingleChildScrollView(
             child:  SafeArea(
               child: Column(
 
                 children: [
-                  const Header(title: 'Cambiar estado'),
+                   Header(title: 'Cambiar estado', onTap: (){
+                    context.go('/my_profile');
+                    Navigator.pop(context);
+                  },),
 
                   SizedBox(
                     height: size.height*0.06,
@@ -110,7 +127,7 @@ class UpdateStateForm extends StatelessWidget {
                       textColor: Colors.white,
                       title: TextFormField(
                         textAlign: TextAlign.center,
-
+                        controller: _stateController,
                         onChanged: (stateString) =>
                             context.read<UpdateStateBloc>().add(StateChanged(stateString)),
                         cursorColor: Colors.white,
@@ -119,13 +136,12 @@ class UpdateStateForm extends StatelessWidget {
                         errorText: state.stateInputValidator.errorMessage,
                           border: InputBorder.none,
 
-                          labelStyle: const TextStyle(color: Colors.white), // Estilo de la etiqueta
+                          labelStyle: const TextStyle(color: Colors.white),
                         ),
-                        style: const TextStyle(color: Colors.white, ), // Estilo del texto dentro del TextField
+                        style: const TextStyle(color: Colors.white, ),
                       ),
                       onTap: (){
                         context.go("/my_profile/update_state");
-
                       },
                     ),
                   ),
@@ -140,32 +156,28 @@ class UpdateStateForm extends StatelessWidget {
                       child: CustomButton(
                         onPressed:  updateStateBloc.state.isValid ?
                             () async{
-                          final userRepository = GetIt.instance<UserAriaRepository>();
+
+                              final userRepository = GetIt.instance<UserAriaRepository>();
                           final userId = await SharedPreferencesManager.getUserId();
+                          print(userId);
                           final response = await userRepository.updateUserState(userId!, _stateController.text.trim());
-                          // final response = await userRepository.updateUserData(userLogged.user.id.toString(),_nameController.text,_lastNameController.text,_nicknameController.text,_genderController.text,_birthDateController.text,_countryController.text,_cityController.text);
                           print(response);
                           _stateController.clear();
-
-
+                              context.read<ProfileBloc>().fetchDataProfile(userId);
                           if(response == 'State is updated'){
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(successSnackBar)
                                 .closed;
-                            context.go("/my_profile");
-
-
+                            Navigator.pop(context);
+                            //context.go("/my_profile");
                           }
-
                           else {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(errorSnackBar)
                                 .closed;
                           }
-
                         } : null,
                         text: 'Guardar', width: 0.8,))
-
 
                 ],
               ),

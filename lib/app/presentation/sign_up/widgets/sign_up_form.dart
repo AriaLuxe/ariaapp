@@ -1,5 +1,6 @@
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
+import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
@@ -93,7 +94,17 @@ class _SignUpFormState extends State<SignUpForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const ArrowBack(),
+                   ArrowBack(onTap: (){
+                    bool o = Navigator.canPop(context);
+
+                    if(o){
+                      Navigator.pop(context);
+                    }else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
+
+                      null;
+                    }
+                  },),
                   Image.asset('assets/images/logo-aia.jpg',width: 60,),
                 ],
               ),

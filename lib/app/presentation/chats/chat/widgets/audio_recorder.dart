@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:record/record.dart';
 
+import '../../../../config/styles.dart';
 import '../bloc/chat_bloc.dart';
 
 class AudioRecorder extends StatefulWidget {
@@ -24,6 +25,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   RecordState _recordState = RecordState.stop;
   StreamSubscription<Amplitude>? _amplitudeSub;
   Amplitude? _amplitude;
+  bool isRecording = false;
 
   @override
   void initState() {
@@ -75,6 +77,27 @@ class _AudioRecorderState extends State<AudioRecorder> {
       widget.onStop(path);
     }
   }
+  Future<void> _stopTest() async {
+
+    _timer?.cancel();
+    _recordDuration = 0;
+
+    final path = await _audioRecorder.stop();
+    await _audioRecorder.start();
+
+
+    if (path != null) {
+      widget.onStop(path);
+    }
+  }
+  Future<void> _stopAndDelete() async {
+    _timer?.cancel();
+    _recordDuration = 0;
+
+    await _audioRecorder.stop();
+
+    await _audioRecorder.dispose();
+  }
 
   Future<void> _pause() async {
     _timer?.cancel();
@@ -86,28 +109,69 @@ class _AudioRecorderState extends State<AudioRecorder> {
     await _audioRecorder.resume();
   }
 
+  Future<void> _sendAudio() async {
+    if (_recordState == RecordState.pause) {
+      await _stopAndDelete();
+    }
+    final path = await _audioRecorder.stop();
+    isRecording = false;
+    if (path != null) {
+      widget.onStop(path);
+    }
+  }
+
+
+  Widget _buildSendButton() {
+    return IconButton(
+      onPressed:isRecording ? () {
+        _sendAudio();
+      }: null,
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.blue),
+      ),
+      icon: const Icon(
+        Icons.send,
+        color: Color(0xFF354271),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    return  Container(
+      height:  isRecording ?MediaQuery.of(context).size.height*0.15:MediaQuery.of(context).size.height*0.1,
+      decoration: isRecording ? const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only( topLeft : Radius.circular(20), topRight : Radius.circular(20),)
+      ): const BoxDecoration(),
+      child: Column(
+        children: [
+          isRecording ?const SizedBox():
+          const Divider(
+              color: Color(0xFF354271),
+              thickness: 2
+          ),          isRecording ? const Text('Grabando audio') : const SizedBox(),
+          isRecording ? _buildText() : const SizedBox(),
+    
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
 
-            _buildRecordStopControl(),
-            const SizedBox(width: 20),
-            _buildPauseResumeControl(),
-            const SizedBox(width: 20),
-            _buildText(),
-          ],
-        ),
-       // if (_amplitude != null) ...[
-        //  const SizedBox(height: 40),
-        //  Text('Current: ${_amplitude?.current ?? 0.0}'),
-        //  Text('Max: ${_amplitude?.max ?? 0.0}'),
-        //],
-      ],
+              _buildDeleteButton(),
+              //_buildPauseResumeControl(),
+              _buildRecordPauseResumeControl(),
+              //_buildRecordStopControl(),
+              _buildSendButton(),
+
+            ],
+          ),
+         // if (_amplitude != null) ...[
+          //  const SizedBox(height: 40),
+          //  Text('Current: ${_amplitude?.current ?? 0.0}'),
+          //  Text('Max: ${_amplitude?.max ?? 0.0}'),
+          //],
+        ],
+      ),
     );
   }
 
@@ -120,62 +184,77 @@ class _AudioRecorderState extends State<AudioRecorder> {
     super.dispose();
   }
 
-  Widget _buildRecordStopControl() {
+
+  Widget _buildRecordPauseResumeControl() {
     late Icon icon;
     late Color color;
+    bool showPauseResume = false;
 
-    if (_recordState != RecordState.stop) {
-      icon =  Icon(Icons.stop, color: Colors.red, size: widget.iconSize);
-      color = Colors.red.withOpacity(0.1);
-    } else {
-      final theme = Theme.of(context);
-      icon = Icon(Icons.mic, color: Colors.grey, size: widget.iconSize);
-      color = theme.primaryColor.withOpacity(0.1);
-    }
-
-    return ClipOval(
-      child: Material(
-        color: color,
-        child: InkWell(
-          child: SizedBox(width: 56, height: 56, child: icon),
-          onTap: () {
-            (_recordState != RecordState.stop) ? _stop() : _start();
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPauseResumeControl() {
     if (_recordState == RecordState.stop) {
-      return const SizedBox.shrink();
-    }
-
-    late Icon icon;
-    late Color color;
-
-    if (_recordState == RecordState.record) {
-      icon =  Icon(Icons.pause, color: Colors.red, size: widget.iconSize);
-      color = Colors.red.withOpacity(0.1);
+      icon = Icon(Icons.mic, color: Styles.primaryColor, size: widget.iconSize);
+      color = Colors.white;
+      showPauseResume = false;
+    } else if (_recordState == RecordState.record) {
+      icon = Icon(Icons.pause, color: Colors.white, size: widget.iconSize);
+      color = Styles.primaryColor;
+      showPauseResume = true;
     } else {
-      final theme = Theme.of(context);
-      icon =  Icon(Icons.play_arrow, color: Colors.red, size: widget.iconSize);
-      color = theme.primaryColor.withOpacity(0.1);
+      //resume
+      icon = Icon(Icons.mic, color: Colors.white, size: widget.iconSize);
+      color = Styles.primaryColor;
+      showPauseResume = true;
     }
 
-    return ClipOval(
-      child: Material(
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
         color: color,
-        child: InkWell(
-          child: SizedBox(width: 56, height: 56, child: icon),
-          onTap: () {
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.42),
+            blurRadius: 20,
+          ),
+        ],
+      ),
+      child: InkWell(
+        child: Center(child: icon),
+        onTap: () {
+          if (_recordState == RecordState.stop) {
+            setState(() {
+              isRecording = true;
+            });
+            _start();
+          } else if (_recordState == RecordState.record) {
             (_recordState == RecordState.pause) ? _resume() : _pause();
-          },
-        ),
+          } else if (_recordState == RecordState.pause) {
+             _resume();
+          }
+        },
       ),
     );
   }
 
+  Widget _buildDeleteButton() {
+    return IconButton(
+      onPressed: () {
+        if (_recordState != RecordState.stop) {
+          setState(() {
+            isRecording = false;
+          });
+          _stopAndDelete();
+        }
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.white),
+      ),
+      icon: const Icon(
+        Icons.backspace,
+        color: Color(0xFF354271),
+
+      ),
+    );
+  }
   Widget _buildText() {
     if (_recordState != RecordState.stop) {
       return _buildTimer();
@@ -190,7 +269,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
     return Text(
       '$minutes : $seconds',
-      style: const TextStyle(color: Colors.red),
+      style:  TextStyle(color: Styles.primaryColor),
     );
   }
 
@@ -210,4 +289,73 @@ class _AudioRecorderState extends State<AudioRecorder> {
       setState(() => _recordDuration++);
     });
   }
+
+
+
+
+  Widget _buildPauseResumeControl() {
+    late Icon icon;
+    late Color color;
+
+    if (_recordState == RecordState.stop) {
+      return const SizedBox.shrink();
+    } else if (_recordState == RecordState.record) {
+      icon = Icon(Icons.pause, color: Colors.white, size: widget.iconSize);
+      color = Styles.primaryColor;
+    } else {
+      icon = Icon(Icons.mic, color: Styles.primaryColor, size: widget.iconSize);
+      color = Colors.white;
+    }
+
+    return ClipOval(
+      child: Material(
+        color: color,
+        child: InkWell(
+          child: SizedBox(width: 56, height: 56, child: icon),
+          onTap: () {
+            (_recordState == RecordState.pause) ? _resume() : _pause();
+          },
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildRecordStopControl() {
+    late Icon icon;
+    late Color color;
+
+    if (_recordState != RecordState.stop) {
+      icon =  Icon(Icons.stop, color: Colors.red, size: widget.iconSize);
+      color = Colors.red.withOpacity(0.1);
+    } else {
+      final theme = Theme.of(context);
+      icon = Icon(Icons.mic, color: Styles.primaryColor, size: widget.iconSize);
+      color = Colors.white;
+    }
+
+    return  Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+        boxShadow:  [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.42),
+            blurRadius: 20,
+          ),
+        ],
+      ),
+      child: InkWell(
+        child: Center(child: icon),
+        onTap: () {
+          (_recordState != RecordState.stop) ? _stop() : _start();
+        },
+      ),
+    );
+
+  }
+
+
+
 }

@@ -5,7 +5,7 @@ class Message {
   final int durationSeconds;
 
   final DateTime date;
-  final bool unread;
+  final bool read;
   final bool isLiked;
   final int chat;
 
@@ -15,7 +15,7 @@ class Message {
     required this.sender,
     required this.content,
     required this.date,
-    required this.unread,
+    required this.read,
     required this.isLiked,
     required this.chat,
   });

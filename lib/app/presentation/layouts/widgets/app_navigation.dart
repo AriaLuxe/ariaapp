@@ -4,6 +4,8 @@ import 'package:ariapp/app/presentation/layouts/layout.dart';
 import 'package:ariapp/app/presentation/people/people_screen.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/my_information/my_information.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/profile_image.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/update_image.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_email/update_email.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_information/update_information.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_password/update_password.dart';
@@ -25,6 +27,9 @@ class AppNavigation {
 
   static String initial = "/get_started";
 
+
+
+
   // Private navigators
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellNavigatorChats =
@@ -42,6 +47,7 @@ class AppNavigation {
     debugLogDiagnostics: true,
     navigatorKey: _rootNavigatorKey,
     routes: [
+
       /// MainWrapper
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -50,8 +56,19 @@ class AppNavigation {
           );
         },
         branches: <StatefulShellBranch>[
-          /// Brach Home
           StatefulShellBranch(
+            navigatorKey: _shellNavigatorChats,
+            routes: [
+              GoRoute(
+                path: "/chats",
+                name: "Chats",
+                builder: (BuildContext context, GoRouterState state) =>
+                const ChatsScreen(),
+
+              ),
+            ],
+          ),
+         /* StatefulShellBranch(
             navigatorKey: _shellNavigatorChats,
             routes: <RouteBase>[
               GoRoute(
@@ -63,20 +80,19 @@ class AppNavigation {
                   GoRoute(
                     path: 'chat',
                     name: 'Chat',
-                    pageBuilder: (context, state) => CustomTransitionPage<void>(
-                      key: state.pageKey,
-                      child:  ChatScreen(chatId: 0),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) =>
-                          FadeTransition(opacity: animation, child: child),
-                    ),
+                    pageBuilder: (context, state) =>
+                        CustomTransitionPage<void>(
+                          key: state.pageKey,
+                          child: ChatScreen(chatId: 0),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                        ),
                   ),
                 ],
               ),
             ],
-          ),
-
-          /// Brach Setting
+          ),*/
           StatefulShellBranch(
             navigatorKey: _shellNavigatorPeople,
             routes: <RouteBase>[
@@ -92,13 +108,11 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const ProfileScreen(null),
-                        transitionsBuilder: (
-                            context,
+                        child:  ProfileScreen(user: null,),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -122,13 +136,11 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const QuestionScrollableView(),
-                        transitionsBuilder: (
-                            context,
+                        child: const QuestionScrollableView(),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -143,8 +155,9 @@ class AppNavigation {
               GoRoute(
                 path: "/my_profile",
                 name: "MyProfile",
-                builder: (BuildContext context, GoRouterState state) =>
-                 MyProfileScreen(),
+                builder: (BuildContext context, GoRouterState state) {
+                  return const MyProfileScreen();
+                },
                 routes: [
                   GoRoute(
                     path: "my_information",
@@ -152,13 +165,11 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const MyInformation(),
-                        transitionsBuilder: (
-                            context,
+                        child: const MyInformation(),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -169,13 +180,11 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const UpdateInformation(),
-                        transitionsBuilder: (
-                            context,
+                        child:const  UpdateInformation(),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -186,13 +195,11 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const UpdateEmail(),
-                        transitionsBuilder: (
-                            context,
+                        child: const UpdateEmail(),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -203,13 +210,11 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const UpdatePassword(),
-                        transitionsBuilder: (
-                            context,
+                        child: const UpdatePassword(),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -220,13 +225,42 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const UpdateState(),
-                        transitionsBuilder: (
-                            context,
+                        child: const UpdateState(state: '',),
+                        transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
-                            child,
-                            ) =>
+                            child,) =>
+                            FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                  ),
+
+                  GoRoute(
+                    path: "profile_image",
+                    name: "ProfileImage",
+                    pageBuilder: (context, state) {
+                      return CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const ProfileImage(),
+                        transitionsBuilder: (context,
+                            animation,
+                            secondaryAnimation,
+                            child,) =>
+                            FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: "update_image",
+                    name: "UpdateImage",
+                    pageBuilder: (context, state) {
+                      return CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child:  UpdateImage(urlPhoto: '',),
+                        transitionsBuilder: (context,
+                            animation,
+                            secondaryAnimation,
+                            child,) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -237,38 +271,53 @@ class AppNavigation {
           ),
         ],
       ),
+     /* GoRoute(
+        path: "/update_image",
+        name: "UpdateImage",
+        builder: (context, state) {
+          return
+            const UpdateImage(urlPhoto: '',
+                );
+        },
+      ),
+      */
       /// Player
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/get_started',
         name: "GetStarted",
-        builder: (context, state) => GetStartedScreen(
-          key: state.pageKey,
-        ),
+        builder: (context, state) =>
+            GetStartedScreen(
+              key: state.pageKey,
+            ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/sign_in',
         name: "SignIn",
-        builder: (context, state) => SignInScreen(
-          key: state.pageKey,
-        ),
+        builder: (context, state) =>
+            SignInScreen(
+              key: state.pageKey,
+            ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/sign_up',
         name: "SignUp",
-        builder: (context, state) => SignUpScreen(
-          key: state.pageKey,
-        ),
+        builder: (context, state) =>
+            SignUpScreen(
+              key: state.pageKey,
+            ),
       ),
+
       GoRoute(
         path: '/verify_code',
         name: "VerifyCode",
         builder: (context, state) {
           final Map<String, String> pathParams = state.pathParameters;
 
-          final bool isResetPassword = bool.parse(pathParams['isResetPassword']!);
+          final bool isResetPassword = bool.parse(
+              pathParams['isResetPassword']!);
           final String email = pathParams['email']!;
           final String verify = pathParams['verify']!;
 
@@ -284,10 +333,20 @@ class AppNavigation {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/reset_password/:email',
         name: "ResetPassword",
-        builder: (context, state) => ResetPassword(
-          key: state.pageKey, email: state.uri.queryParameters['email']!
-        ),
+        builder: (context, state) =>
+            ResetPassword(
+                key: state.pageKey, email: state.uri.queryParameters['email']!
+            ),
       ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/chat',
+        name: "Chat",
+        builder: (context, state) =>
+            const ChatScreen(chatId: 0),
+            ),
+
+
     ],
   );
 }

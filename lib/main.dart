@@ -12,6 +12,7 @@ void main() {
   usersDependencies();
   chatsDependencies();
   messagesDependencies();
+  voiceDependencies();
   runApp(const MyApp());
   /*runApp(
     DevicePreview(

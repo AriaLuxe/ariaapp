@@ -1,26 +1,45 @@
 import 'dart:ui';
 
+import 'package:ariapp/app/presentation/profiles/profile/bloc/follower_counter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../config/base_url_config.dart';
-import '../../../config/styles.dart';
 import '../../../domain/entities/user_aria.dart';
-import '../widgets/settings_option.dart';
+import '../../../security/user_logged.dart';
+import '../follow/bloc/follow_bloc.dart';
+import '../follow/followers_list.dart';
+import '../follow/followings_list.dart';
+import '../my_profile/bloc/profile_bloc.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen( this.user, {super.key});
+   ProfileScreen( {required this.user, super.key});
   final UserAria? user;
-  //final userLogged = GetIt.instance<UserLogged>();
+  final userLoggedId = GetIt.instance<UserLogged>().user.id;
 
   @override
   Widget build(BuildContext context) {
+    print('Id perfil: ${user?.id}');
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    final profileBloc = BlocProvider.of<ProfileBloc>(context);
+
+    final followerCounterBloc = BlocProvider.of<FollowerCounterBloc>(context);
+
+    followerCounterBloc.fetchFollowerCounter(user?.id ?? 0);
+
+    profileBloc.checkFollow(user?.id ?? 0);
+    profileBloc.checkBlock(user?.id ?? 0);
+
+
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
+        child: BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        return Column(
           children: [
             Stack(
-              //alignment: AlignmentDirectional.topCenter,
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height * 0.4,
@@ -34,13 +53,13 @@ class ProfileScreen extends StatelessWidget {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Color(0x00000000), // Transparente en la parte superior
-                              Color(0xFF151F42), // Color 0xFF151F42 en la parte inferior
+                              Color(0x00000000),
+                              Color(0xFF151F42),
                             ],
                           ),
                         ),
@@ -57,7 +76,6 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-
                             GestureDetector(
                               onTap: (){
                                 Navigator.pop(context);
@@ -67,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                                 decoration:  BoxDecoration(
                                   border: Border.all(color: Colors.black,),
                                   shape: BoxShape.circle,
-                                  color: Color(0xFFFFFFFF).withOpacity(0.52),
+                                  color: const Color(0xFFFFFFFF).withOpacity(0.52),
                                 ),
                                 child: const Icon(
                                   Icons.arrow_back_outlined,
@@ -108,36 +126,155 @@ class ProfileScreen extends StatelessWidget {
 
                           child: Image.network(
                             '${BaseUrlConfig.baseUrlImage}${user?.imgProfile}',
-                            fit: BoxFit.cover, // Puedes usar BoxFit.fill si prefieres llenar el contenedor sin recortar
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
 
-                      Text('${user?.nameUser} ${user?.lastName}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 21),),
+                      Text('${user?.nameUser} ${user?.lastName}',style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 21),),
 
-                      Text('${user?.nickname}',style: TextStyle(color: Colors.white,fontSize: 18),),
-                      SizedBox(height: 10,),
+                      Text('${user?.nickname}',style: const TextStyle(color: Colors.white,fontSize: 18),),
+                      const SizedBox(height: 10,),
+                      SizedBox(
+                        width: screenWidth*.8,
+                        child: BlocBuilder<FollowerCounterBloc, FollowerCounterState>(
+                          builder: (context, state) {
+                            return Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Text(state.numberOfSubscribers.toString(),style: const TextStyle(color: Colors.white,fontSize: 21,fontWeight: FontWeight.bold),),
+                                const Text('Suscritos',style: TextStyle(color: Colors.white),),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: (){
+                                //followerBloc.followersFetched();
+                                final followerBloc = BlocProvider.of<FollowBloc>(context);
+
+                                followerBloc.followersFetched(userLoggedId!,user!.id ?? 0);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  const FollowersList()));
+                              },
+                              child: Column(
+                                children: [
+                                  Text(state.numberOfFollowers.toString(),style: const TextStyle(color: Colors.white,fontSize: 21,fontWeight: FontWeight.bold),),
+                                  const Text('Seguidores',style: TextStyle(color: Colors.white),),
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: (){
+                                final followerBloc = BlocProvider.of<FollowBloc>(context);
+
+                                followerBloc.followingsFetched(userLoggedId!, user!.id ?? 0);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const FollowingList()));
+
+                              },
+                              child: Column(
+                                children: [
+                                  Text(state.numberOfFollowings.toString(),style: const TextStyle(color: Colors.white,fontSize: 21, fontWeight: FontWeight.bold),),
+                                  const Text('Seguidos',style: TextStyle(color: Colors.white),),
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+  },
+),
+                      ),
+                      const SizedBox(height: 30,),
                       Container(
-                        width: MediaQuery.of(context).size.width*.8,
+                        height: 60,
+                          width: MediaQuery.of(context).size.width*.8,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: const Color(0xFFebebeb).withOpacity(0.26)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                            GestureDetector(
+                            onTap: (){
+
+                                profileBloc.toggleFollowProfile(user?.id ?? 0, state.isFollowed);
+
+
+                            },
+                              child:
+                              Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width*.37,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF354271),
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                child:  Center(
+                                  child: Text(
+                                    state.isFollowed ? 'Siguiendo' : 'Seguir',
+                                    style:  const TextStyle(
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                                GestureDetector(
+                                  onTap: (){},
+                                  child:
+                                  Container(
+                                    height: 40,
+                                    width: MediaQuery.of(context).size.width*.37,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF354271),
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    child: const Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Chatear   ',
+                                            style:  TextStyle(
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                          Icon(Icons.send,color: Colors.green,)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                ),
+
+                              ],
+                            ),
+
+                          )
+                      ),
+                      const SizedBox(height: 20,),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Color(0xFFebebeb).withOpacity(0.26)
+                          borderRadius: BorderRadius.circular(25),
+                          color:const Color(0xFFebebeb).withOpacity(0.26),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputa... 🥥😎',
-                            style: TextStyle(color: Colors.white),
+                            user?.state?.isNotEmpty == true ? user!.state! : 'Sin estado',
+                            style: const TextStyle(color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 35,
                       ),
-
                       SizedBox(
                         width: MediaQuery.of(context).size.width*.8,
 
@@ -145,14 +282,14 @@ class ProfileScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          leading: Icon(Icons.people, color: Colors.white,size: 36,),
+                          leading: const Icon(Icons.people, color: Colors.white,size: 36,),
                           tileColor: const Color(0xFF354271).withOpacity(0.97),
                           textColor: Colors.white,
                           title: const Text('Suscritos'),
-                          subtitle: Text('24k'),
+                          subtitle: Text(state.numberOfSubscribers.toString()),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 6,
                       ),
                       SizedBox(
@@ -161,14 +298,14 @@ class ProfileScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder( //<-- SEE HERE
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          leading: Icon(Icons.cake, color: Colors.white,size: 36,),
+                          leading: const Icon(Icons.cake, color: Colors.white,size: 36,),
                           tileColor: const Color(0xFF354271).withOpacity(0.97),
                           textColor: Colors.white,
                           title: const Text('Cumpleaños'),
-                          subtitle: Text('5 de agosto'),
+                          subtitle: Text('${user?.dateBirth?.day}/${user?.dateBirth?.month}/${user?.dateBirth?.year}   '),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 6,
                       ),
                       SizedBox(
@@ -178,14 +315,14 @@ class ProfileScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder( //<-- SEE HERE
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          leading: Icon(Icons.flag, color: Colors.white,size: 36,),
+                          leading: const Icon(Icons.flag, color: Colors.white,size: 36,),
                           tileColor: const Color(0xFF354271).withOpacity(0.97),
                           textColor: Colors.white,
                           title: const Text('Pais'),
                           subtitle: Text('${user?.country}'),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Container(
@@ -204,8 +341,8 @@ class ProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                                 child: ListTile(
-                                  title: const Text('Empezar a chatear', style: TextStyle(color: Colors.green)),
-                                  trailing: const Icon(Icons.send, color: Colors.green),
+                                  title: const Text('Favoritos', style: TextStyle(color: Colors.green)),
+                                  trailing: const Icon(Icons.star, color: Colors.green),
                                   onTap: () {},
                                 ),
                               ),
@@ -218,8 +355,25 @@ class ProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                                 child: ListTile(
-                                  title: const Text('Bloquear usuario', style: TextStyle(color: Colors.red)),
-                                  trailing: const Icon(Icons.remove_circle_outline, color: Colors.red),
+                                  title: state.isBlock ?const Text('Desbloquear usuario', style: TextStyle(color: Colors.red)):const Text('Bloquear usuario', style: TextStyle(color: Colors.red)),
+                                  trailing: state.isBlock ?const Icon(Icons.remove_circle, color: Colors.red):const Icon(Icons.remove_circle_outline, color: Colors.red),
+                                  onTap: () {
+
+                                    profileBloc.toggleBlockProfile(user?.id ?? 0, state.isBlock);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 6,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF354271).withOpacity(0.97),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: ListTile(
+                                  title: const Text('Eliminar chat usuario', style: TextStyle(color: Colors.red)),
+                                  trailing: const Icon(Icons.delete, color: Colors.red),
                                   onTap: () {},
                                 ),
                               ),
@@ -229,7 +383,7 @@ class ProfileScreen extends StatelessWidget {
 
                         )
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                     ],
@@ -239,9 +393,9 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ],
-        ),
-
-
+        );
+  },
+),
       ),
     );
   }

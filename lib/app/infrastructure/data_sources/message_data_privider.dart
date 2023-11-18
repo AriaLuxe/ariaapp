@@ -11,18 +11,15 @@ class MessageDataProvider {
 
   Future<List<MessageModel>> getMessagesByChatId(int chatId, int userId) async {
     try {
-      print('chat: $chatId');
-      print('user: $userId');
+
       String? token = await SharedPreferencesManager.getToken();
 
       final response = await http
           .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/$chatId/$userId'),headers: {
         'Authorization': 'Bearer $token',
       },);
-      print(response.body);
 
       List<MessageModel> messages = MessageModel.fromJsonList(response.body);
-      print(response.body);
       return messages;
     } catch (e) {
       print(e);

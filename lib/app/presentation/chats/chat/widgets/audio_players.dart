@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../config/styles.dart';
 import '../bloc/chat_bloc.dart';
 
 class AudioPlayers extends StatefulWidget {
@@ -33,8 +34,8 @@ class AudioPlayers extends StatefulWidget {
 }
 
 class AudioPlayersState extends State<AudioPlayers> {
-  static const double _controlSize = 56;
-  static const double _deleteBtnSize = 24;
+  static const double _controlSize = 35;
+  static const double _deleteBtnSize = 18;
 
   final _audioPlayer = ap.AudioPlayer()..setReleaseMode(ReleaseMode.stop);
   late StreamSubscription<void> _playerStateChangedSubscription;
@@ -42,6 +43,10 @@ class AudioPlayersState extends State<AudioPlayers> {
   late StreamSubscription<Duration> _positionChangedSubscription;
   Duration? _position;
   Duration? _duration;
+
+
+
+
 
   @override
   void initState() {
@@ -77,37 +82,46 @@ class AudioPlayersState extends State<AudioPlayers> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                widget.isChat
-                    ? IconButton(
-                  onPressed: widget.onSent,
-                  icon: const Icon(Icons.send),
-                )
-                    : SizedBox(), // Botón de enviar condicional
-                _buildControl(),
-                _buildSlider(constraints.maxWidth),
-                IconButton(
-                  icon: const Icon(Icons.delete,
-                      color: Color(0xFF73748D), size: _deleteBtnSize),
-                  onPressed: () {
-                    if (_audioPlayer.state == ap.PlayerState.playing) {
-                      stop().then((value) => widget.onDelete());
-                    } else {
-                      widget.onDelete();
-                    }
-                  },
-                ),
-              ],
-            ),
-            Text('${_duration ?? 0.0}'),
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+            color: Styles.primaryColor,
+            borderRadius: BorderRadius.circular(40.0),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
 
-          ],
+              _buildControl(),
+              Column(
+
+                children: [
+                  _buildSlider(constraints.maxWidth),
+                  SizedBox(
+                      child: Text(
+                        '${_duration ?? Duration.zero} / ${_duration?.inSeconds?? '00:00'}',
+
+                        style: const TextStyle(
+                            fontSize: 12,color: Colors.white
+                        ),)),
+
+                ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.backspace,
+                    color: Colors.white, size: _deleteBtnSize),
+                onPressed: () {
+                  if (_audioPlayer.state == ap.PlayerState.playing) {
+                    stop().then((value) => widget.onDelete());
+                  } else {
+                    widget.onDelete();
+                  }
+                },
+              ),
+
+            ],
+          ),
         );
       },
     );
@@ -118,12 +132,11 @@ class AudioPlayersState extends State<AudioPlayers> {
     Color color;
 
     if (_audioPlayer.state == ap.PlayerState.playing) {
-      icon = const Icon(Icons.pause, color: Colors.red, size: 30);
-      color = Colors.red.withOpacity(0.1);
+      icon = const Icon(Icons.pause, color: Color(0xFF354271), size: 25);
+      color = Colors.white;
     } else {
-      final theme = Theme.of(context);
-      icon = Icon(Icons.play_arrow, color: theme.primaryColor, size: 30);
-      color = theme.primaryColor.withOpacity(0.1);
+      icon = const Icon(Icons.play_arrow, color: Color(0xFF354271), size:25);
+      color = Colors.white;
     }
 
     return ClipOval(
@@ -158,10 +171,10 @@ class AudioPlayersState extends State<AudioPlayers> {
     width -= _deleteBtnSize;
 
     return SizedBox(
-      width: MediaQuery.of(context).size.width/2,
+      width: MediaQuery.of(context).size.width*0.4,
       child: Slider(
-        activeColor: Theme.of(context).primaryColor,
-        inactiveColor: Theme.of(context).colorScheme.secondary,
+        activeColor: const Color(0xFF5368d6),
+        inactiveColor: Colors.white,
         onChanged: (v) {
           if (duration != null) {
             final position = v * duration.inMilliseconds;

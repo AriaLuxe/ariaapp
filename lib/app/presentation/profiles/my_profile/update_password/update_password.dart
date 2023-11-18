@@ -84,7 +84,10 @@ class UpdatePasswordForm extends StatelessWidget {
           child: Column(
 
             children: [
-              const Header(title: 'Contraseña nueva'),
+               Header(title: 'Contraseña nueva',onTap: (){
+                 Navigator.pop(context);
+
+               },),
 
               SizedBox(
                 height: size.height*0.06,

@@ -46,7 +46,6 @@ class PeopleList extends StatelessWidget {
                     itemCount: state.users.length,
                     itemBuilder: (context, index) {
                       final user = state.users[index];
-                     // print('ididi${chat.chatId}');
                       return GestureDetector(
                         onTap: () {
                           /*Navigator.push(
@@ -60,12 +59,13 @@ class PeopleList extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: ListTile(
                             onTap: (){
-                              Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user)));
+                              print('raa${user.id}');
+                              Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user: user)));
                             },
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage('${BaseUrlConfig.baseUrlImage}${user.imgProfile}'),
                             ),
-                            title: Text('${user.nameUser} ${user.lastName}', style: TextStyle(color: Colors.white),),
+                            title: Text('${user.nameUser} ${user.lastName}', style:  const TextStyle(color: Colors.white),),
                             subtitle: Text(user.nickname, style: const TextStyle(color: Color(0xFFc0c0c0)),),
                           )
                         ),

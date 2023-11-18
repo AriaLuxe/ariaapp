@@ -1,183 +1,3 @@
-/*import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
-
-import '../chat_screen.dart';
-
-class AudioMessage extends StatefulWidget {
-  final String audioPath;
-  final DateTime time;
-  final int senderId;
-  final bool isMe;
-  //final AudioPlayer audioPlayer;
-  final String url;
-
-  const AudioMessage({
-    Key? key,
-    required this.audioPath,
-    required this.time,
-    required this.senderId,
-    required this.isMe,
-  //  required this.audioPlayer,
-    required this.url,
-  }) : super(key: key);
-
-  @override
-  _AudioMessageState createState() => _AudioMessageState();
-}
-
-class _AudioMessageState extends State<AudioMessage> {
-  late Stream<PositionData> positionDataStream;
-late final AudioPlayer audioPlayer; //= AudioPlayer();
-
-
-
-  @override
-  void initState() {
-    super.initState();
-    audioPlayer = AudioPlayer();
-
-    positionDataStream = Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-      audioPlayer.positionStream,
-      audioPlayer.bufferedPositionStream,
-      audioPlayer.durationStream,
-          (position, bufferedPosition, duration) {
-        final validDuration = duration ?? Duration.zero;
-        return PositionData(position, bufferedPosition, validDuration);
-      },
-    );
-    audioPlayer.setUrl('${widget.url}${widget.audioPath}');
-  }
-@override
-  void dispose() {
-  audioPlayer.dispose();
-
-  super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant AudioMessage oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    audioPlayer.setUrl('${widget.url}${widget.audioPath}');
-  }
-  @override
-  Widget build(BuildContext context) {
-    //audioPlayer.setUrl('${widget.url}${widget.audioPath}');
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Container(
-        margin: widget.isMe
-            ? const EdgeInsets.only(top: 8, bottom: 8, left: 80)
-            : const EdgeInsets.only(top: 8, bottom: 8, right: 80),
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-        decoration: BoxDecoration(
-          color: widget.isMe ? const Color(0xFF202248) : const Color(0xffF5F5FF),
-          borderRadius: widget.isMe
-              ? const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-          )
-              : const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-            bottomRight: Radius.circular(15),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: StreamBuilder<PlayerState?>(
-                    stream: audioPlayer.playerStateStream,
-                    builder: (_, snapshot) {
-                      final playerState = snapshot.data;
-                      final processingState = playerState?.processingState;
-                      final playing = playerState?.playing;
-                      if (!(playing ?? false)) {
-                        return IconButton(
-                          iconSize: 40.0,
-
-                          onPressed: () async {
-                            if (audioPlayer.playing) {
-                              await audioPlayer.pause();
-                            } else {
-                              await audioPlayer.play();
-                            }
-                          },
-                          icon: const Icon(Icons.play_arrow_rounded),
-                        );
-                      } else if (processingState != ProcessingState.completed) {
-                        return IconButton(
-                          iconSize: 40.0,
-
-                          onPressed: () async {
-                            await audioPlayer.pause();
-                          },
-                          icon: const Icon(Icons.pause_rounded),
-                        );
-                      }else {return IconButton(
-                        icon: const Icon(Icons.replay),
-                        iconSize: 40.0,
-                        onPressed: () async {
-                          await audioPlayer.seek(Duration.zero);},
-                      );
-                      }
-
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: StreamBuilder<PositionData>(
-                    stream: positionDataStream,
-                    builder: (_, snapshot) {
-                      if (!snapshot.hasData) {
-                        return  LinearProgressIndicator(
-                          backgroundColor: widget.isMe ? Colors.white : Theme.of(context).primaryColor,
-                          value: 0.0,
-                        );
-                      }
-                      final positionData = snapshot.data!;
-                      final durationMilliseconds = positionData.duration.inMilliseconds;
-                      final positionMilliseconds = positionData.position.inMilliseconds;
-
-                      if (durationMilliseconds == 0) {
-                        return const LinearProgressIndicator(value: 0.0);
-                      }
-
-                      double progressValue = positionMilliseconds / durationMilliseconds;
-
-                      return LinearProgressIndicator(
-                        value: progressValue,
-                        color: widget.isMe ? Theme.of(context).primaryColor : Colors.white,
-                        backgroundColor: widget.isMe ? Colors.white : Theme.of(context).primaryColor,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${widget.time.hour}:${widget.time.minute}',
-              style: TextStyle(
-                color: widget.isMe ? Colors.white : const Color(0xFF202248),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
-
 
 import 'dart:async';
 
@@ -187,20 +7,22 @@ import 'package:audioplayers/audioplayers.dart' as ap;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../config/styles.dart';
+
 class AudioMessage extends StatefulWidget {
   final String audioPath;
   final DateTime time;
   final int senderId;
   final bool isMe;
   final String url;
-
+  final bool isChat;
   const AudioMessage({
     Key? key,
     required this.audioPath,
     required this.time,
     required this.senderId,
     required this.isMe,
-    required this.url,
+    required this.url, required this.isChat,
   }) : super(key: key);
 
   @override
@@ -208,7 +30,7 @@ class AudioMessage extends StatefulWidget {
 }
 
 class _AudioMessageState extends State<AudioMessage> {
-  static const double _controlSize = 56;
+  static const double _controlSize = 40;
   static const double _deleteBtnSize = 24;
 
   final _audioPlayer = ap.AudioPlayer()..setReleaseMode(ReleaseMode.stop);
@@ -223,6 +45,8 @@ class _AudioMessageState extends State<AudioMessage> {
     _playerStateChangedSubscription =
         _audioPlayer.onPlayerComplete.listen((state) async {
           await stop();
+          _timer?.cancel();
+
           setState(() {});
         });
     _positionChangedSubscription = _audioPlayer.onPositionChanged.listen(
@@ -235,9 +59,19 @@ class _AudioMessageState extends State<AudioMessage> {
         _duration = duration;
       }),
     );
+
     _loadAudio();
+    _preloadAudio();
 
     super.initState();
+  }
+
+
+  void _preloadAudio() async {
+    await _audioPlayer.play(
+        UrlSource('${widget.url}${widget.audioPath}'),
+        position: Duration(seconds: 0)
+    );
   }
 
   @override
@@ -251,18 +85,30 @@ class _AudioMessageState extends State<AudioMessage> {
 
   void _loadAudio() async {
     await _audioPlayer.play(ap.UrlSource(widget.audioPath));
+
   }
 
   Future<void> play() {
+    _timer?.cancel();
+
+    _startTimer();
    // print(widget.source);
     return _audioPlayer.play(
      ap.UrlSource('${widget.url}${widget.audioPath}')
     );
   }
 
-  Future<void> pause() => _audioPlayer.pause();
+  Future<void> pause() async{
+  await  _audioPlayer.pause();
+  _timer?.cancel();
 
-  Future<void> stop() => _audioPlayer.stop();
+  }
+
+  Future<void> stop() async {
+    await _audioPlayer.stop();
+    _timer?.cancel();
+
+  }
 
   Widget _buildControl() {
     Icon icon;
@@ -270,19 +116,19 @@ class _AudioMessageState extends State<AudioMessage> {
     Color backgroundColor;
 
     if (_audioPlayer.state == ap.PlayerState.playing) {
-      icon = const Icon(Icons.pause, size: 30);
+      icon = const Icon(Icons.pause, size: 30,color: Color(0xFF354271));
       iconColor = Colors.red;
       backgroundColor = Colors.red.withOpacity(0.1);
     } else {
       final theme = Theme.of(context);
-      icon = Icon(Icons.play_arrow, size: 30);
-      iconColor = widget.isMe ? Colors.white : const Color(0xFF202248);
-      backgroundColor = Colors.transparent; // Puedes ajustar esto según tus preferencias.
+      icon = const Icon(Icons.play_arrow, size: 30, color: Color(0xFF354271),);
+      iconColor = Colors.black;
+      backgroundColor = Colors.transparent;
     }
 
     return ClipOval(
       child: Material(
-        color: backgroundColor,
+        color: Colors.white,
         child: InkWell(
           child: SizedBox(width: _controlSize, height: _controlSize, child: icon),
           onTap: () {
@@ -296,9 +142,9 @@ class _AudioMessageState extends State<AudioMessage> {
       ),
     );
   }
+  bool _playing = false;
 
-
-  Widget _buildSlider(double widgetWidth) {
+ Widget _buildSlider(double widgetWidth) {
     bool canSetValue = false;
     final duration = _duration;
     final position = _position;
@@ -306,17 +152,15 @@ class _AudioMessageState extends State<AudioMessage> {
     if (duration != null && position != null) {
       canSetValue = position.inMilliseconds > 0;
       canSetValue &= position.inMilliseconds < duration.inMilliseconds;
+
     }
-
-    double width = widgetWidth - _controlSize - _deleteBtnSize;
-    width -= _deleteBtnSize;
-
+    double width = widgetWidth - _controlSize;
     return SizedBox(
-      width: MediaQuery.of(context).size.width*0.4,
+      width: MediaQuery.of(context).size.width * 0.6,
       child: Slider(
-        activeColor: widget.isMe ? Colors.white : const Color(0xFF202248),
-        inactiveColor: widget.isMe ? Colors.white : const Color(0xFF202248),
-        onChanged: (v) {
+        inactiveColor: Colors.white,
+        activeColor: const Color(0xFF5368d6),
+        onChanged:  (v) {
           if (duration != null) {
             final position = v * duration.inMilliseconds;
             _audioPlayer.seek(Duration(milliseconds: position.round()));
@@ -328,6 +172,10 @@ class _AudioMessageState extends State<AudioMessage> {
       ),
     );
   }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -336,42 +184,96 @@ class _AudioMessageState extends State<AudioMessage> {
         margin: widget.isMe
             ? const EdgeInsets.only(top: 8, bottom: 8, left: 80)
             : const EdgeInsets.only(top: 8, bottom: 8, right: 80),
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         decoration: BoxDecoration(
-          color: widget.isMe ? const Color(0xFF202248) : const Color(0xffF5F5FF),
+          color:  const Color(0xff354271),
           borderRadius: widget.isMe
               ? const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
+            topLeft: Radius.circular(40),
+            bottomLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
           )
               : const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-            bottomRight: Radius.circular(15),
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
+            bottomRight: Radius.circular(40),
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+
               children: [
                 _buildControl(),
-                _buildSlider(20)
+                Column(
+                  children: [
+                    _buildSlider(20),
+                    SizedBox(
+                        child: Text(
+                          '${_duration ?? Duration.zero} / ${_duration?.inSeconds?? '00:00'}',
+
+                          style: const TextStyle(
+                              fontSize: 12,color: Colors.white
+                          ),)),
+                    _buildText(),
+
+                  ],
+                )
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              '${_duration ?? Duration.zero} / ${_duration?.inSeconds?? '00:00'}',
-              style: TextStyle(
-                color: widget.isMe ? Colors.white : const Color(0xFF202248),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+
           ],
         ),
       ),
     );
   }
+  int _recordDuration = 0;
+  Timer? _timer;
+/*
+  Widget _buildText() {
+    if (_duration != null) {
+      final minutes = _duration!.inMinutes;
+      final seconds = _duration!.inSeconds.remainder(60);
+      final formattedTime = '$minutes:${seconds.toString().padLeft(2, '0')}';
+
+      return Text(formattedTime);
+    } else {
+      return Text("...");
+    }
+  }
+*/
+  Widget _buildText() {
+  return _buildTimer();
+  }
+
+  Widget _buildTimer() {
+    final String minutes = _formatNumber(_recordDuration ~/ 60);
+    final String seconds = _formatNumber(_recordDuration % 60);
+
+    return Text(
+      '$minutes : $seconds',
+      style:  TextStyle(color: Styles.primaryColor),
+    );
+  }
+
+  String _formatNumber(int number) {
+    String numberStr = number.toString();
+    if (number < 10) {
+      numberStr = '0$numberStr';
+    }
+
+    return numberStr;
+  }
+
+  void _startTimer() {
+     _recordDuration = 0;
+
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      setState(() => _recordDuration++);
+    });
+  }
+
 }

@@ -1,9 +1,14 @@
 import 'dart:async';
 
+import 'package:ariapp/app/domain/entities/user_aria.dart';
+import 'package:ariapp/app/security/user_logged.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:get_it/get_it.dart';
 
+import '../../../../../infrastructure/repositories/user_aria_repository.dart';
+import '../../../../../security/shared_preferences_manager.dart';
 import '../validators/birthdate_input_validator.dart';
 import '../validators/city_input_validator.dart';
 import '../validators/country_input_validator.dart';
@@ -16,7 +21,11 @@ part 'my_profile_event.dart';
 part 'my_profile_state.dart';
 
 class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
-  MyProfileBloc() : super(const MyProfileState()) {
+
+  final UserAriaRepository userAriaRepository;
+  MyProfileBloc() :
+        userAriaRepository = GetIt.instance<UserAriaRepository>(),
+        super(const MyProfileState()) {
     on<MyProfileEvent>((event, emit) {
       // TODO: implement event handler
     });
@@ -27,8 +36,8 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
     on<CountryChanged>(_onCountryChanged);
     on<CityChanged>(_onCityChanged);
     on<GenderChanged>(_onGenderChanged);
+    on<CurrentProfile>(_onCurrentProfile);
   }
-
   void _onGenderChanged(GenderChanged event, Emitter<MyProfileState> emit) {
     final gender = GenderInputValidator.dirty(event.gender);
     emit(
@@ -167,8 +176,29 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
         ),
       ),
     );
+
+  }
+  void _onCurrentProfile(
+      CurrentProfile event,
+      Emitter<MyProfileState> emit,
+      ) async {
+    final userUd = await SharedPreferencesManager.getUserId();
+    final user = await userAriaRepository.getUserById(userUd!);
+    print(user);
+    emit(state.copyWith(
+      nameInputValidator:NameInputValidator.dirty(user.nameUser),
+      lastNameInputValidator: LastNameInputValidator.dirty(user.lastName),
+      nicknameInputValidator: NicknameInputValidator.dirty(user.nickname),
+      genderInputValidator: GenderInputValidator.dirty(user.gender),
+      birthDateInputValidator:BirthDateInputValidator.dirty(user.gender),
+      countryInputValidator: CountryInputValidator.dirty(user.gender),
+      cityInputValidator: CityInputValidator.dirty(user.gender),
+    ));
   }
 
+  void currentProfile(){
+    add(const CurrentProfile());
+  }
 
 
 

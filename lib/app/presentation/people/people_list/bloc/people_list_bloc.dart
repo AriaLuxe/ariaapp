@@ -44,7 +44,6 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
           users: usersUpdated,
         ),
       );
-      print('entre');
     } catch (e) {
       print(e);
       emit(state.copyWith(peopleListStatus:  PeopleListStatus.error));
@@ -62,9 +61,6 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
     emit(state.copyWith(peopleListStatus: PeopleListStatus.loading));
 
     try {
-      String? token = await  SharedPreferencesManager.getToken();
-      print('token');
-      print(token);
 
       final List<UserAria> searchResults = await usersRepository.searchUser(event.keyword);
       emit(
@@ -73,7 +69,6 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
           users: searchResults,
         ),
       );
-      print(searchResults);
     } catch (e) {
       print(e);
       emit(state.copyWith(peopleListStatus: PeopleListStatus.error));

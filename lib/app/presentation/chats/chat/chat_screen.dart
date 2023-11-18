@@ -1,9 +1,12 @@
+import 'package:ariapp/app/presentation/chats/chat/widgets/audio_player_widget.dart';
+import 'package:ariapp/app/presentation/widgets/header.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:audioplayers/audioplayers.dart';
+import '../../widgets/header_chat.dart';
 import 'bloc/chat_bloc.dart';
 import 'widgets/audio_message.dart';
 import 'widgets/audio_players.dart';
@@ -26,10 +29,7 @@ class ChatScreen extends StatelessWidget {
 final int chatId;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChatBloc(),
-      child:  Chat(chatId: chatId,),
-    );
+    return Chat(chatId: chatId,);
   }
 }
 
@@ -53,29 +53,18 @@ class _ChatState extends State<Chat> {
   ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() async{
+  void initState() {
     showPlayer = false;
-    userId = await SharedPreferencesManager.getUserId();
+   // userId =  SharedPreferencesManager.getUserId();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final chatBloc = BlocProvider.of<ChatBloc>(context);
-    chatBloc.messageFetched(widget.chatId);
+    //chatBloc.messageFetched(widget.chatId);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat Title'),
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.more_horiz),
-            iconSize: 30.0,
-            color: Colors.white,
-            onPressed: () {},
-          ),
-        ],
-      ),
+
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           if (state.chatStatus == ChatStatus.loading) {
@@ -85,72 +74,70 @@ class _ChatState extends State<Chat> {
           } else {
             final messages = state.messages;
             //var messagesOrder = messages.reversed.toList();
-            return Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
+            return SafeArea(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width*0.9,
+                      child: HeaderChat(title: 'asd', onTap: (){
+                        Navigator.pop(context);
+                      }, url: 'https://th.bing.com/th/id/R.749ef6ba37425e40d6b8ffb16f2ea08e?rik=OHNHPvVuuCHGsA&pid=ImgRaw&r=0',)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Divider(
+                    color: Color(0xFF354271),
+
+                      thickness: 2
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                        ),
+                      ),
+                      child: ListView.builder(
+                        reverse: true,
+                        controller: _scrollController,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index)  {
+//                          final message = messages[messages.length-1- index];
+                          final message = messages.toList();
+
+
+                          return message[index];
+                        },
                       ),
                     ),
-                    child: ListView.builder(
-                      reverse: true,
-                      controller: _scrollController, // Asigna el controlador al ListView
-                      itemCount: messages.length,
-                      itemBuilder: (context, index)  {
-                        final message = messages[messages.length-1- index];
-                        print(message.id);
-                        final isMe = message.sender == userId;
-                        return AudioMessage(
-                          audioPath: message.content,
-                          time: message.date,
-                          senderId: 1,
-                          isMe: isMe,
-                          url: 'https://uploadsaria.blob.core.windows.net/files/',
-                        );
-                      },
-                    ),
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: state.isRecording
-                      ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: AudioPlayers(
-                      isChat: true,
-                      onSent: (){
-                        print('aaa');                        print(audioPath!);
-                        chatBloc.messageSent(widget.chatId,audioPath!);
+                  const SizedBox(),
+                  AudioRecorder(
+                    iconSize: 25,
+                    onStop: (path) {
+                      print('Audio grabado');
+                      if (kDebugMode) print('Ruta del archivo grabado: $path');
+                      audioPath = path;
+                      chatBloc.isRecording(true);
+                      if (audioPath != null) {
+
+                        print('Audio enviado');
+                        print(audioPath);
+                        chatBloc.messageSent(widget.chatId, audioPath!);
                         _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                         chatBloc.isRecording(false);
-
-                      },
-                      //chatId: widget.chatId,
-                      source: audioPath!,
-                      onDelete: () {
-                      //showPlayer = false;
-                        chatBloc.isRecording(false);
-                      },
-                    ),
-                  )
-                      : AudioRecorder(iconSize: 30,
-                    onStop: (path) {
-                      print('path enviado');
-                      print(path);
-                      if (kDebugMode) print('Recorded file path: $path');
-                        audioPath = path;
-
-                      chatBloc.isRecording(true);
-
-                      //showPlayer = true;
+                      } else {
+                        print('No hay audio para enviar');
+                      }
+                      // showPlayer = true;
                     },
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           }
         },

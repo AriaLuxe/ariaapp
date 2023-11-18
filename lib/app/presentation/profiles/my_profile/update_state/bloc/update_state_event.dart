@@ -10,3 +10,10 @@ final class StateChanged extends UpdateStateEvent {
   @override
   List<Object?> get props => [state];
 }
+
+final class StateCurrent extends UpdateStateEvent {
+
+
+  @override
+  List<Object?> get props => [];
+}

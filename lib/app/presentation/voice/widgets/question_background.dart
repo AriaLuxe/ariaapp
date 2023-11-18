@@ -18,6 +18,7 @@ class QuestionBackground extends StatelessWidget {
           stops: stops,
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
+
         )
       ),
     ));

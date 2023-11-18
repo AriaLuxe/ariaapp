@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../../config/base_url_config.dart';

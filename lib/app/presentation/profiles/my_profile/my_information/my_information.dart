@@ -1,4 +1,3 @@
-import 'package:ariapp/app/presentation/profiles/my_profile/bloc/my_profile_bloc.dart';
 import 'package:ariapp/app/presentation/widgets/header.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/user_logged.dart';
@@ -17,6 +16,7 @@ import '../../../../security/user_logged.dart';
 import '../../../sign_in/widgets/text_input.dart';
 import '../../../widgets/arrow_back.dart';
 import '../../../widgets/custom_button.dart';
+import '../update_information/bloc/my_profile_bloc.dart';
 
 
 
@@ -95,7 +95,9 @@ class _MyInformationState extends State<MyInformation> {
                   child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                     const Header(title: 'Mi información',),
+                      Header(title: 'Mi información',onTap: (){
+                        Navigator.pop(context);
+                      },),
 
                       SizedBox(
                         height: size.height*0.06,

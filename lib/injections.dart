@@ -1,9 +1,13 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
+import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/update_state/bloc/update_state_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/update_state/update_state.dart';
 import 'package:get_it/get_it.dart';
 
 import 'app/infrastructure/data_sources/users_data_provider.dart';
@@ -33,10 +37,19 @@ void messagesDependencies() {
       MessageRepository(
           messageDataProvider: serviceLocator<MessageDataProvider>()));
 }
-
+void voiceDependencies() {
+  serviceLocator
+      .registerLazySingleton<VoiceCloneDataProvider>(() => VoiceCloneDataProvider());
+  serviceLocator.registerLazySingleton<VoiceRepository>(() =>
+      VoiceRepository(
+          voiceCloneDataProvider: serviceLocator<VoiceCloneDataProvider>()));
+}
 void userLogged(UserAria user) {
   serviceLocator.registerLazySingleton<UserLogged>(
           () => UserLogged( user:user));
 }
+
+
+
 
 

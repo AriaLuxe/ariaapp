@@ -10,7 +10,9 @@ part of 'my_profile_bloc.dart';
   final GenderInputValidator genderInputValidator;
   final FormzSubmissionStatus formStatus;
   final bool isValid;
-  const MyProfileState({
+
+   const MyProfileState({
+
         this.genderInputValidator = const GenderInputValidator.pure(),
         this.countryInputValidator = const CountryInputValidator.pure(),
         this.nicknameInputValidator = const NicknameInputValidator.pure(),

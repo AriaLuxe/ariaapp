@@ -9,6 +9,7 @@ import '../../../../infrastructure/repositories/user_aria_repository.dart';
 import '../../../sign_in/widgets/text_input.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/header.dart';
+import '../bloc/profile_bloc.dart';
 
 class UpdateEmail extends StatelessWidget {
   const UpdateEmail({super.key});
@@ -82,7 +83,10 @@ class UpdateEmailForm extends StatelessWidget {
           child: Column(
 
             children: [
-              const Header(title: 'Cambiar correo'),
+               Header(title: 'Cambiar correo', onTap: (){
+                 Navigator.pop(context);
+
+               },),
 
               SizedBox(
                 height: size.height*0.06,
@@ -150,6 +154,8 @@ class UpdateEmailForm extends StatelessWidget {
                       _passwordController.clear();
 
                       if(response == 'Email is updated'){
+                        context.read<ProfileBloc>().fetchDataProfile(userId);
+
                         ScaffoldMessenger.of(context)
                             .showSnackBar(successSnackBar)
                             .closed;

@@ -9,7 +9,7 @@ class MessageModel extends Message {
     required String content,
      required int durationSeconds,
     required DateTime date,
-    required bool unread,
+    required bool read,
     required bool isLiked,
     required int chat,
   }) : super(
@@ -18,7 +18,7 @@ class MessageModel extends Message {
           content: content,
           durationSeconds: durationSeconds,
           date: date,
-          unread: unread,
+          read: read,
           isLiked: isLiked,
           chat: chat,
         );
@@ -31,8 +31,8 @@ class MessageModel extends Message {
       durationSeconds: json['durationSeconds'] ?? 0,
       date:
           json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
-      unread: json['unread'] ??
-          true, // Asumiendo que los mensajes sin leer son true por defecto
+      read: json['read'] ??
+          false,
       isLiked: json['isliked'] ?? false,
       chat: json['chat'] ?? 0,
     );
@@ -45,7 +45,7 @@ class MessageModel extends Message {
       'content': content,
       'durationSeconds': durationSeconds,
       'date': date.toIso8601String(),
-      'unread': unread,
+      'read': read,
       'isliked': isLiked,
       'chat': chat,
     };

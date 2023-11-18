@@ -74,3 +74,9 @@ class GenderChanged extends MyProfileEvent {
   @override
   List<Object?> get props => [gender];
 }
+class CurrentProfile extends MyProfileEvent {
+  const CurrentProfile();
+}
+class CurrentUser extends MyProfileEvent {
+  const CurrentUser();
+}

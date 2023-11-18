@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'arrow_back.dart';
 
 class Header extends StatelessWidget {
-  const Header({super.key, required this.title});
+   Header({super.key, required this.title, required this.onTap});
   final String title;
+  void Function() onTap;
   @override
   Widget build(BuildContext context) {
     return  Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ArrowBack(onTap: (){
-          Navigator.pop(context);
-        },),
+        ArrowBack(onTap: onTap),
          Padding(
           padding:  const EdgeInsets.only(top: 25.0),
           child:  SizedBox(

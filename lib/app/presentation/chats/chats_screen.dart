@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/styles.dart';
+import '../profiles/my_profile/bloc/profile_bloc.dart';
 import '../widgets/custom_search_bar.dart';
 import 'chat_list/bloc/chat_list_bloc.dart';
 import 'chat_list/chats_list.dart';
@@ -48,9 +49,17 @@ class ChatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
     chatListBloc.chatsFetched();
+    final profileBloc = context.watch<ProfileBloc>();
+
+    profileBloc.fetchDataProfile(9);
     return  const SafeArea(
       child:  Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Text('Chats',style: TextStyle(color: Colors.white,fontSize: 24),),
+                  ),
                   CustomSearchBar(title:'Buscar chat'),
                   ChatsList(),
                 ],

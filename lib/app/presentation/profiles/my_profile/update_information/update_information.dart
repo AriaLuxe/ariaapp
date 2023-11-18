@@ -1,7 +1,8 @@
-import 'package:ariapp/app/presentation/profiles/my_profile/bloc/my_profile_bloc.dart';
+import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/presentation/widgets/header.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/user_logged.dart';
+import 'package:ariapp/injections.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ import '../../../../security/user_logged.dart';
 import '../../../sign_in/widgets/text_input.dart';
 import '../../../widgets/arrow_back.dart';
 import '../../../widgets/custom_button.dart';
+import '../bloc/profile_bloc.dart';
+import 'bloc/my_profile_bloc.dart';
 
 class UpdateInformation extends StatelessWidget {
   const UpdateInformation({super.key});
@@ -24,14 +27,14 @@ class UpdateInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-  create: (context) => MyProfileBloc(),
-  child: Center(
-    child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.9,
+      create: (context) => MyProfileBloc(),
+      child: Center(
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
 
-        child: const UpdateInformationForm()),
-  ),
-);
+            child: const UpdateInformationForm()),
+      ),
+    );
   }
 }
 
@@ -53,39 +56,39 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-  final userLogged = GetIt.instance<UserLogged>();
-
+   final UserLogged userLog = GetIt.instance<UserLogged>();
 
   @override
-  void initState()  {
+  void initState() {
     loadUserData();
     super.initState();
   }
 
-  void loadUserData()  {
+  void loadUserData() async {
+
 
     _birthDateController.text =
-        DateFormat('yyyy-MM-dd').format(userLogged.user.dateBirth!);
+        DateFormat('yyyy-MM-dd').format(userLog.user.dateBirth!);
     //_birthDateController.text = '${userLogged.user.dateBirth?.year}-${userLogged.user.dateBirth?.month}-${userLogged.user.dateBirth?.day}';
-    _genderController.text = userLogged.user.gender;
-    _countryController.text = userLogged.user.country;
-    _nameController.text = userLogged.user.nameUser;
-    _lastNameController.text = userLogged.user.lastName;
-    _nicknameController.text = userLogged.user.nickname;
-    _cityController.text = userLogged.user.city;
+    _genderController.text = userLog.user.gender;
+    _countryController.text = userLog.user.country;
+    _nameController.text = userLog.user.nameUser;
+    _lastNameController.text = userLog.user.lastName;
+    _nicknameController.text = userLog.user.nickname;
+    _cityController.text = userLog.user.city;
 
 
   }
 
   bool hasChanged(){
-    if (_nameController.text != userLogged.user.nameUser ||
-        _lastNameController.text != userLogged.user.lastName ||
-        _nicknameController.text != userLogged.user.nickname ||
-        _genderController.text != userLogged.user.gender ||
-        _countryController.text != userLogged.user.country ||
-        _cityController.text != userLogged.user.city ||
+    if (_nameController.text != userLog.user.nameUser ||
+        _lastNameController.text != userLog.user.lastName ||
+        _nicknameController.text != userLog.user.nickname ||
+        _genderController.text != userLog.user.gender ||
+        _countryController.text != userLog.user.country ||
+        _cityController.text != userLog.user.city ||
         _birthDateController.text !=
-            DateFormat('yyyy-MM-dd').format(userLogged.user.dateBirth!)) {
+            DateFormat('yyyy-MM-dd').format(userLog.user.dateBirth!)) {
       return true;
     }else{
       return false;
@@ -111,7 +114,42 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
     });
   }
 
+  final  errorSnackBar = const SnackBar(
+      backgroundColor: Colors.red,
+      content: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error,size: 60,),
+            Column(
+              children: [
+                Text('Error', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
+              ],
+            ),
+          ],
+        ),
+      )
 
+  );
+
+  final  successSnackBar = const SnackBar(
+      backgroundColor: Colors.green,
+      content: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error,size: 60,),
+            Column(
+              children: [
+                Text('Datos actualizados', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
+
+              ],
+            ),
+          ],
+        ),
+      )
+
+  );
   @override
   Widget build(BuildContext context) {
 
@@ -136,322 +174,324 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
     Size size = MediaQuery.of(context).size;
 
     return BlocBuilder<MyProfileBloc, MyProfileState>(
-  builder: (context, state) {
-    print(state.isValid);
-    return Scaffold(
-      body: SingleChildScrollView(
-        child:  SafeArea(
-          child: Column(
+      builder: (context, state) {
+        print(state.isValid);
+        return Scaffold(
+          body: SingleChildScrollView(
+            child:  SafeArea(
+              child: Column(
 
-              children: [
-                const Header(title: 'Actualizar'),
+                children: [
+                   Header(title: 'Actualizar',onTap: (){
+                     Navigator.pop(context);
 
-                 SizedBox(
-                  height: size.height*0.04,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                   },),
 
-                  children: [
-                    const Text('Nombres',style: TextStyle(color: Colors.white),),
-                    TextInput(
-                      controller: _nameController,
-                      verticalPadding: 15,
-                      prefixIcon: Icons.person,
-                      label: 'Ingresa tus nombres',
-                      onChanged: (name) =>
-                          context.read<MyProfileBloc>().add(NameChanged(name)),
-                      errorMessage: state.nameInputValidator.errorMessage,
-                    ),
-                  ],
-                ),
-                 SizedBox(
-                  height: size.height*0.015,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(
+                    height: size.height*0.04,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                  children: [
-                    const Text('Apellidos',style: TextStyle(color: Colors.white),),
+                    children: [
+                      const Text('Nombres',style: TextStyle(color: Colors.white),),
+                      TextInput(
+                        controller: _nameController,
+                        verticalPadding: 15,
+                        prefixIcon: Icons.person,
+                        label: 'Ingresa tus nombres',
+                        onChanged: (name) =>
+                            context.read<MyProfileBloc>().add(NameChanged(name)),
+                        errorMessage: state.nameInputValidator.errorMessage,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height*0.015,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                    TextInput(
-                      controller: _lastNameController,
+                    children: [
+                      const Text('Apellidos',style: TextStyle(color: Colors.white),),
 
-                      verticalPadding: 15,
+                      TextInput(
+                        controller: _lastNameController,
 
-                      prefixIcon: Icons.person,
-                      label: 'Ingresa tus apellidos',
-                      onChanged: (lastName) =>
-                          context.read<MyProfileBloc>().add(LastNameChanged(lastName)),
-                      errorMessage: state.lastNameInputValidator.errorMessage,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: size.height*0.015,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                        verticalPadding: 15,
 
-                  children: [
-                    const Text('Apodo',style: TextStyle(color: Colors.white),),
+                        prefixIcon: Icons.person,
+                        label: 'Ingresa tus apellidos',
+                        onChanged: (lastName) =>
+                            context.read<MyProfileBloc>().add(LastNameChanged(lastName)),
+                        errorMessage: state.lastNameInputValidator.errorMessage,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height*0.015,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                    TextInput(
-                      controller: _nicknameController,
+                    children: [
+                      const Text('Apodo',style: TextStyle(color: Colors.white),),
 
-                      verticalPadding: 15,
+                      TextInput(
+                        controller: _nicknameController,
 
-                      prefixIcon: Icons.verified_user,
-                      label: 'Ingresa tu nickname',
-                      onChanged: (nickname) =>
-                          context.read<MyProfileBloc>().add(NicknameChanged(nickname)),
-                      errorMessage: state.nicknameInputValidator.errorMessage,
-                    ),
-                  ],
-                ),
+                        verticalPadding: 15,
+
+                        prefixIcon: Icons.verified_user,
+                        label: 'Ingresa tu nickname',
+                        onChanged: (nickname) =>
+                            context.read<MyProfileBloc>().add(NicknameChanged(nickname)),
+                        errorMessage: state.nicknameInputValidator.errorMessage,
+                      ),
+                    ],
+                  ),
 
 
 
 
-                SizedBox(
-                  height: size.height*0.015,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(
+                    height: size.height*0.015,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                  children: [
-                    const Text('Genero',style: TextStyle(color: Colors.white),),
+                    children: [
+                      const Text('Genero',style: TextStyle(color: Colors.white),),
 
-                    TextInput(
+                      TextInput(
 
-                      controller: _genderController,
+                        controller: _genderController,
 
-                      verticalPadding: 15,
+                        verticalPadding: 15,
 
-                      errorMessage: state.genderInputValidator.errorMessage,
-                      onTap: () {
-                        context
-                            .read<MyProfileBloc>()
-                            .add(GenderChanged(_genderController.text));
+                        errorMessage: state.genderInputValidator.errorMessage,
+                        onTap: () {
+                          context
+                              .read<MyProfileBloc>()
+                              .add(GenderChanged(_genderController.text));
 
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ListTile(
-                                  title: Text('Femenino'),
-                                  onTap: () {
-                                    onGenderChanged('Femenino');
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                ListTile(
-                                  title: Text('Masculino'),
-                                  onTap: () {
-                                    onGenderChanged('Masculino');
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                ListTile(
-                                  title: Text('Otro'),
-                                  onTap: () {
-                                    onGenderChanged('Otro');
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      readOnly: true,
-                      label: 'Género',
-                      prefixIcon: Icons.circle_outlined,
-
-                    ),
-                  ],
-                ),
-            SizedBox(
-              height: size.height*0.015,
-            ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                  children: [
-                    const Text('Fecha de nacimiento',style: TextStyle(color: Colors.white),),
-
-                    TextInput(
-                      controller: _birthDateController,
-
-                      verticalPadding: 15,
-
-                      readOnly: true,
-                      onTap: () {
-                        context
-                            .read<MyProfileBloc>()
-                            .add(BirthDateChanged(_birthDateController.text));
-                        showDialog(
-                          context: context,
-                          builder: (context1) {
-                            return AlertDialog(
-                              title: Text(
-                                'Selecciona una fecha',
-                                style: TextStyle(
-                                  color: Styles.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              content: SizedBox(
-                                height: MediaQuery.of(context).size.height / 4,
-                                width: MediaQuery.of(context).size.height * 2,
-                                child: CupertinoDatePicker(
-                                  mode: CupertinoDatePickerMode.date,
-                                  initialDateTime: DateTime(2000),
-                                  maximumDate: DateTime.now(),
-                                  onDateTimeChanged: (DateTime newDate) {
-                                    _birthDateController.text =
-                                        DateFormat('yyyy-MM-dd').format(newDate);
-                                  },
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    context.read<MyProfileBloc>().add(
-                                        BirthDateChanged(_birthDateController.text));
-
-                                    context.pop();
-
-                                  },
-                                  child: const Text('Aceptar'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      enabled: true,
-                      label: 'Fecha de nacimiento',
-                      prefixIcon: Icons.calendar_month,
-                      isAnimated: FloatingLabelBehavior.never,
-                      errorMessage: state.birthDateInputValidator.errorMessage,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: size.height*0.015,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-
-                        children: [
-                          const Text('Pais',style: TextStyle(color: Colors.white),),
-
-                          TextInput(
-                            verticalPadding: 15,
-
-                            controller: _countryController,
-                            readOnly: true,
-                            onTap: () {
-                              context
-                                  .read<MyProfileBloc>()
-                                  .add(CountryChanged(_countryController.text));
-                              showCountryPicker(
-                                  context: context,
-                                  countryListTheme: const CountryListThemeData(
-                                    searchTextStyle: TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 18,
-                                    ),
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    title: Text('Femenino'),
+                                    onTap: () {
+                                      onGenderChanged('Femenino');
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
-                                  onSelect: (Country country) {
-                                    _countryController.text = country.name;
-                                    context
-                                        .read<MyProfileBloc>()
-                                        .add(CountryChanged(_countryController.text));
-                                  });
+                                  ListTile(
+                                    title: Text('Masculino'),
+                                    onTap: () {
+                                      onGenderChanged('Masculino');
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: Text('Otro'),
+                                    onTap: () {
+                                      onGenderChanged('Otro');
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
                             },
+                          );
+                        },
+                        readOnly: true,
+                        label: 'Género',
+                        prefixIcon: Icons.circle_outlined,
 
-                            prefixIcon: Icons.flag,
-                            label: 'Pais',
-                            errorMessage: state.countryInputValidator.errorMessage,
-                          ),
-                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Ciudad',style: TextStyle(color: Colors.white),),
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height*0.015,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                          TextInput(
-                            verticalPadding: 15,
-                            controller: _cityController,
+                    children: [
+                      const Text('Fecha de nacimiento',style: TextStyle(color: Colors.white),),
 
-                            prefixIcon: Icons.location_on,
-                            label: 'Ciudad',
-                            onChanged: (city) =>
-                                context.read<MyProfileBloc>().add(CityChanged(city)),
-                            errorMessage: state.cityInputValidator.errorMessage,
-                          ),
-                        ],
+                      TextInput(
+                        controller: _birthDateController,
+
+                        verticalPadding: 15,
+
+                        readOnly: true,
+                        onTap: () {
+                          context
+                              .read<MyProfileBloc>()
+                              .add(BirthDateChanged(_birthDateController.text));
+                          showDialog(
+                            context: context,
+                            builder: (context1) {
+                              return AlertDialog(
+                                title: Text(
+                                  'Selecciona una fecha',
+                                  style: TextStyle(
+                                    color: Styles.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                content: SizedBox(
+                                  height: MediaQuery.of(context).size.height / 4,
+                                  width: MediaQuery.of(context).size.height * 2,
+                                  child: CupertinoDatePicker(
+                                    mode: CupertinoDatePickerMode.date,
+                                    initialDateTime: DateTime(2000),
+                                    maximumDate: DateTime.now(),
+                                    onDateTimeChanged: (DateTime newDate) {
+                                      _birthDateController.text =
+                                          DateFormat('yyyy-MM-dd').format(newDate);
+                                    },
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      context.read<MyProfileBloc>().add(
+                                          BirthDateChanged(_birthDateController.text));
+
+                                      context.pop();
+
+                                    },
+                                    child: const Text('Aceptar'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        enabled: true,
+                        label: 'Fecha de nacimiento',
+                        prefixIcon: Icons.calendar_month,
+                        isAnimated: FloatingLabelBehavior.never,
+                        errorMessage: state.birthDateInputValidator.errorMessage,
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height*0.015,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+                            const Text('Pais',style: TextStyle(color: Colors.white),),
+
+                            TextInput(
+                              verticalPadding: 15,
+
+                              controller: _countryController,
+                              readOnly: true,
+                              onTap: () {
+                                context
+                                    .read<MyProfileBloc>()
+                                    .add(CountryChanged(_countryController.text));
+                                showCountryPicker(
+                                    context: context,
+                                    countryListTheme: const CountryListThemeData(
+                                      searchTextStyle: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    onSelect: (Country country) {
+                                      _countryController.text = country.name;
+                                      context
+                                          .read<MyProfileBloc>()
+                                          .add(CountryChanged(_countryController.text));
+                                    });
+                              },
+
+                              prefixIcon: Icons.flag,
+                              label: 'Pais',
+                              errorMessage: state.countryInputValidator.errorMessage,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Ciudad',style: TextStyle(color: Colors.white),),
+
+                            TextInput(
+                              verticalPadding: 15,
+                              controller: _cityController,
+
+                              prefixIcon: Icons.location_on,
+                              label: 'Ciudad',
+                              onChanged: (city) =>
+                                  context.read<MyProfileBloc>().add(CityChanged(city)),
+                              errorMessage: state.cityInputValidator.errorMessage,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height*0.06,
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      child: CustomButton(
+                        onPressed: hasChanged() && myProfileBloc.state.isValid ?
+                            () async{
+                          final userRepository = GetIt.instance<UserAriaRepository>();
+                           final response = await userRepository.updateUserData(userLog.user.id.toString(),_nameController.text,_lastNameController.text,_nicknameController.text,_genderController.text,DateTime.parse(_birthDateController.text),_countryController.text,_cityController.text);
+                           final userUpdated = await usersRepository.getUserById(userLog.user.id!);
+                           //userLog.copyWith(user: userUpdated);
+                          userLog.user = userUpdated;
+
+                          final UserLogged us = GetIt.instance<UserLogged>();
+                          print(us.user.nameUser);
+                           print(response);
+
+                          if(response == 'UserInfo is updated'){
+                            ScaffoldMessenger.of(context)
+                             .showSnackBar(successSnackBar)
+                            .closed;
+                            context.read<ProfileBloc>().fetchDataProfile(userLog.user.id!);
+
+                            context.go("/my_profile");
+                          }else{
+                            ScaffoldMessenger.of(context)
+                              .showSnackBar(errorSnackBar)
+                            .closed;
+                          }
 
 
-                SizedBox(
-                  height: size.height*0.06,
-                ),
-                SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      onPressed: hasChanged() && myProfileBloc.state.isValid ?
-                          () async{
-                      final userRepository = GetIt.instance<UserAriaRepository>();
-                       // final response = await userRepository.updateUserData(userLogged.user.id.toString(),_nameController.text,_lastNameController.text,_nicknameController.text,_genderController.text,_birthDateController.text,_countryController.text,_cityController.text);
-                      print('entreeeeeeeeeeeee');
-
-                      print(_birthDateController.text);
-
-                      _birthDateController.clear();
-                        _genderController.clear();
-                        _countryController.clear();
-                        _nameController.clear();
-                        _lastNameController.clear();
-                        _nicknameController.clear();
-                        _cityController.clear();
-                            // if(response == 'Email sent sucessfully'){
-
-                        //  Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Verificar y Registrarse', isResetPassword: false,user: user)));
-
-                       // }else{
-                        //  ScaffoldMessenger.of(context)
-                            //  .showSnackBar(errorSnackBar)
-                              //.closed;
-                       // }
-
-                      } : null,
-                      text: 'Guardar Cambios ', width: 0.8,))
+                        } : null,
+                        text: 'Guardar Cambios ', width: 0.8,))
 
 
-              ],
+                ],
+              ),
             ),
-        ),
 
-      ),
-      );
-  },
-);
+          ),
+        );
+      },
+    );
   }
 }

@@ -9,10 +9,10 @@ class ArrowBack extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10.0), // Espacio entre el ícono y el borde
+        padding: const EdgeInsets.all(10.0),
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(0xFF354271), // Color de fondo del ícono
+          color: Color(0xFF354271),
         ),
         child: const Icon(
           Icons.arrow_back_outlined,

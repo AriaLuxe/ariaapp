@@ -1,6 +1,7 @@
 import 'package:ariapp/app/config/styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/sign_in_bloc.dart';
@@ -14,6 +15,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  int backButtonCounter = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
