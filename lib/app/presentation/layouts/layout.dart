@@ -57,6 +57,8 @@ final userRepository = GetIt.instance<UserAriaRepository>();
   Future<void> _loadUserData() async {
     int? userId = await SharedPreferencesManager.getUserId();
     user = await userRepository.getUserById(userId!);
+    //final userId = GetIt.instance<UserLogged>().user.id;
+
   }
   void _onItemTapped(int index) {
     setState(() {
@@ -74,6 +76,7 @@ final userRepository = GetIt.instance<UserAriaRepository>();
   }
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: ()async{
         backButtonCounter++;
@@ -192,6 +195,7 @@ final userRepository = GetIt.instance<UserAriaRepository>();
                         setState(() {
                           _selectedIndex = index;
                         });
+
                         _goBranch(_selectedIndex);
                       },
                     ),
@@ -224,6 +228,5 @@ final userRepository = GetIt.instance<UserAriaRepository>();
   }
 }
 
-// En tu BottomNavigationBarItem:
 
 

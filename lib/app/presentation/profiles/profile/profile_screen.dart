@@ -1,6 +1,11 @@
 import 'dart:ui';
 
+import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
+import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
+import 'package:ariapp/app/presentation/chats/chat/chat_screen.dart';
+import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/bloc/follower_counter_bloc.dart';
+import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -17,13 +22,14 @@ class ProfileScreen extends StatelessWidget {
    ProfileScreen( {required this.user, super.key});
   final UserAria? user;
   final userLoggedId = GetIt.instance<UserLogged>().user.id;
-
   @override
   Widget build(BuildContext context) {
     print('Id perfil: ${user?.id}');
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
+    final chatBloc = BlocProvider.of<ChatBloc>(context);
+    final chatListBloc = BlocProvider.of<ChatListBloc>(context);
 
     final followerCounterBloc = BlocProvider.of<FollowerCounterBloc>(context);
 
@@ -31,12 +37,13 @@ class ProfileScreen extends StatelessWidget {
 
     profileBloc.checkFollow(user?.id ?? 0);
     profileBloc.checkBlock(user?.id ?? 0);
-
+    profileBloc.fetchChat(userLoggedId!, user?.id ?? 0);
 
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
+        int chatIdX = state.chatId;
         return Column(
           children: [
             Stack(
@@ -221,10 +228,31 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                             ),
                                 GestureDetector(
-                                  onTap: (){},
+                                  onTap: () async {
+                                    if(state.isBlock){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: 'Desbloquear para enviar mensaje',
+                                             onAccept: () {
+                                              Navigator.pop(context);
+                                             },
+                                          );
+                                        },
+                                      );
+                                    }else {
+                                      chatBloc.clearMessages();
+                                      chatBloc.dataChatFetched(user!.id!);
+                                      final  chatsDataProvider = ChatsDataProvider();
+                                      final chat = await chatsDataProvider.createChat(userLoggedId!, user!.id!);
+                                      chatBloc.messageFetched(chat.chatId!,0,8);
+                                      Navigator.push(context,MaterialPageRoute(
+                                          builder: (context) =>  ChatScreen(userId: user!.id!, chatId: chat.chatId!, userReceivedId: user!.id!,)));
+                                    }
+                                    },
                                   child:
                                   Container(
                                     height: 40,
@@ -358,7 +386,6 @@ class ProfileScreen extends StatelessWidget {
                                   title: state.isBlock ?const Text('Desbloquear usuario', style: TextStyle(color: Colors.red)):const Text('Bloquear usuario', style: TextStyle(color: Colors.red)),
                                   trailing: state.isBlock ?const Icon(Icons.remove_circle, color: Colors.red):const Icon(Icons.remove_circle_outline, color: Colors.red),
                                   onTap: () {
-
                                     profileBloc.toggleBlockProfile(user?.id ?? 0, state.isBlock);
                                   },
                                 ),
@@ -366,21 +393,37 @@ class ProfileScreen extends StatelessWidget {
                               const SizedBox(
                                 height: 6,
                               ),
-                              Container(
+                              BlocBuilder<ChatListBloc, ChatListState>(
+
+                              builder: (context, state) {
+                                 return Container(
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF354271).withOpacity(0.97),
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                child: ListTile(
+                                child: state.isLoadingDeleteChat? const Center(child:CircularProgressIndicator()):ListTile(
                                   title: const Text('Eliminar chat usuario', style: TextStyle(color: Colors.red)),
                                   trailing: const Icon(Icons.delete, color: Colors.red),
-                                  onTap: () {},
+                                  onTap: () {
+                                    chatListBloc.deleteChat(chatIdX);
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomDialogAccept(
+                                          text: 'Chat eliminado',
+                                          onAccept: () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
-                              ),
-
+                              );
+  },
+),
                             ],
                           ),
-
                         )
                       ),
                       const SizedBox(

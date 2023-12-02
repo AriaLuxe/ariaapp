@@ -1,28 +1,18 @@
-import 'dart:io';
-
-import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
-import 'package:ariapp/app/presentation/chats/chat/widgets/audio_player_widget.dart';
-import 'package:ariapp/app/presentation/chats/chat/widgets/audio_players.dart';
-import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
-import 'package:ariapp/app/presentation/voice/edit_voice/edit_voice.dart';
-import 'package:ariapp/app/presentation/voice/voice_clone/player_response.dart';
-import 'package:ariapp/app/presentation/voice/voice_clone/player_response_network.dart';
-import 'package:ariapp/app/presentation/voice/voice_clone/voice_clone.dart';
+
+import 'package:ariapp/app/presentation/voice/voice_clone/voice_clone_screen.dart';
+import 'package:ariapp/app/presentation/voice/widgets/audio_player_test.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:ariapp/app/config/styles.dart';
-import 'package:ariapp/app/presentation/voice/widgets/question_scrollable_view.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_blue.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_follow.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:just_audio/just_audio.dart';
 
-import 'package:path_provider/path_provider.dart';
 
-import '../chats/chat/widgets/audio_message.dart';
 import 'bloc/voice_bloc.dart';
 
 class VoiceScreen extends StatefulWidget {
@@ -36,9 +26,15 @@ class VoiceScreen extends StatefulWidget {
 class _VoiceScreenState extends State<VoiceScreen> {
 
   bool isEditingConfiguration = false;
-  bool testAudio = false;
+  bool loadingVoiceTest = false;
+  bool loadingDeleteVoiceClone = false;
 
-final TextEditingController _testVoice = TextEditingController();
+
+  bool testAudio = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+
+  final TextEditingController _testVoice = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +237,6 @@ final TextEditingController _testVoice = TextEditingController();
                           child: TextFormField(
                             controller: _testVoice,
                             cursorColor: Colors.white,
-                            maxLines: 4,
                             decoration: const InputDecoration(
                               floatingLabelBehavior: FloatingLabelBehavior
                                   .never,
@@ -255,30 +250,40 @@ final TextEditingController _testVoice = TextEditingController();
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      testAudio ? PlayerResponseNetwork(
+                      if (loadingVoiceTest) const Center(child: CircularProgressIndicator()),
+                      testAudio ? AudioPlayerTest(
                         audioUrl: 'https://uploadsaria.blob.core.windows.net/files/${state
                             .urlAudioTest}',
                         //time: DateTime.now(),
                         //senderId: 1,
                         //isMe: true,
                         // url: 'https://uploadsaria.blob.core.windows.net/files/',
-                        onDelete: () {},
-                      ) : SizedBox(),
+                     audioPlayer: _audioPlayer,
+                      ) : const SizedBox(),
                       const SizedBox(height: 10),
-
                       CustomButtonBlue(
                         text: testAudio
                             ? 'Nueva prueba'
                             : 'Generar audio',
-                        onPressed: () {
-                          if (testAudio) {
-                            _testVoice.clear();
-                          }
-                          voiceBloc.testAudio(_testVoice.text);
-                          print(state.urlAudioTest);
-                          print('entre?');
+                        onPressed:testAudio ?  (){
+                          _testVoice.clear();
                           setState(() {
+                            loadingVoiceTest = false;
+                            testAudio = !testAudio;
+                          });
+                        }: () async {
+                          if (_testVoice.text.isEmpty) {
+                            return;
+                          }
+                          setState(() {
+                            loadingVoiceTest = true;
+                          });
+                          int? userId = await SharedPreferencesManager.getUserId();
+                          final voiceCloneDataProvider = VoiceCloneDataProvider();
+                          final path = await voiceCloneDataProvider.testAudio(userId!, _testVoice.text);
+                          _audioPlayer.setUrl('https://uploadsaria.blob.core.windows.net/files/${path}');
+                          setState(() {
+                            loadingVoiceTest = false;
                             testAudio = !testAudio;
                           });
                         },
@@ -326,7 +331,10 @@ final TextEditingController _testVoice = TextEditingController();
           children: [
 
             const SizedBox(height: 6),
-            buildOptionTile('Eliminar voz', Icons.delete, Colors.red, (){
+            loadingDeleteVoiceClone ? const Center(child: CircularProgressIndicator(),):buildOptionTile('Eliminar voz', Icons.delete, Colors.red, (){
+              setState(() {
+                loadingDeleteVoiceClone = true;
+              });
               final voiceCloneDataProvider = VoiceCloneDataProvider();
               showDialog(
                 context: context,
@@ -335,6 +343,9 @@ final TextEditingController _testVoice = TextEditingController();
                     text: '¿Estás seguro que desea eliminar la voz clonada?',
                     onOk: () async {
                       await voiceCloneDataProvider.deleteVoice(voiceId);
+                      setState(() {
+                        loadingDeleteVoiceClone = false;
+                      });
                       Navigator.pop(context);
                       voiceBloc.showView(false);
 
@@ -347,8 +358,6 @@ final TextEditingController _testVoice = TextEditingController();
                 },
               );
              // await voiceCloneDataProvider.deleteVoice(voiceId);
-
-
             },Colors.red),
           ],
         ),

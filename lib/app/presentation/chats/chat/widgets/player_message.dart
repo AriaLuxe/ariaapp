@@ -5,23 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 
-
-
-class PlayerResponseNetwork extends StatefulWidget {
-  final String audioUrl; // Cambié el nombre para reflejar que es una URL
+class PlayerMessage extends StatefulWidget {
+  final String audioPath;
   final void Function() onDelete;
 
-  const PlayerResponseNetwork({
+  const PlayerMessage({
     Key? key,
-    required this.audioUrl,
-    required this.onDelete,
+    required this.audioPath, required this.onDelete,
   }) : super(key: key);
 
   @override
-  PlayerResponseNetworkState createState() => PlayerResponseNetworkState();
+  PlayerMessageState createState() => PlayerMessageState();
 }
 
-class PlayerResponseNetworkState extends State<PlayerResponseNetwork> {
+class PlayerMessageState extends State<PlayerMessage> {
   late AudioPlayer _audioPlayer;
   late ConcatenatingAudioSource _audioSource;
 
@@ -30,7 +27,7 @@ class PlayerResponseNetworkState extends State<PlayerResponseNetwork> {
     super.initState();
     _audioPlayer = AudioPlayer();
     _audioSource = ConcatenatingAudioSource(children: [
-      AudioSource.uri(Uri.parse(widget.audioUrl)), // Usa la URL directamente
+      AudioSource.uri(Uri.file(widget.audioPath)),
     ]);
 
     _initAudioPlayer();
@@ -55,7 +52,7 @@ class PlayerResponseNetworkState extends State<PlayerResponseNetwork> {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      width: size.width * 0.7,
+      width: size.width*0.7,
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
         color: Styles.primaryColor,
@@ -64,7 +61,7 @@ class PlayerResponseNetworkState extends State<PlayerResponseNetwork> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          StreamBuilder<PlayerState>(
+          StreamBuilder(
             stream: _audioPlayer.playerStateStream,
             builder: (context, snapshot) {
               final playerState = snapshot.data;
@@ -86,20 +83,30 @@ class PlayerResponseNetworkState extends State<PlayerResponseNetwork> {
                   icon: Icons.pause,
                 );
               }
-
-              return CustomIconButton(
+              /*  return  CustomIconButton(
+                  background: Colors.white,
+                  onPressed: widget.audioPlayer.play,
+                   icon: Icons.play_arrow,
+                  iconColor: Styles.primaryColor,
+*/              return CustomIconButton(
                 background: Colors.white,
-                onPressed: _audioPlayer.play,
+                onPressed: () {
+                  // Reiniciar la reproducción desde el principio
+                  _audioPlayer.seek(Duration.zero);
+                  _audioPlayer.play();
+                },
                 icon: Icons.play_arrow,
                 iconColor: Styles.primaryColor,
               );
+
+              //);
             },
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: size.width * 0.35,
+                width:size.width * 0.35,
                 child: StreamBuilder<PositionData>(
                   stream: _audioPlayer.positionStream.map((position) =>
                       PositionData(
@@ -131,18 +138,12 @@ class PlayerResponseNetworkState extends State<PlayerResponseNetwork> {
               ),
             ],
           ),
-          IconButton(
-            onPressed: () {
-              widget.onDelete();
-            },
-            icon: const Icon(Icons.backspace, size: 18),
-          )
+
         ],
       ),
     );
   }
 }
-
 class PositionData {
   final Duration position;
   final Duration bufferedPosition;

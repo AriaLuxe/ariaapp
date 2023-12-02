@@ -15,3 +15,7 @@ class ChatsAdded extends ChatListEvent {
 
   const ChatsAdded(this.senderId, this.receiverId);
 }
+class DeleteChat extends ChatListEvent {
+  final int chatId;
+  const DeleteChat(this.chatId);
+}

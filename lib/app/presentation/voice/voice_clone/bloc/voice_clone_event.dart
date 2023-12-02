@@ -25,14 +25,7 @@ class ShowRecording extends VoiceCloneEvent {
 
 }
 
-class GetResponses extends VoiceCloneEvent {
-  final List<Question> questions;
-   const GetResponses({required this.questions});
 
-  @override
-  List<Object?> get props => [questions];
-
-}
 class CollectAudio extends VoiceCloneEvent {
   final String path;
 

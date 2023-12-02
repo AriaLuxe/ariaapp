@@ -4,6 +4,7 @@ import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
+import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/sign_in_service.dart';
 import 'package:ariapp/injections.dart';
@@ -33,7 +34,7 @@ class _SignInFormState extends State<SignInForm> {
   final usersRepository = GetIt.instance<UserAriaRepository>();
 
 
-
+  bool isLoadingSignIn = false;
   bool _obscureText = true;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -46,7 +47,6 @@ class _SignInFormState extends State<SignInForm> {
             Icon(Icons.error,size: 60,),
             Column(
               children: [
-
                 Text('Verifique su correo', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
               ],
             ),
@@ -173,13 +173,8 @@ class _SignInFormState extends State<SignInForm> {
                         onPressed: context.read<SignInBloc>().state.emailInputValidator.isValid ? () async {
                           final emailValidation = EmailValidationDataProvider();
                           final response = await emailValidation.sendEmailToResetPassword(email.text.trim());
-                          print('response');
-                          print(response);
-                          if(response == 'Email sent sucessfully'){
-                           // context.goNamed(
-                              //  '/verify_code',pathParameters: {'email': email.text.trim(), 'verify': 'Verificar código', 'isResetPassword': 'true'
-                               // });
 
+                          if(response == 'Email sent sucessfully'){
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
@@ -189,17 +184,21 @@ class _SignInFormState extends State<SignInForm> {
                               context,
                               MaterialPageRoute(builder: (context) => VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
                             );
-                              //context.goNamed(
-                              //  '/verify_code',pathParameters: {'email': email.text.trim(), 'verify': 'Verificar código', 'isResetPassword': 'true'
-                            //});
 
                           }
                           else{
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(errorSnackBar)
-                                .closed;
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomDialogAccept(
+                                  text: 'Verifique su correo electronico',
+                                  onAccept: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            );
                           }
-
                         } : null,
                         child:  Text(
                           '¿Olvidaste tu contraseña?',
@@ -208,8 +207,6 @@ class _SignInFormState extends State<SignInForm> {
                       ),
 
                     ),
-
-
                   ],
                 ),
               ),
@@ -218,33 +215,47 @@ class _SignInFormState extends State<SignInForm> {
               ),
               SizedBox(
                 width: size.width * 0.8,
-                child: CustomButton(
+                child: isLoadingSignIn? const Center(child: CircularProgressIndicator(),)
+                    :CustomButton(
                   onPressed: signInBloc.state.isValid
                       ? () async {
+                    setState(() {
+                      isLoadingSignIn = true;
+                    });
 
                     final signInService = SignInService();
                     final response = await signInService.signIn(email.text, password.text);
 
-                    print(response);
-
                     if (response.containsKey('token')) {
                       final token = response['token'];
                       final decodedToken = JwtDecoder.decode(token);
-
                       await SharedPreferencesManager.saveToken(token);
                       await SharedPreferencesManager.saveUserId(decodedToken['idUser']);
                       await SharedPreferencesManager.saveEmail(decodedToken['email']);
                       final userId = await SharedPreferencesManager.getUserId();
 //                      final userRepository = GetIt.instance<UserAriaRepository>();
                       final user = await usersRepository.getUserById(userId!);
-
                       userLogged(user);
+                      setState(() {
+                        isLoadingSignIn = false;
+                      });
                       context.go('/chats');
 
                        } else {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(credentialsSnackBar)
-                          .closed;
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: 'Credenciales incorrectos',
+                            onAccept: () {
+                              setState(() {
+                                isLoadingSignIn = false;
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
                     }
                   }
                       : null,
@@ -260,8 +271,6 @@ class _SignInFormState extends State<SignInForm> {
                   width: size.width*0.7,
                   child: CustomButton(
                      text: 'Crear cuenta', onPressed: () {
-                    //context.push('/sign_up');
-
                    Navigator.push(
                      context,
                      MaterialPageRoute(

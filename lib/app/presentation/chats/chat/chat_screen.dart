@@ -1,16 +1,12 @@
-import 'package:ariapp/app/presentation/chats/chat/widgets/audio_player_widget.dart';
-import 'package:ariapp/app/presentation/widgets/header.dart';
-import 'package:ariapp/app/security/shared_preferences_manager.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
-import 'package:audioplayers/audioplayers.dart';
 import '../../widgets/header_chat.dart';
 import 'bloc/chat_bloc.dart';
-import 'widgets/audio_message.dart';
-import 'widgets/audio_players.dart';
-import 'widgets/audio_recorder.dart';
+import 'widgets/audio_recorder_voice.dart';
 
 
 class PositionData {
@@ -25,17 +21,22 @@ class PositionData {
 }
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key, required this.chatId}) : super(key: key);
+  const ChatScreen({Key? key, required this.userId, required this.chatId, required this.userReceivedId}) : super(key: key);
+final int userId;
 final int chatId;
+final int userReceivedId;
   @override
   Widget build(BuildContext context) {
-    return Chat(chatId: chatId,);
+    return Chat(userId: userId, chatId: chatId, userReceivedId: userReceivedId,);
   }
 }
 
 class Chat extends StatefulWidget {
-  const Chat({Key? key, required this.chatId}) : super(key: key);
+  const Chat({Key? key, required this.userId, required this.chatId, required this.userReceivedId}) : super(key: key);
+  final int userId;
   final int chatId;
+  final int userReceivedId;
+
   @override
   State<Chat> createState() => _ChatState();
 }
@@ -45,34 +46,50 @@ class _ChatState extends State<Chat> {
   //final userLogged = GetIt.instance<UserLogged>();
 
   late final String url;
-  AudioPlayer audioPlayer = AudioPlayer();
-
+  int page =0;
   bool showPlayer = false;
   String? audioPath;
   int? userId;
   ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     showPlayer = false;
    // userId =  SharedPreferencesManager.getUserId();
+    final chatBloc = BlocProvider.of<ChatBloc>(context);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
+        page++;
+        chatBloc.loadMoreMessages(
+          widget.chatId,
+          page,
+          8,
+        );
+        print(page);
+
+
+      }
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     final chatBloc = BlocProvider.of<ChatBloc>(context);
-    //chatBloc.messageFetched(widget.chatId);
+    final chatListBloc = BlocProvider.of<ChatListBloc>(context);
+
+
     return Scaffold(
 
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
+          final messages = state.messages;
           if (state.chatStatus == ChatStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.chatStatus == ChatStatus.error) {
             return const Center(child: Text('Error fetching messages'));
-          } else {
-            final messages = state.messages;
+          } else if (state.chatStatus == ChatStatus.success) {
             //var messagesOrder = messages.reversed.toList();
             return SafeArea(
               child: Column(
@@ -82,18 +99,21 @@ class _ChatState extends State<Chat> {
                   ),
                   SizedBox(
                       width: MediaQuery.of(context).size.width*0.9,
-                      child: HeaderChat(title: 'asd', onTap: (){
+                      child: HeaderChat(title: state.name, onTap: (){
+                        chatBloc.clearMessages();
                         Navigator.pop(context);
-                      }, url: 'https://th.bing.com/th/id/R.749ef6ba37425e40d6b8ffb16f2ea08e?rik=OHNHPvVuuCHGsA&pid=ImgRaw&r=0',)),
+                      }, url: '${BaseUrlConfig.baseUrlImage}${state.urlPhoto}',)),
                   const SizedBox(
                     height: 10,
                   ),
                   const Divider(
-                    color: Color(0xFF354271),
+                      color: Color(0xFF354271),
 
                       thickness: 2
                   ),
-                  Expanded(
+                  state.messages.isEmpty ?
+               const Expanded(child: Center(child: Text('Manda tu primer mensaje',style: TextStyle(color: Colors.white),)))
+              :Expanded(
                     child: Container(
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -104,32 +124,36 @@ class _ChatState extends State<Chat> {
                       child: ListView.builder(
                         reverse: true,
                         controller: _scrollController,
-                        itemCount: messages.length,
-                        itemBuilder: (context, index)  {
-//                          final message = messages[messages.length-1- index];
-                          final message = messages.toList();
-
-
-                          return message[index];
-                        },
+                        itemCount: messages.length+1,
+                        itemBuilder: (context, index) {
+                          if (index < messages.length) {
+                            final message = messages.toList();
+                            return message[index];
+                          } else {
+                            return  Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: state.hasMoreMessages ? const Center(child: CircularProgressIndicator()): Flash(child: const Center(child:  Text('No hay mas mensajes',style: TextStyle(color: Colors.grey),)))
+                            );
+                          }
+                        }
                       ),
                     ),
                   ),
                   const SizedBox(),
-                  AudioRecorder(
-                    iconSize: 25,
-                    onStop: (path) {
+                  state.recordingResponse? const LinearProgressIndicator(): const SizedBox(),
+                  AudioRecorderView(
+                    onSaved: (path) async {
                       print('Audio grabado');
                       if (kDebugMode) print('Ruta del archivo grabado: $path');
                       audioPath = path;
                       chatBloc.isRecording(true);
                       if (audioPath != null) {
-
                         print('Audio enviado');
-                        print(audioPath);
-                        chatBloc.messageSent(widget.chatId, audioPath!);
-                        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                         chatBloc.messageSent(widget.chatId, widget.userReceivedId, audioPath!,);
                         chatBloc.isRecording(false);
+                        await Future.delayed(const Duration(milliseconds: 5000));
+                        chatListBloc.chatsFetched();
+
                       } else {
                         print('No hay audio para enviar');
                       }
@@ -139,8 +163,14 @@ class _ChatState extends State<Chat> {
                 ],
               ),
             );
+
           }
+          return const Center(
+            child: Text('Comuníquese al email@gmail.com'),
+          );
+
         },
+
       ),
     );
   }

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ariapp/app/domain/entities/chat.dart';
+import 'package:ariapp/app/infrastructure/models/chat_model.dart';
+import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -14,21 +17,23 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UserAriaRepository userAriaRepository;
+  final ChatRepository chatRepository;
+
   ProfileBloc() :
         userAriaRepository = GetIt.instance<UserAriaRepository>(),
-        super(const ProfileState()) {
+        chatRepository = GetIt.instance<ChatRepository>(),
+
+      super(const ProfileState()) {
     on<ProfileEvent>((event, emit) {
       // TODO: implement event handler
     });
     on<FetchDataProfile>(_onFetchDataProfile);
     on<CheckFollowStatus>(_onCheckFollowStatus);
     on<ToggleFollow>(_onToggleFollow);
-
     on<CheckBlockStatus>(_onCheckBlockStatus);
     on<ToggleBlock>(_onToggleBlock);
     on<ProfileDefaultPhoto>(_onProfilePhotoDefault);
-
-
+    on<FetchChat>(_onFetchChat);
 
   }
 
@@ -55,6 +60,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   void fetchDataProfile(int userId){
     add(FetchDataProfile(userId));
+  }
+  void _onFetchChat(
+      FetchChat event,
+      Emitter<ProfileState> emit,
+      ) async {
+
+    final Chat chat = await chatRepository.createChat(event.userLogger,event.user);
+    emit(state.copyWith(
+     chatId: chat.chatId,
+    ));
+  }
+
+  void fetchChat(int userLogged, int user){
+    add(FetchChat(userLogged,user));
   }
 
   void _onCheckFollowStatus(CheckFollowStatus event, Emitter<ProfileState> emit) async {
@@ -150,8 +169,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try{
       int? userId = await SharedPreferencesManager.getUserId();
-
-      print(event.isBlock);
       if(!event.isBlock){
         emit(state.copyWith(isBlock: true));
 
@@ -162,11 +179,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       }
       else {
+
         emit(state.copyWith(isBlock: false));
-
         final response = await userAriaRepository.unBlock(userId!, event.idBlocked);
-
-
         if(response == 'User unblock successfully' ){
           print('se dejo de bloquear');
         }else {

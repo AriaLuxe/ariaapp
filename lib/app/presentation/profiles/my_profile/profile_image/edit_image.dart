@@ -81,61 +81,58 @@ class _EditImageState extends State<EditImage> {
     return Scaffold(
 
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height*0.7,
-              child: CustomImageCrop(
-                backgroundColor: Styles.primaryColor,
-                cropController: controller,
-                image:  FileImage(
-                    File(widget.photoPath)),
-                shape: _currentShape,
-                ratio: _currentShape == CustomCropShape.Ratio
-                    ? Ratio(width: _width, height: _height)
-                    : null,
-                canRotate: true,
-                canMove: true,
-                canScale: true,
-                borderRadius:
-                _currentShape == CustomCropShape.Ratio ? _radius : 0,
-                customProgressIndicator: const CupertinoActivityIndicator(),
-                imageFit: _imageFit,
-                pathPaint: Paint()
-                  ..color = Colors.transparent
-                  ..strokeWidth = 4.0
-                  ..style = PaintingStyle.stroke
-                  ..strokeJoin = StrokeJoin.round,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.7,
+                child: CustomImageCrop(
+                  backgroundColor: Styles.primaryColor,
+                  cropController: controller,
+                  image:  FileImage(
+                      File(widget.photoPath)),
+                  shape: _currentShape,
+                  ratio: _currentShape == CustomCropShape.Ratio
+                      ? Ratio(width: _width, height: _height)
+                      : null,
+                  canRotate: true,
+                  canMove: true,
+                  canScale: true,
+                  borderRadius:
+                  _currentShape == CustomCropShape.Ratio ? _radius : 0,
+                  customProgressIndicator: const CupertinoActivityIndicator(),
+                  imageFit: _imageFit,
+                  pathPaint: Paint()
+                    ..color = Colors.transparent
+                    ..strokeWidth = 4.0
+                    ..style = PaintingStyle.stroke
+                    ..strokeJoin = StrokeJoin.round,
+                ),
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height*0.05,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width*0.4,
-                  child: CustomButtonBlue(
-                      text: 'Cancelar', onPressed: (){
-                        Navigator.pop(context);
-                  }, width: 0.8,),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width*0.4,
-                  child: CustomButtonBlue(
-                    text: 'Guardar', onPressed: _saveCroppedImage, width: 0.8,),
-                ),
-
-
-
-              ],
-            ),
-
-
-            SizedBox(height: MediaQuery.of(context).padding.bottom),
-          ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.05,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.4,
+                    child: CustomButtonBlue(
+                        text: 'Cancelar', onPressed: (){
+                          Navigator.pop(context);
+                    }, width: 0.8,),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.4,
+                    child: CustomButtonBlue(
+                      text: 'Guardar', onPressed: _saveCroppedImage, width: 0.8,),
+                  ),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
+            ],
+          ),
         ),
       ),
     );

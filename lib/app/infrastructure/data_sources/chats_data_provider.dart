@@ -12,7 +12,7 @@ class ChatsDataProvider {
     try {
       String? token = await SharedPreferencesManager.getToken();
       final response =
-          await http.get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/$id'),headers: {
+          await http.get(Uri.parse('${BaseUrlConfig.baseUrl}/chats/IA/$id'),headers: {
             'Authorization': 'Bearer $token',
           },);
       List<ChatModel> chats = ChatModel.toChatsList(response.body);
@@ -29,7 +29,7 @@ class ChatsDataProvider {
 
       final response = await http.post(
         Uri.parse(
-            '${BaseUrlConfig.baseUrl}/chats/add/ordinary/$senderId/$receiverId'),
+            '${BaseUrlConfig.baseUrl}/chats/add/IA/$senderId/$receiverId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -48,6 +48,23 @@ class ChatsDataProvider {
     } catch (error) {
       print(error);
       throw Exception(error);
+    }
+  }
+
+  Future<String> deleteChat(int chatId) async {
+    try {
+
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http
+          .delete(Uri.parse('${BaseUrlConfig.baseUrl}/chats/delete/$chatId'),headers: {
+        'Authorization': 'Bearer $token',
+      },);
+      return response.body;
+
+    } catch (e) {
+      print(e);
+      throw Exception(e);
     }
   }
 }

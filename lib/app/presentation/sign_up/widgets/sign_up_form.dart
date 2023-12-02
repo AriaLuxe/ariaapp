@@ -4,12 +4,12 @@ import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
+import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../config/styles.dart';
@@ -29,6 +29,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
+  bool isLoadingSignUp = false;
 
   @override
   void dispose() {
@@ -356,9 +357,12 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
               SizedBox(
                   width: double.infinity,
-                  child: CustomButton(
+                  child: isLoadingSignUp ? const Center(child: CircularProgressIndicator(),):CustomButton(
                       onPressed: signUpBloc.state.isValid
                           ? () async{
+                        setState(() {
+                          isLoadingSignUp = true;
+                        });
                         final emailValidation = EmailValidationDataProvider();
                         final response = await emailValidation.sendEmailToRegisterUser(email.value);
                         if(response == 'Email sent sucessfully'){
@@ -376,11 +380,21 @@ class _SignUpFormState extends State<SignUpForm> {
                             role: 'USER'
                           );
                           Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Verificar y Registrarse', isResetPassword: false,user: user)));
-
+                          setState(() {
+                            isLoadingSignUp = false;
+                          });
                         }else{
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(errorSnackBar)
-                              .closed;
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomDialogAccept(
+                                text: 'Verifique sus datos',
+                                onAccept: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
                         }
 
                       }

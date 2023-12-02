@@ -65,8 +65,8 @@ class _FollowersListState extends State<FollowersList> {
                               itemBuilder: (context, index) {
                                 final follower = state.followers[index];
                                 return ListTile(
-                                  title: Text('${follower.nameUser} ${follower.lastName}',style: const TextStyle(color: Colors.white),),
-                                  subtitle: Text(follower.nickName,style: const TextStyle(color: Color(0xFFc0c0c0)),),
+                                  title: Text('${follower.nameUser} ${follower.lastName}',style: const TextStyle(color: Colors.white),maxLines: 1,),
+                                  subtitle: Text(follower.nickName,maxLines: 1,style: const TextStyle(color: Color(0xFFc0c0c0)),),
                                   trailing: SizedBox(
                                       width: MediaQuery.of(context).size.width*0.2,
                                       child: CustomButtonFollow(onPressed: () {

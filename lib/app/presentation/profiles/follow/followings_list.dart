@@ -70,8 +70,8 @@ class _FollowingListState extends State<FollowingList> {
                                 print('bucle');
                                 print(following.idUser);
                                 return ListTile(
-                                  title: Text('${following.nameUser} ${following.lastName}',style: const TextStyle(color: Colors.white),),
-                                  subtitle: Text(following.nickName,style: const TextStyle(color: Color(0xFFc0c0c0)),),
+                                  title: Text('${following.nameUser} ${following.lastName}',style: const TextStyle(color: Colors.white),maxLines: 1),
+                                  subtitle: Text(following.nickName,style: const TextStyle(color: Color(0xFFc0c0c0)),maxLines: 1),
                                   trailing: SizedBox(
                                       width: MediaQuery.of(context).size.width*0.2,
                                       child: CustomButtonFollow(onPressed: () {

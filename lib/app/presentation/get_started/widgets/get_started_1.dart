@@ -1,4 +1,6 @@
+import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:flutter/material.dart';
+
 
 import '../../widgets/custom_button.dart';
 
@@ -6,9 +8,9 @@ class GetStarted1 extends StatelessWidget {
   const GetStarted1({Key? key, required this.onPress,}) : super(key: key);
   final dynamic onPress;
 
-
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Column(

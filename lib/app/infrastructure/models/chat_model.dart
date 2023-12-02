@@ -32,7 +32,7 @@ class ChatModel extends Chat {
   factory ChatModel.fromMap(Map<String, dynamic> json) {
     return ChatModel(
       chatId: json['idChat'] ?? 0, // Valor predeterminado para chatId
-      userId: json['userId'] ?? 0, // Valor predeterminado para userId
+      userId: json['idUser'] ?? 0, // Valor predeterminado para userId
       nameUser: json['nameUser'] ?? '', // Valor predeterminado para nameUser
       lastName: json['lastName'] ?? '', // Valor predeterminado para lastName
       imgProfile:

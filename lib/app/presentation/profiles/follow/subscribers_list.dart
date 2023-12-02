@@ -56,8 +56,8 @@ class SubscribersList extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final subscriber = state.subscribers[index];
                               return ListTile(
-                                title: Text('${subscriber.nameUser} ${subscriber.lastName}'),
-                                subtitle: Text(subscriber.nickName),
+                                title: Text('${subscriber.nameUser} ${subscriber.lastName}',maxLines: 1),
+                                subtitle: Text(subscriber.nickName,maxLines: 1),
                                 trailing: TextButton(onPressed: () {
                                 }, child: const Text('Seguir'),),
                                 onTap: () {

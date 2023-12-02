@@ -1,4 +1,3 @@
-import 'package:ariapp/app/presentation/chats/chat/chat_screen.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
 import 'package:ariapp/app/presentation/layouts/layout.dart';
 import 'package:ariapp/app/presentation/people/people_screen.dart';
@@ -16,7 +15,6 @@ import 'package:ariapp/app/presentation/sign_up/sign_up_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/reset_password.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/voice/voice_screen.dart';
-import 'package:ariapp/app/presentation/voice/widgets/question_scrollable_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -130,21 +128,7 @@ class AppNavigation {
                 builder: (BuildContext context, GoRouterState state) =>
                 const VoiceScreen(),
                 routes: [
-                  GoRoute(
-                    path: "voice_clone",
-                    name: "VoiceClone",
-                    pageBuilder: (context, state) {
-                      return CustomTransitionPage<void>(
-                        key: state.pageKey,
-                        child: const QuestionScrollableView(),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
-                            FadeTransition(opacity: animation, child: child),
-                      );
-                    },
-                  ),
+
                 ],
               ),
             ],
@@ -338,13 +322,13 @@ class AppNavigation {
                 key: state.pageKey, email: state.uri.queryParameters['email']!
             ),
       ),
-      GoRoute(
+     /* GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/chat',
         name: "Chat",
         builder: (context, state) =>
             const ChatScreen(chatId: 0),
-            ),
+            ),*/
 
 
     ],

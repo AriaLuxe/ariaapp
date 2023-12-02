@@ -6,7 +6,6 @@ import 'package:just_audio/just_audio.dart';
 import 'audio_message_content.dart';
 
 class ChatMessageWidget extends StatelessWidget {
-  final int senderId;
   final DateTime dateTime;
   final AudioPlayer audioPlayer;
   final String audioUrl;
@@ -14,7 +13,6 @@ final bool? read;
 final bool? isMe;
   const ChatMessageWidget({
     super.key,
-    required this.senderId,
     required this.dateTime,
     required this.read,
     required this.isMe,

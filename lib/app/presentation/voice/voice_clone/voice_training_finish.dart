@@ -3,6 +3,7 @@ import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider
 import 'package:ariapp/app/presentation/voice/bloc/voice_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart';
+import 'package:ariapp/app/presentation/voice/voice_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class VoiceTrainingFinish extends StatefulWidget {
 
 class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
 
-
+  bool isLoadingClone = false;
   @override
   Widget build(BuildContext context) {
 
@@ -104,8 +105,13 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                               width: MediaQuery.of(context).size.width*0.5,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20),
-                                child: CustomButton(text: 'Crear voz',
+                                child:isLoadingClone? const Center(child: CircularProgressIndicator(),)
+                                    : CustomButton(text: 'Crear voz',
                                     onPressed: ()async{
+
+                                      setState(() {
+                                        isLoadingClone = true;
+                                      });
                                       final voiceCloneBloc = BlocProvider.of<VoiceCloneBloc>(context);
                                       final voiceBloc = BlocProvider.of<VoiceBloc>(context);
 
@@ -114,7 +120,11 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                         await voiceCloneDataProvider.cloneVoice(state.audioPaths);
                                         voiceBloc.showView(true);
                                         voiceCloneBloc.clearPaths();
-                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => const VoiceScreen()));
+                                        setState(() {
+                                          isLoadingClone = false;
+                                        });
+
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const VoiceScreen()));
 
                                       }else{
                                         showDialog(

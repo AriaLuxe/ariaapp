@@ -50,7 +50,6 @@ class _QuestionResponseState extends State<QuestionResponse> {
           },):
            ResponseRecord(
              onStop: (String path) {
-
             audioPath = path;
             print(audioPath);
             voiceBloc.collectAudio(audioPath);

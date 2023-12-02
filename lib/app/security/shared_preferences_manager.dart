@@ -4,7 +4,17 @@ class SharedPreferencesManager {
   static const _keyUserId = 'idUser';
   static const _keyEmail = 'email';
   static const _keyToken = 'token';
+  static const _keyHasSeenGetStarted = 'hasSeenGetStarted ';
 
+  static Future<void> saveHasSeenGetStarted(bool hasView) async {
+    final preference = await SharedPreferences.getInstance();
+    await preference.setBool(_keyHasSeenGetStarted, hasView);
+  }
+
+  static Future<bool?> getHasSeenGetStarted() async {
+    final preference = await SharedPreferences.getInstance();
+    return preference.getBool(_keyHasSeenGetStarted);
+  }
 
   static Future<void> saveUserId(int userId) async {
     final preference = await SharedPreferences.getInstance();

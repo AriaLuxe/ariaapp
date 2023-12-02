@@ -18,6 +18,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     on<ChatListEvent>((event, emit) {});
     on<ChatsFetched>(_onChatsFetched);
     on<ChatsAdded>(_onChatAdded);
+    on<DeleteChat>(_onDeleteChat);
   }
 
   Future<void> _onChatsFetched(
@@ -31,6 +32,8 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       final List<Chat> chats =
           await chatRepository.getAllChatsByUserId(userId!);
       List<Chat> chatsUpdated = [];
+      print('chats.length');
+      print(chats.length);
 
       for (final chat in chats) {
         chatsUpdated.add(chat);
@@ -59,7 +62,6 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     try {
       final Chat chat =
           await chatRepository.createChat(event.senderId, event.receiverId);
-      print('entreeee111');
       List<Chat> chatsUpdated = List.from(state.chats);
       chatsUpdated.add(chat);
 
@@ -78,5 +80,36 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
 
   void chatsAdded(int senderId, int receiverId) {
     add(ChatsAdded(senderId, receiverId));
+  }
+  Future<void> _onDeleteChat(
+      DeleteChat event,
+      Emitter<ChatListState> emit,
+      ) async {
+    try {
+      emit(state.copyWith(
+        isLoadingDeleteChat: true,
+      ));
+      final response = await chatRepository.deleteChat(event.chatId);
+      print(response);
+      if (response == 'Chat is deleted') {
+        final List<Chat> updatedChats = List.from(state.chats);
+        updatedChats.removeWhere((chat) => chat.chatId == event.chatId);
+
+        emit(state.copyWith(
+          chatListStatus: ChatListStatus.success,
+          chats: updatedChats,
+          isLoadingDeleteChat: false,
+        ));
+      } else {
+        // Maneja el caso en el que la eliminación no fue exitosa
+      }
+    } catch (e) {
+      emit(state.copyWith(chatListStatus: ChatListStatus.error));
+      print('Error al eliminar el chat: $e');
+    }
+  }
+
+  void deleteChat(int chatId) {
+    add(DeleteChat(chatId));
   }
 }

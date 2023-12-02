@@ -88,13 +88,11 @@ class UsersDataProvider {
           .get(Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/data/$userId'),headers: {
         'Authorization': 'Bearer $token',
       },);
-      if (response.statusCode == 200) {
+      print('resposne. bodyu sssss');
         final UserAriaModel user =
             UserAriaModel.fromJson(jsonDecode(response.body));
         return user;
-      } else {
-        throw Exception(response.body);
-      }
+
     } catch (e) {
       throw Exception(e);
     }
@@ -406,7 +404,6 @@ print(response.body);
   Future<String> unBlock(int idBlockingUser, int idBlocked) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
-
       final response =
       await http.delete(Uri.parse("${BaseUrlConfig.baseUrl}/locks/unblock?idBlockingUser=$idBlockingUser&idBlocked=$idBlocked"),headers: {
         'Authorization': 'Bearer $token',
@@ -428,12 +425,13 @@ print(response.body);
     print(userLooking);
     try {
       String? token = await SharedPreferencesManager.getToken();
-      print('userLooking');
 
       final response =
       await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/locks/verify-blocking?idUserLogged=$userId&idUserLooking=$userLooking"),headers: {
         'Authorization': 'Bearer $token',
       },);
+      print('esta bloqueado');
+
       print(response.body);
 
       if (response.statusCode == 200) {

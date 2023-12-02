@@ -12,6 +12,7 @@ part of 'profile_bloc.dart';
     this.numberOfSubscribers = 0,
     this.isFollowed = false,
     this.isBlock = false,
+    this.chatId = 0,
   });
   final String name;
   final String lastName;
@@ -23,6 +24,7 @@ part of 'profile_bloc.dart';
   final int numberOfSubscribers;
   final bool isFollowed;
   final bool isBlock;
+  final int chatId;
 
   ProfileState copyWith({
      String? name,
@@ -35,7 +37,7 @@ part of 'profile_bloc.dart';
     int? numberOfSubscribers,
     bool? isFollowed,
      bool? isBlock,
-
+    int? chatId,
 
   }) => ProfileState(
     name: name ?? this.name,
@@ -47,10 +49,11 @@ part of 'profile_bloc.dart';
       numberOfFollowings: numberOfFollowings ?? this.numberOfFollowings,
       numberOfSubscribers: numberOfSubscribers ?? this.numberOfSubscribers,
     isFollowed: isFollowed ?? this.isFollowed,
-    isBlock: isBlock ?? this.isBlock
+    isBlock: isBlock ?? this.isBlock,
+      chatId: chatId ?? this.chatId,
   );
   @override
-  List<Object?> get props => [name, lastName, email, state, urlProfile,numberOfFollowers,numberOfFollowings,numberOfSubscribers,isFollowed, isBlock];
+  List<Object?> get props => [chatId,name, lastName, email, state, urlProfile,numberOfFollowers,numberOfFollowings,numberOfSubscribers,isFollowed, isBlock];
 }
 
 

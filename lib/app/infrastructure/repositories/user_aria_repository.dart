@@ -133,6 +133,6 @@ class UserAriaRepository extends UserAriaInterface {
 
   @override
   Future<String> unBlock(int idBlockingUser, int idBlocked) async{
-    return await usersDataProvider.unBlock(idBlockingUser,idBlockingUser);
+    return await usersDataProvider.unBlock(idBlockingUser,idBlocked);
   }
 }

@@ -7,9 +7,9 @@ class ChatRepository extends ChatInterface {
 
   ChatRepository({required this.chatsDataProvider});
   @override
-  Future<void> deleteChat(int id) {
-    // TODO: implement deleteChat
-    throw UnimplementedError();
+  Future<String> deleteChat(int chatId) async{
+    final response  = await chatsDataProvider.deleteChat(chatId);
+    return response;
   }
 
   @override

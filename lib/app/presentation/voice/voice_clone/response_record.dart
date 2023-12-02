@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:ariapp/app/config/styles.dart';
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';

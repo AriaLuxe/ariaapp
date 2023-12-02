@@ -20,6 +20,27 @@ class AudioMessageContent extends StatefulWidget {
 }
 
 class AudioMessageContentState extends State<AudioMessageContent> {
+
+  late bool isReadyToPlay; // Add this variable
+
+  @override
+  void initState() {
+    super.initState();
+    isReadyToPlay = false;
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    widget.audioPlayer.playerStateStream.listen((playerState) {
+      if (playerState.processingState == ProcessingState.ready) {
+        setState(() {
+          isReadyToPlay = true;
+        });
+      }
+    });
+  }
+
+
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         widget.audioPlayer.positionStream,
@@ -33,17 +54,13 @@ class AudioMessageContentState extends State<AudioMessageContent> {
       );
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     return SizedBox(
       width: size.width * 0.5,
-      child: Row(
+
+      child:isReadyToPlay? Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           StreamBuilder(
@@ -68,15 +85,18 @@ class AudioMessageContentState extends State<AudioMessageContent> {
                   icon: Icons.pause,
                 );
               }
-
-              return  CustomIconButton(
+            return CustomIconButton(
                 background: Colors.white,
-                onPressed: widget.audioPlayer.play,
-                 icon: Icons.play_arrow,
+                onPressed: () {
+                  // Reiniciar la reproducción desde el principio
+                  widget.audioPlayer.seek(Duration.zero);
+                  widget.audioPlayer.play();
+                },
+                icon: Icons.play_arrow,
                 iconColor: Styles.primaryColor,
-
-
               );
+
+              //);
             },
           ),
           Column(
@@ -111,7 +131,7 @@ class AudioMessageContentState extends State<AudioMessageContent> {
             ],
           )
         ],
-      ),
+      ): const Center(child: CircularProgressIndicator()),
     );
   }
 }

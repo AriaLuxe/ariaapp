@@ -4,14 +4,11 @@ import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/presentation/profiles/follow/bloc/follow_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followers_list.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followings_list.dart';
-import 'package:ariapp/app/presentation/profiles/follow/subscribers_list.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_state/update_state.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/widgets/my_profile_option.dart';
-import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_blue.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
-import 'package:ariapp/injections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -19,7 +16,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../config/styles.dart';
 import '../../../security/user_logged.dart';
-import 'update_information/update_information.dart';
 import 'update_state/bloc/update_state_bloc.dart';
 
 class MyProfileScreen extends StatelessWidget {
@@ -60,18 +56,14 @@ class _MyProfileState extends State<MyProfile> {
 
    void loadData() {
      final userLogged = GetIt.instance<UserLogged>();
-
      _nameController.text = userLogged.user.nameUser;
      _lastNameController.text = userLogged.user.lastName;
      _emailController.text = userLogged.user.email;
-
-
 
    }
 
    @override
   Widget build(BuildContext context)  {
-
 
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
