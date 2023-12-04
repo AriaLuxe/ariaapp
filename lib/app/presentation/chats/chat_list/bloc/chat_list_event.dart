@@ -19,3 +19,12 @@ class DeleteChat extends ChatListEvent {
   final int chatId;
   const DeleteChat(this.chatId);
 }
+class SearchChat extends ChatListEvent {
+  final String keyword;
+  final int userId;
+
+  const SearchChat(this.keyword, this.userId);
+
+  @override
+  List<Object> get props => [keyword,userId];
+}

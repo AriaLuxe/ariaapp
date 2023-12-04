@@ -1,13 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import '../../widgets/header_chat.dart';
 import 'bloc/chat_bloc.dart';
 import 'widgets/audio_recorder_voice.dart';
-
 
 class PositionData {
   const PositionData(
@@ -36,27 +38,21 @@ class Chat extends StatefulWidget {
   final int userId;
   final int chatId;
   final int userReceivedId;
-
   @override
   State<Chat> createState() => _ChatState();
 }
 
 class _ChatState extends State<Chat> {
-  final TextEditingController _textController = TextEditingController();
-  //final userLogged = GetIt.instance<UserLogged>();
-
   late final String url;
   int page =0;
   bool showPlayer = false;
   String? audioPath;
   int? userId;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     showPlayer = false;
-   // userId =  SharedPreferencesManager.getUserId();
     final chatBloc = BlocProvider.of<ChatBloc>(context);
-
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
         page++;
@@ -65,9 +61,6 @@ class _ChatState extends State<Chat> {
           page,
           8,
         );
-        print(page);
-
-
       }
     });
     super.initState();
@@ -79,9 +72,7 @@ class _ChatState extends State<Chat> {
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
 
-
     return Scaffold(
-
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           final messages = state.messages;
@@ -99,16 +90,21 @@ class _ChatState extends State<Chat> {
                   ),
                   SizedBox(
                       width: MediaQuery.of(context).size.width*0.9,
+                      //TODO: Agregar navegacion hacia el perfile al tocar la foto
                       child: HeaderChat(title: state.name, onTap: (){
                         chatBloc.clearMessages();
                         Navigator.pop(context);
-                      }, url: '${BaseUrlConfig.baseUrlImage}${state.urlPhoto}',)),
+                      }, url: '${BaseUrlConfig.baseUrlImage}${state.urlPhoto}',
+                        onTapProfile: () async {
+                        final userAriaRepository = GetIt.instance<UserAriaRepository>();
+                        final user = await userAriaRepository.getUserById(state.userId);
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user: user)));
+                        },)),
                   const SizedBox(
                     height: 10,
                   ),
                   const Divider(
                       color: Color(0xFF354271),
-
                       thickness: 2
                   ),
                   state.messages.isEmpty ?
@@ -153,7 +149,6 @@ class _ChatState extends State<Chat> {
                         chatBloc.isRecording(false);
                         await Future.delayed(const Duration(milliseconds: 5000));
                         chatListBloc.chatsFetched();
-
                       } else {
                         print('No hay audio para enviar');
                       }
@@ -163,14 +158,11 @@ class _ChatState extends State<Chat> {
                 ],
               ),
             );
-
           }
           return const Center(
             child: Text('Comuníquese al email@gmail.com'),
           );
-
         },
-
       ),
     );
   }

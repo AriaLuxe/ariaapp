@@ -19,6 +19,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     on<ChatsFetched>(_onChatsFetched);
     on<ChatsAdded>(_onChatAdded);
     on<DeleteChat>(_onDeleteChat);
+    on<SearchChat>(_onSearchChat);
   }
 
   Future<void> _onChatsFetched(
@@ -88,21 +89,29 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     try {
       emit(state.copyWith(
         isLoadingDeleteChat: true,
+        responseDeleteChat: '',
+
       ));
-      final response = await chatRepository.deleteChat(event.chatId);
-      print(response);
+     final response = await chatRepository.deleteChat(event.chatId);
+     print(response);
+      print(event.chatId);
       if (response == 'Chat is deleted') {
         final List<Chat> updatedChats = List.from(state.chats);
         updatedChats.removeWhere((chat) => chat.chatId == event.chatId);
-
         emit(state.copyWith(
+          responseDeleteChat: response,
           chatListStatus: ChatListStatus.success,
           chats: updatedChats,
           isLoadingDeleteChat: false,
         ));
-      } else {
-        // Maneja el caso en el que la eliminación no fue exitosa
+      } else if(response == 'Chat does not exist'){
+        emit(state.copyWith(
+          responseDeleteChat: response,
+          chatListStatus: ChatListStatus.success,
+          isLoadingDeleteChat: false,
+        ));
       }
+
     } catch (e) {
       emit(state.copyWith(chatListStatus: ChatListStatus.error));
       print('Error al eliminar el chat: $e');
@@ -111,5 +120,28 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
 
   void deleteChat(int chatId) {
     add(DeleteChat(chatId));
+  }
+  Future<void> _onSearchChat(
+      SearchChat event,
+      Emitter<ChatListState> emit,
+      ) async {
+    emit(state.copyWith(chatListStatus: ChatListStatus.loading));
+
+    try {
+
+      final List<Chat> searchResults = await chatRepository.searchChats(event.keyword,event.userId);
+      emit(
+        state.copyWith(
+          chatListStatus: ChatListStatus.success,
+          chats: searchResults,
+        ),
+      );
+    } catch (e) {
+      print(e);
+      emit(state.copyWith(chatListStatus: ChatListStatus.error));
+    }
+  }
+  void searchChats(String keyword, int userId){
+    add(SearchChat(keyword,userId));
   }
 }

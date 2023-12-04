@@ -12,6 +12,7 @@ class VoiceClone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -42,6 +43,9 @@ class VoiceClone extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height*0.3,
+                    ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
@@ -58,6 +62,9 @@ class VoiceClone extends StatelessWidget {
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height*0.01,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -77,9 +84,8 @@ class VoiceClone extends StatelessWidget {
                                     ),
                                   ],
                                 ),child: CustomButton(text: 'Comenzar', onPressed: (){
-                              final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
 
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceTraining()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const VoiceTraining()));
                             }, width: 0.8)),
                           )),
                     ),

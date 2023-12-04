@@ -81,8 +81,10 @@ class UpdateEmailForm extends StatelessWidget {
       body: SingleChildScrollView(
         child:  SafeArea(
           child: Column(
-
             children: [
+              SizedBox(
+                height: size.height*0.02,
+              ),
                Header(title: 'Cambiar correo', onTap: (){
                  Navigator.pop(context);
 
@@ -140,7 +142,7 @@ class UpdateEmailForm extends StatelessWidget {
                 height: size.height*0.06,
               ),
               SizedBox(
-                  width: size.width*0.6,
+                  width: size.width*0.7,
                   child: CustomButton(
                     onPressed:  updateEmailBloc.state.isValid ?
                         () async{

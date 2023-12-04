@@ -16,3 +16,11 @@ class FetchFollowers extends FollowerCounterEvent{
   List<Object?> get props => [userId];
 
 }
+class ToggleFollow extends FollowerCounterEvent {
+  final int userLooking;
+  final bool isFollowing;
+  const ToggleFollow(this.userLooking, this.isFollowing);
+
+  @override
+  List<Object> get props => [userLooking,isFollowing];
+}

@@ -5,14 +5,14 @@ import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.
 import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart';
 import 'package:ariapp/app/presentation/voice/voice_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
+import 'package:ariapp/app/presentation/widgets/custom_button_voice_clone.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../widgets/custom_button.dart';
 
 class VoiceTrainingFinish extends StatefulWidget {
-  VoiceTrainingFinish({super.key});
+  const VoiceTrainingFinish({super.key});
 
   @override
   State<VoiceTrainingFinish> createState() => _VoiceTrainingFinishState();
@@ -24,7 +24,6 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
   @override
   Widget build(BuildContext context) {
 
-    final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
     return BlocBuilder<VoiceCloneBloc, VoiceCloneState>(
       builder: (context, state) {
 
@@ -106,7 +105,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 20),
                                 child:isLoadingClone? const Center(child: CircularProgressIndicator(),)
-                                    : CustomButton(text: 'Crear voz',
+                                    : CustomButtonVoiceClone(text: 'Crear voz',
                                     onPressed: ()async{
 
                                       setState(() {
@@ -123,7 +122,6 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                         setState(() {
                                           isLoadingClone = false;
                                         });
-
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => const VoiceScreen()));
 
                                       }else{
@@ -133,6 +131,9 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                             return CustomDialogAccept(
                                               text: 'Por favor responda todas las preguntas',
                                               onAccept: () {
+                                                setState(() {
+                                                  isLoadingClone = false;
+                                                });
                                                 Navigator.pop(context);
                                               },
 

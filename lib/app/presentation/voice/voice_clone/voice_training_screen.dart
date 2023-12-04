@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../widgets/custom_button.dart';
 
 class VoiceTraining extends StatefulWidget {
-   VoiceTraining({super.key});
+   const VoiceTraining({super.key});
 
   @override
   State<VoiceTraining> createState() => _VoiceTrainingState();

@@ -21,7 +21,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
   @override
   Widget build(BuildContext context) {
     final peopleListBloc = BlocProvider.of<PeopleListBloc>(context);
-    peopleListBloc.peopleFetched();
+    peopleListBloc.peopleFetched(0,10);
 
     return   SafeArea(
       child: Column(

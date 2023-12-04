@@ -1,5 +1,4 @@
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
-import 'package:ariapp/app/presentation/chats/chats_screen.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
@@ -8,16 +7,13 @@ import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/sign_in_service.dart';
 import 'package:ariapp/injections.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import '../../../config/styles.dart';
 import '../../../infrastructure/repositories/user_aria_repository.dart';
-import '../../layouts/layout.dart';
 import '../../sign_up/sign_up_screen.dart';
 import '../bloc/sign_in_bloc.dart';
 import 'text_input.dart';
@@ -38,42 +34,7 @@ class _SignInFormState extends State<SignInForm> {
   bool _obscureText = true;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  final  errorSnackBar = const SnackBar(
-      backgroundColor: Colors.red,
-      content: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error,size: 60,),
-            Column(
-              children: [
-                Text('Verifique su correo', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
-              ],
-            ),
-          ],
-        ),
-      )
 
-  );
-
-  final  credentialsSnackBar = const SnackBar(
-      backgroundColor: Colors.red,
-      content: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error,size: 60,),
-            Column(
-              children: [
-
-                Text('Credenciales incorrectos', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
-              ],
-            ),
-          ],
-        ),
-      )
-
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -90,29 +51,26 @@ class _SignInFormState extends State<SignInForm> {
                 padding:  const EdgeInsets.symmetric( horizontal: 20.0, vertical: 0),
                 child: Align(
                   alignment: Alignment.bottomLeft,
-                  child: ArrowBack(onTap: (){
-                    bool o = Navigator.canPop(context);
-
-                    if(o){
-                      Navigator.pop(context);
-                      }else {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => GetStartedScreen()));
-
-                      null;
-                    }
+                  child: ArrowBack(onTap: ()async{
+                    await  SharedPreferencesManager.saveHasSeenGetStarted(false);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const GetStartedScreen()));
                   },),
                 ),
               ),
-
               Image.asset(
-                'assets/images/logo-aia.jpg',
+                'assets/images/tree_oficial.png',
                 width: MediaQuery.of(context).size.height * 0.1,
               ),
+              SizedBox(
+                height: size.height*0.03,
+              ),
                Image.asset(
-                  'assets/images/aia.jpg',
+                  'assets/images/aia.png',
                   width: MediaQuery.of(context).size.height * 0.15,
                 ),
-
+              SizedBox(
+                height: size.height*0.03,
+              ),
               const Text(
                 'Bienvenido',
                 style: TextStyle(
@@ -121,7 +79,7 @@ class _SignInFormState extends State<SignInForm> {
                 ),
               ),
                SizedBox(
-                height: size.height*0.1,
+                height: size.height*0.03,
               ),
               SizedBox(
                 width: size.width*0.85,
@@ -170,10 +128,10 @@ class _SignInFormState extends State<SignInForm> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: context.read<SignInBloc>().state.emailInputValidator.isValid ? () async {
+                        onPressed: /*context.read<SignInBloc>().state.emailInputValidator.isValid ? */() async {
                           final emailValidation = EmailValidationDataProvider();
                           final response = await emailValidation.sendEmailToResetPassword(email.text.trim());
-
+                          print(response);
                           if(response == 'Email sent sucessfully'){
                             Navigator.push(
                               context,
@@ -184,14 +142,12 @@ class _SignInFormState extends State<SignInForm> {
                               context,
                               MaterialPageRoute(builder: (context) => VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
                             );
-
-                          }
-                          else{
+                          }else if(response == 'Does not exist an account with this email'){
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return CustomDialogAccept(
-                                  text: 'Verifique su correo electronico',
+                                  text: 'No existe una cuenta con este correo, por favor, ingrese nuevamente',
                                   onAccept: () {
                                     Navigator.pop(context);
                                   },
@@ -199,10 +155,23 @@ class _SignInFormState extends State<SignInForm> {
                               },
                             );
                           }
-                        } : null,
+                          else{
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomDialogAccept(
+                                  text: 'Ingrese correo electrónico',
+                                  onAccept: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        },
                         child:  Text(
                           '¿Olvidaste tu contraseña?',
-                          style: TextStyle(color: context.read<SignInBloc>().state.emailInputValidator.isValid ? Colors.white : Colors.grey),
+                          style: TextStyle(color: /*context.read<SignInBloc>().state.emailInputValidator.isValid ? Colors.white :*/ Colors.white),
                         ),
                       ),
 
@@ -256,6 +225,9 @@ class _SignInFormState extends State<SignInForm> {
                           );
                         },
                       );
+                      setState(() {
+                        isLoadingSignIn = false;
+                      });
                     }
                   }
                       : null,

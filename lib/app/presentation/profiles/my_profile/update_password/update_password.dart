@@ -84,7 +84,10 @@ class UpdatePasswordForm extends StatelessWidget {
           child: Column(
 
             children: [
-               Header(title: 'Contraseña nueva',onTap: (){
+              SizedBox(
+                height: size.height*0.02,
+              ),
+               Header(title: 'Cambiar Contraseña',onTap: (){
                  Navigator.pop(context);
 
                },),
@@ -154,14 +157,11 @@ class UpdatePasswordForm extends StatelessWidget {
                   ),
                 ],
               ),
-
-
-
               SizedBox(
                 height: size.height*0.06,
               ),
               SizedBox(
-                  width: size.width*0.6,
+                  width: size.width*0.7,
                   child: CustomButton(
                     onPressed:  updateEmailBloc.state.isValid ?
                         () async{

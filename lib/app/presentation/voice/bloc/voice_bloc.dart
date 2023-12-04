@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:bloc/bloc.dart';
@@ -21,7 +20,6 @@ class VoiceBloc extends Bloc<VoiceEvent, VoiceState> {
       // TODO: implement event handler
     });
     on<ShowPlayer>(_onShowPlayer);
-    on<CollectAudio>(_onAddedPath);
     on<FetchProfileVoice>(_onFetchProfileVoice);
     on<UpdateSimilarity>(_onUpdateSimilarity);
     on<UpdateStability>(_onUpdateStability);
@@ -56,18 +54,7 @@ on<ShowView>(_onShowView);
     add(ShowPlayer(isRecording));
   }
 
-Future<void> _onAddedPath(
-    CollectAudio event,
-    Emitter<VoiceState> emit
-    )async {
-    try
-    {
-      final List<String> paths = List.from(state.audioPaths)..add(event.path);
 
-    }catch (e){
-    }
-
-    }
   Future<void> _onDeletePath(
       DeleteAudio event,
       Emitter<VoiceState> emit
@@ -88,16 +75,6 @@ Future<void> _onAddedPath(
     add(CollectAudio(path));
   }
 
-  Future<void> _onCloneVoice(
-  CloneVoice event,
-      Emitter<VoiceState> emit
-      ) async{
-    try {
-
-    }
-    catch(e){
-    }
-  }
 
   Future<void> _onFetchProfileVoice(
       FetchProfileVoice event,
@@ -125,7 +102,8 @@ Future<void> _onAddedPath(
             voiceId: voiceId.toString(),
             description: description,
             stability: stability,
-            similarity: similarityBoost, isThereAudio: true,
+            similarity: similarityBoost,
+              isThereAudio: true,
             )
         );
 

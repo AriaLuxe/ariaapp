@@ -29,6 +29,7 @@ class GetStarted2 extends StatelessWidget {
               const AnimatedText( text:
                 'Explora un mundo donde tus personajes favoritos conversan',
                 style: TextStyle(
+                  height: 1.2,
                   shadows: [
                     Shadow(
                       color: Colors.black,

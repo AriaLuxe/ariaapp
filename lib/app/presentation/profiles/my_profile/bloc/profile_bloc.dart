@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ariapp/app/domain/entities/chat.dart';
-import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
-import 'package:ariapp/app/security/user_logged.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
@@ -33,7 +30,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<CheckBlockStatus>(_onCheckBlockStatus);
     on<ToggleBlock>(_onToggleBlock);
     on<ProfileDefaultPhoto>(_onProfilePhotoDefault);
-    on<FetchChat>(_onFetchChat);
 
   }
 
@@ -61,27 +57,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   void fetchDataProfile(int userId){
     add(FetchDataProfile(userId));
   }
-  void _onFetchChat(
-      FetchChat event,
-      Emitter<ProfileState> emit,
-      ) async {
 
-    final Chat chat = await chatRepository.createChat(event.userLogger,event.user);
-    emit(state.copyWith(
-     chatId: chat.chatId,
-    ));
-  }
-
-  void fetchChat(int userLogged, int user){
-    add(FetchChat(userLogged,user));
-  }
 
   void _onCheckFollowStatus(CheckFollowStatus event, Emitter<ProfileState> emit) async {
 
   try{
-    print('event.userLooking');
 
-    print(event.userLooking);
     final currentUserId = await SharedPreferencesManager.getUserId();
     final response = await userAriaRepository.checkFollow(currentUserId!, event.userLooking);
 
@@ -110,18 +91,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if(!event.isFollowing){
         emit(state.copyWith(isFollowed: true));
 
-        final response = await userAriaRepository.follow(userId!,event.userLooking);
+        await userAriaRepository.follow(userId!,event.userLooking);
+        final numberOfFollowers = await userAriaRepository.getFollowersCounter(event.userLooking);
+        emit(state.copyWith(
+          numberOfFollowers: numberOfFollowers,
+        ));
 
       }
       else {
         emit(state.copyWith(isFollowed: false));
-
         final follower = await userAriaRepository.checkFollow(userId!, event.userLooking);
         final followerDecode = jsonDecode(follower);
 
         final response = await userAriaRepository.unFollow(followerDecode['idRequest']);
 
         if(response == 'Request deleted' ){
+          final numberOfFollowers = await userAriaRepository.getFollowersCounter(event.userLooking);
+          emit(state.copyWith(
+            numberOfFollowers: numberOfFollowers,
+          ));
           print('se dejo de seguir');
         }else {
           print('error');
@@ -172,7 +160,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if(!event.isBlock){
         emit(state.copyWith(isBlock: true));
 
-        final response = await userAriaRepository.block(userId!,event.idBlocked);
+       await userAriaRepository.block(userId!,event.idBlocked);
 
         print('se bloqueo');
 

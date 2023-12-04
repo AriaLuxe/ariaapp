@@ -8,8 +8,8 @@ class UserAriaRepository extends UserAriaInterface {
 
   UserAriaRepository({required this.usersDataProvider});
   @override
-  Future<List<UserAria>> getAllFriends() async {
-    final response = await usersDataProvider.getUsers();
+  Future<List<UserAria>> getAllFriends(int page, int pageSize) async {
+    final response = await usersDataProvider.getUsers(page,pageSize);
     return response;
   }
 

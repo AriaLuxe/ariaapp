@@ -5,7 +5,6 @@ import 'package:ariapp/injections.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../sign_in/sing_in_screen.dart';
 import 'widgets/get_started_1.dart';
@@ -39,7 +38,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
 
     String? token =  await SharedPreferencesManager.getToken();
     bool? hasSeenGetStarted = await SharedPreferencesManager.getHasSeenGetStarted();
-    if (hasSeenGetStarted == null){
+    if (hasSeenGetStarted == null ||hasSeenGetStarted == false  ){
       setState(() {
         isLoadingPage = false;
       });
@@ -96,8 +95,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                   width: double.infinity,
                   height: size.height * 0.1,
                   child: Image.asset(
-                    'assets/images/logo-aia.jpg',
-                    key: const ValueKey<String>('assets/images/logo-aia.jpg'),
+                    'assets/images/aia.png',
+                    key: const ValueKey<String>('assets/images/aia.png'),
                   ),
                 ),
                const Center(child: CircularProgressIndicator(),)

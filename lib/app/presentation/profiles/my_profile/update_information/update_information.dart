@@ -1,8 +1,5 @@
-import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/presentation/widgets/header.dart';
-import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/user_logged.dart';
-import 'package:ariapp/injections.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +10,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../config/styles.dart';
 import '../../../../infrastructure/repositories/user_aria_repository.dart';
-import '../../../../security/user_logged.dart';
-import '../../../../security/user_logged.dart';
 import '../../../sign_in/widgets/text_input.dart';
-import '../../../widgets/arrow_back.dart';
 import '../../../widgets/custom_button.dart';
 import '../bloc/profile_bloc.dart';
 import 'bloc/my_profile_bloc.dart';
@@ -152,9 +146,6 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
   );
   @override
   Widget build(BuildContext context) {
-
-    print(_birthDateController.text);
-
     hasChanged();
     final myProfileBloc = context.watch<MyProfileBloc>();
     myProfileBloc.add(NameChanged(_nameController.text));
@@ -164,29 +155,21 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
     myProfileBloc.add(BirthDateChanged(_birthDateController.text));
     myProfileBloc.add(CountryChanged(_countryController.text));
     myProfileBloc.add(CityChanged(_cityController.text));
-    final nameUser = myProfileBloc.state.nameInputValidator;
-    final lastName = myProfileBloc.state.lastNameInputValidator;
-    final nickname = myProfileBloc.state.nicknameInputValidator;
-    final country = myProfileBloc.state.countryInputValidator;
-
-    final birthDate = myProfileBloc.state.birthDateInputValidator;
-
     Size size = MediaQuery.of(context).size;
 
     return BlocBuilder<MyProfileBloc, MyProfileState>(
       builder: (context, state) {
-        print(state.isValid);
         return Scaffold(
           body: SingleChildScrollView(
             child:  SafeArea(
               child: Column(
-
                 children: [
+                  SizedBox(
+                    height: size.height*0.02,
+                  ),
                    Header(title: 'Actualizar',onTap: (){
                      Navigator.pop(context);
-
                    },),
-
                   SizedBox(
                     height: size.height*0.04,
                   ),
@@ -250,31 +233,21 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                       ),
                     ],
                   ),
-
-
-
-
                   SizedBox(
                     height: size.height*0.015,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-
                     children: [
-                      const Text('Genero',style: TextStyle(color: Colors.white),),
-
+                      const Text('Género',style: TextStyle(color: Colors.white),),
                       TextInput(
-
                         controller: _genderController,
-
                         verticalPadding: 15,
-
                         errorMessage: state.genderInputValidator.errorMessage,
                         onTap: () {
                           context
                               .read<MyProfileBloc>()
                               .add(GenderChanged(_genderController.text));
-
                           showModalBottomSheet(
                             context: context,
                             builder: (BuildContext context) {
@@ -282,21 +255,21 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   ListTile(
-                                    title: Text('Femenino'),
+                                    title: const Text('Femenino'),
                                     onTap: () {
                                       onGenderChanged('Femenino');
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   ListTile(
-                                    title: Text('Masculino'),
+                                    title: const Text('Masculino'),
                                     onTap: () {
                                       onGenderChanged('Masculino');
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   ListTile(
-                                    title: Text('Otro'),
+                                    title: const Text('Otro'),
                                     onTap: () {
                                       onGenderChanged('Otro');
                                       Navigator.of(context).pop();
@@ -393,7 +366,7 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            const Text('Pais',style: TextStyle(color: Colors.white),),
+                            const Text('País',style: TextStyle(color: Colors.white),),
 
                             TextInput(
                               verticalPadding: 15,
@@ -462,29 +435,19 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                            final userUpdated = await usersRepository.getUserById(userLog.user.id!);
                            //userLog.copyWith(user: userUpdated);
                           userLog.user = userUpdated;
-
-                          final UserLogged us = GetIt.instance<UserLogged>();
-                          print(us.user.nameUser);
-                           print(response);
-
                           if(response == 'UserInfo is updated'){
                             ScaffoldMessenger.of(context)
                              .showSnackBar(successSnackBar)
                             .closed;
                             context.read<ProfileBloc>().fetchDataProfile(userLog.user.id!);
-
                             context.go("/my_profile");
                           }else{
                             ScaffoldMessenger.of(context)
                               .showSnackBar(errorSnackBar)
                             .closed;
                           }
-
-
                         } : null,
                         text: 'Guardar Cambios ', width: 0.8,))
-
-
                 ],
               ),
             ),

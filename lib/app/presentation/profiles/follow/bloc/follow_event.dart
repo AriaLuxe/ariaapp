@@ -19,7 +19,9 @@ class FetchFollowings extends FollowEvent{
   const FetchFollowings(this.userId, this.userLooking);
 }
 class FetchSubscribers extends FollowEvent{
-  const FetchSubscribers();
+  final int userId;
+
+  const FetchSubscribers(this.userId);
 }
 
 class ToggleFollow extends FollowEvent {

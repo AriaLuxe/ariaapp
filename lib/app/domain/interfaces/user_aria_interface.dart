@@ -1,4 +1,3 @@
-import 'package:ariapp/app/presentation/profiles/my_profile/update_email/update_email.dart';
 
 import '../entities/follower.dart';
 import '../entities/user_aria.dart';
@@ -6,7 +5,7 @@ import '../entities/user_aria.dart';
 abstract class UserAriaInterface {
   Future<void> signUpUser(UserAria user);
   Future<UserAria> getUserById(int id);
-  Future<List<UserAria>> getAllFriends();
+  Future<List<UserAria>> getAllFriends(int page, int pageSize);
   Future<List<UserAria>> searchUser(String keyword);
   Future<List<UserAria>> getFavoriteUsers();
   Future<void> updateUserData(String userId, String name, String lastName, String nickname, String gender, DateTime date, String country, String city);

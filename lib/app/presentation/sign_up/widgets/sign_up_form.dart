@@ -1,10 +1,9 @@
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
-import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
-import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
+import 'package:ariapp/app/presentation/widgets/header.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,328 +81,355 @@ class _SignUpFormState extends State<SignUpForm> {
 
     final password = signUpBloc.state.passwordInputValidator;
     final birthDate = signUpBloc.state.birthDateInputValidator;
-    //final gender  = signUpBloc.state.emailInputValidator;
-    //final country =  signUpBloc.state.nickName;
-    //final city =  signUpBloc.state.city;
 
     return BlocBuilder<SignUpBloc, SignUpState>(
       builder: (context, state) {
-        return SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   ArrowBack(onTap: (){
-                    bool o = Navigator.canPop(context);
+        return Column(
+          children: [
+            Header(title: 'Crear cuenta', onTap: (){
+              Navigator.pop(context);
+            },),
+            const SizedBox(
+              height: 25,
+            ),
+            TextInput(
+              verticalPadding: 15,
+              prefixIcon: Icons.person,
+              label: 'Ingresa tus nombres',
+              onChanged: (name) =>
+                  context.read<SignUpBloc>().add(NameChanged(name)),
+              errorMessage: state.nameInputValidator.errorMessage,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextInput(
+              verticalPadding: 15,
 
-                    if(o){
-                      Navigator.pop(context);
-                    }else {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
+              prefixIcon: Icons.person,
+              label: 'Ingresa tus apellidos',
+              onChanged: (lastName) =>
+                  context.read<SignUpBloc>().add(LastNameChanged(lastName)),
+              errorMessage: state.lastNameInputValidator.errorMessage,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextInput(
+              verticalPadding: 15,
 
-                      null;
-                    }
-                  },),
-                  Image.asset('assets/images/logo-aia.jpg',width: 60,),
-                ],
-              ),
-              const Text(
-                'Crear cuenta',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 28,
-                    color: Colors.white),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              TextInput(
-                verticalPadding: 15,
-                prefixIcon: Icons.person,
-                label: 'Ingresa tus nombres',
-                onChanged: (name) =>
-                    context.read<SignUpBloc>().add(NameChanged(name)),
-                errorMessage: state.nameInputValidator.errorMessage,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextInput(
-                verticalPadding: 15,
+              prefixIcon: Icons.verified_user,
+              label: 'Ingresa tu nickname',
+              onChanged: (nickname) =>
+                  context.read<SignUpBloc>().add(NicknameChanged(nickname)),
+              errorMessage: state.nicknameInputValidator.errorMessage,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
 
-                prefixIcon: Icons.person,
-                label: 'Ingresa tus apellidos',
-                onChanged: (lastName) =>
-                    context.read<SignUpBloc>().add(LastNameChanged(lastName)),
-                errorMessage: state.lastNameInputValidator.errorMessage,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextInput(
-                verticalPadding: 15,
+            TextInput(
+              verticalPadding: 15,
 
-                prefixIcon: Icons.verified_user,
-                label: 'Ingresa tu nickname',
-                onChanged: (nickname) =>
-                    context.read<SignUpBloc>().add(NicknameChanged(nickname)),
-                errorMessage: state.nicknameInputValidator.errorMessage,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-
-              TextInput(
-                verticalPadding: 15,
-
-                readOnly: true,
-                onTap: () {
-                  context
-                      .read<SignUpBloc>()
-                      .add(BirthDateChanged(_birthDateController.text));
-                  showDialog(
-                    context: context,
-                    builder: (context1) {
-                      return AlertDialog(
-                        title: Text(
-                          'Selecciona una fecha',
-                          style: TextStyle(
-                            color: Styles.primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+              readOnly: true,
+              onTap: () {
+                context
+                    .read<SignUpBloc>()
+                    .add(BirthDateChanged(_birthDateController.text));
+                showDialog(
+                  context: context,
+                  builder: (context1) {
+                    return AlertDialog(
+                      title: Text(
+                        'Selecciona una fecha',
+                        style: TextStyle(
+                          color: Styles.primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
-                        content: SizedBox(
-                          height: MediaQuery.of(context).size.height / 4,
-                          width: MediaQuery.of(context).size.height * 2,
-                          child: CupertinoDatePicker(
-                            mode: CupertinoDatePickerMode.date,
-                            initialDateTime: DateTime(2000),
-                            maximumDate: DateTime.now(),
-                            onDateTimeChanged: (DateTime newDate) {
-                              _birthDateController.text =
-                                  DateFormat('yyyy-MM-dd').format(newDate);
-                            },
-                          ),
+                      ),
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height / 4,
+                        width: MediaQuery.of(context).size.height * 2,
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          initialDateTime: DateTime(2000),
+                          maximumDate: DateTime.now(),
+                          onDateTimeChanged: (DateTime newDate) {
+                            _birthDateController.text =
+                                DateFormat('yyyy-MM-dd').format(newDate);
+                          },
                         ),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              context.read<SignUpBloc>().add(
-                                  BirthDateChanged(_birthDateController.text));
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Aceptar'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                enabled: true,
-                label: 'Fecha de nacimiento',
-                prefixIcon: Icons.calendar_month,
-                isAnimated: FloatingLabelBehavior.never,
-                controller: _birthDateController,
-                errorMessage: state.birthDateInputValidator.errorMessage,
-              ),
-
-
-              const SizedBox(
-                height: 20,
-              ),
-              TextInput(
-                verticalPadding: 15,
-
-                errorMessage: state.genderInputValidator.errorMessage,
-                controller: _genderController,
-                onTap: () {
-                  context
-                      .read<SignUpBloc>()
-                      .add(GenderChanged(_genderController.text));
-
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            title: Text('Femenino'),
-                            onTap: () {
-                              onGenderChanged('Femenino');
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          ListTile(
-                            title: Text('Masculino'),
-                            onTap: () {
-                              onGenderChanged('Masculino');
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          ListTile(
-                            title: Text('Otro'),
-                            onTap: () {
-                              onGenderChanged('Otro');
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                readOnly: true,
-                label: 'Género',
-                prefixIcon: Icons.circle_outlined,
-
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    child: TextInput(
-                      verticalPadding: 15,
-
-                      controller: _countryController,
-                      readOnly: true,
-                      onTap: () {
-                        context
-                            .read<SignUpBloc>()
-                            .add(CountryChanged(_countryController.text));
-                        showCountryPicker(
-                            context: context,
-                            countryListTheme: const CountryListThemeData(
-                              searchTextStyle: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 18,
-                              ),
-                            ),
-                            onSelect: (Country country) {
-                              _countryController.text = country.name;
-                              context
-                                  .read<SignUpBloc>()
-                                  .add(CountryChanged(_countryController.text));
-                            });
-                      },
-
-                      prefixIcon: Icons.flag,
-                      label: 'Pais',
-                      errorMessage: state.countryInputValidator.errorMessage,
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: TextInput(
-                      verticalPadding: 15,
-
-                      prefixIcon: Icons.location_on,
-                      label: 'Ciudad',
-                      onChanged: (city) =>
-                          context.read<SignUpBloc>().add(CityChanged(city)),
-                      errorMessage: state.cityInputValidator.errorMessage,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextInput(
-                verticalPadding: 15,
-
-                prefixIcon: Icons.mail,
-                label: 'Ingresa tu correo',
-                onChanged: (email) =>
-                    context.read<SignUpBloc>().add(EmailChanged(email)),
-                errorMessage: state.emailInputValidator.errorMessage,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextInput(
-                verticalPadding: 15,
-
-                obscureText: _obscureText,
-                label: 'Contraseña',
-                prefixIcon: Icons.lock,
-                suffixIcon: IconButton(
-                  icon: Icon(
-
-                    _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            context.read<SignUpBloc>().add(
+                                BirthDateChanged(_birthDateController.text));
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Aceptar'),
+                        ),
+                      ],
+                    );
                   },
-                ),
-                onChanged: (password) =>
-                    context.read<SignUpBloc>().add(PasswordChanged(password)),
-                errorMessage: state.passwordInputValidator.errorMessage,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                  width: double.infinity,
-                  child: isLoadingSignUp ? const Center(child: CircularProgressIndicator(),):CustomButton(
-                      onPressed: signUpBloc.state.isValid
-                          ? () async{
-                        setState(() {
-                          isLoadingSignUp = true;
-                        });
-                        final emailValidation = EmailValidationDataProvider();
-                        final response = await emailValidation.sendEmailToRegisterUser(email.value);
-                        if(response == 'Email sent sucessfully'){
-                          final user = UserAria(
-                            nameUser: nameUser.value.trim(),
-                            lastName: lastName.value.trim(),
-                            email: email.value.trim(),
-                            password: password.value,
-                            gender: _genderController.text.trim(),
-                            country: _countryController.text.trim(),
-                            city: country.value.trim(),
-                            nickname: nickname.value.trim(),
-                            dateBirth: DateTime.parse(DateFormat('yyyy-MM-dd')
-                                .format(DateTime.parse(birthDate.value))),
-                            role: 'USER'
-                          );
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Verificar y Registrarse', isResetPassword: false,user: user)));
-                          setState(() {
-                            isLoadingSignUp = false;
-                          });
-                        }else{
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogAccept(
-                                text: 'Verifique sus datos',
-                                onAccept: () {
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        }
+                );
+              },
+              enabled: true,
+              label: 'Fecha de nacimiento',
+              prefixIcon: Icons.calendar_month,
+              isAnimated: FloatingLabelBehavior.never,
+              controller: _birthDateController,
+              errorMessage: state.birthDateInputValidator.errorMessage,
+            ),
 
+
+            const SizedBox(
+              height: 20,
+            ),
+            TextInput(
+              verticalPadding: 15,
+
+              errorMessage: state.genderInputValidator.errorMessage,
+              controller: _genderController,
+              onTap: () {
+                context
+                    .read<SignUpBloc>()
+                    .add(GenderChanged(_genderController.text));
+
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          title: Text('Femenino'),
+                          onTap: () {
+                            onGenderChanged('Femenino');
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ListTile(
+                          title: Text('Masculino'),
+                          onTap: () {
+                            onGenderChanged('Masculino');
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ListTile(
+                          title: Text('Otro'),
+                          onTap: () {
+                            onGenderChanged('Otro');
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              readOnly: true,
+              label: 'Género',
+              prefixIcon: Icons.circle_outlined,
+
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  child: TextInput(
+                    verticalPadding: 15,
+
+                    controller: _countryController,
+                    readOnly: true,
+                    onTap: () {
+                      context
+                          .read<SignUpBloc>()
+                          .add(CountryChanged(_countryController.text));
+                      showCountryPicker(
+                          context: context,
+                          countryListTheme: const CountryListThemeData(
+                            searchTextStyle: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                            ),
+                          ),
+                          onSelect: (Country country) {
+                            _countryController.text = country.name;
+                            context
+                                .read<SignUpBloc>()
+                                .add(CountryChanged(_countryController.text));
+                          });
+                    },
+
+                    prefixIcon: Icons.flag,
+                    label: 'Pais',
+                    errorMessage: state.countryInputValidator.errorMessage,
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: TextInput(
+                    verticalPadding: 15,
+
+                    prefixIcon: Icons.location_on,
+                    label: 'Ciudad',
+                    onChanged: (city) =>
+                        context.read<SignUpBloc>().add(CityChanged(city)),
+                    errorMessage: state.cityInputValidator.errorMessage,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextInput(
+              verticalPadding: 15,
+
+              prefixIcon: Icons.mail,
+              label: 'Ingresa tu correo',
+              onChanged: (email) =>
+                  context.read<SignUpBloc>().add(EmailChanged(email)),
+              errorMessage: state.emailInputValidator.errorMessage,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextInput(
+              verticalPadding: 15,
+
+              obscureText: _obscureText,
+              label: 'Contraseña',
+              prefixIcon: Icons.lock,
+              suffixIcon: IconButton(
+                icon: Icon(
+
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+              ),
+              onChanged: (password) =>
+                  context.read<SignUpBloc>().add(PasswordChanged(password)),
+              errorMessage: state.passwordInputValidator.errorMessage,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+                width: double.infinity,
+                child: isLoadingSignUp ? const Center(child: CircularProgressIndicator(),):CustomButton(
+                    onPressed: signUpBloc.state.isValid
+                        ? () async{
+                      setState(() {
+                        isLoadingSignUp = true;
+                      });
+                      final emailValidation = EmailValidationDataProvider();
+                      final response = await emailValidation.sendEmailToRegisterUser(email.value);
+                      print(response);
+                      if(response == 'Email sent successfully'){
+                        final user = UserAria(
+                          nameUser: nameUser.value.trim(),
+                          lastName: lastName.value.trim(),
+                          email: email.value.trim(),
+                          password: password.value,
+                          gender: _genderController.text.trim(),
+                          country: _countryController.text.trim(),
+                          city: country.value.trim(),
+                          nickname: nickname.value.trim(),
+                          dateBirth: DateTime.parse(DateFormat('yyyy-MM-dd')
+                              .format(DateTime.parse(birthDate.value))),
+                          role: 'USER'
+                        );
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Verificar y Registrarse', isResetPassword: false,user: user)));
+                        setState(() {
+                          isLoadingSignUp = false;
+                        });
+                      } else if(response == 'Has already exists an account with this email'){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialogAccept(
+                              text: 'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
+                              onAccept: () {
+                                setState(() {
+                                  isLoadingSignUp = true;
+                                });
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
                       }
-                          : null,
-                      text: 'Siguiente', width: 0.8,))
-                      
-                     
-            ],
-          ),
+                      else if(response == 'Code already send to this email'){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialogAccept(
+                              text: 'Ya se envio un codigo a este correo',
+                              onAccept: () {
+                                setState(() {
+                                  isLoadingSignUp = true;
+                                });
+                                final user = UserAria(
+                                    nameUser: nameUser.value.trim(),
+                                    lastName: lastName.value.trim(),
+                                    email: email.value.trim(),
+                                    password: password.value,
+                                    gender: _genderController.text.trim(),
+                                    country: _countryController.text.trim(),
+                                    city: country.value.trim(),
+                                    nickname: nickname.value.trim(),
+                                    dateBirth: DateTime.parse(DateFormat('yyyy-MM-dd')
+                                        .format(DateTime.parse(birthDate.value))),
+                                    role: 'USER'
+                                );
+                                Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Crear cuenta', isResetPassword: false,user: user)));
+
+                                setState(() {
+                                  isLoadingSignUp = false;
+                                });
+                              },
+                            );
+                          },
+                        );
+                      }
+                      else{
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialogAccept(
+                              text: 'Verifique sus datos',
+                              onAccept: () {
+                                setState(() {
+                                  isLoadingSignUp = true;
+                                });
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
+                      }
+                    }
+                        : null,
+                    text: 'Siguiente', width: 0.8,))
+
+
+          ],
         );
       },
     );

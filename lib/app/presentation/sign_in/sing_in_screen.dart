@@ -1,7 +1,6 @@
 import 'package:ariapp/app/config/styles.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/sign_in_bloc.dart';
@@ -25,13 +24,19 @@ class _SignInScreenState extends State<SignInScreen> {
       body: BlocProvider(
         create: (context) => SignInBloc(),
         child: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width *1,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width *1,
 
-            child: const SingleChildScrollView(
-              child:  SignInForm(),
+              child: const SingleChildScrollView(
+                child:  SignInForm(),
 
 
+              ),
             ),
           ),
         ),

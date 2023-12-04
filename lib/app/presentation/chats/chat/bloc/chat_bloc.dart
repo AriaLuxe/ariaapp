@@ -1,11 +1,9 @@
 
-import 'package:ariapp/app/domain/entities/chat.dart';
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/widgets/chat_message_widget.dart';
-import 'package:ariapp/app/presentation/chats/chat/widgets/player_message.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -89,8 +87,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       final UserAria user = await userAriaRepository.getUserById(event.userId);
       emit(state.copyWith(
-        name: user.nameUser,
+        name: user.nickname,
         urlPhoto: user.imgProfile,
+        userId: user.id,
         chatStatus: ChatStatus.success,
       ));
 
@@ -216,7 +215,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       AudioPlayer? audioPlayer;
 
           audioUrl = message.content;
-      print(message.id);
+      print(message.date);
           if (audioUrl != null) {
             audioPlayer = AudioPlayer();
             audioPlayer.setUrl('https://uploadsaria.blob.core.windows.net/files/$audioUrl');

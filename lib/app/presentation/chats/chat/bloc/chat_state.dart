@@ -11,11 +11,13 @@ class ChatState extends Equatable {
   final String path;
   final String name;
   final String urlPhoto;
+  final int userId;
   final bool isFirstMessage;
 
   final int currentPage;
   final bool hasMoreMessages;
-  const ChatState({
+  const ChatState( {
+    this.userId = 0,
     this.isFirstMessage = false,
     this.name = '',
     this.urlPhoto = '',
@@ -41,6 +43,7 @@ class ChatState extends Equatable {
     bool? isFirstMessage,
      int? currentPage,
      bool? hasMoreMessages,
+    int? userId,
   }) {
     return ChatState(
       isFirstMessage: isFirstMessage ?? this.isFirstMessage,
@@ -54,6 +57,7 @@ class ChatState extends Equatable {
       path: path ?? this.path,
       currentPage: currentPage ?? this.currentPage,
         hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
+        userId: userId ?? this.userId
     );
   }
 
@@ -69,6 +73,7 @@ class ChatState extends Equatable {
     urlPhoto,
     recordingResponse,
     currentPage,
-    hasMoreMessages
+    hasMoreMessages,
+    userId
   ];
 }

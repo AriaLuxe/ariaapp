@@ -13,18 +13,20 @@ import '../models/user_aria_model.dart';
 
 class UsersDataProvider {
   String endPoint = 'users';
-  Future<List<UserAriaModel>> getUsers() async {
+  Future<List<UserAriaModel>> getUsers(int page, int pageSize) async {
 
     try {
       String? token = await SharedPreferencesManager.getToken();
 
       final response =
-          await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/$endPoint"),headers: {
+          await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/$endPoint/list?page=$page&size=$pageSize"),headers: {
           'Authorization': 'Bearer $token',
           },);
+
       if (response.statusCode == 200) {
-        final List<UserAriaModel> users =
-            UserAriaModel.toUserAriaList(response.body);
+        List<dynamic> contentList = json.decode(response.body)['content'];
+
+        final List<UserAriaModel> users = contentList.map((content) => UserAriaModel.fromJson(content)).toList();
         return users;
       } else {
         throw Exception(response.body);
@@ -67,7 +69,7 @@ class UsersDataProvider {
         "city": user.city,
         "nickName": user.nickname
       };
-      final response = await http.post(
+      await http.post(
         Uri.parse("${BaseUrlConfig.baseUrl}/$endPoint/add"),
         body: jsonEncode(newUser),
         headers: <String, String>{
@@ -152,8 +154,6 @@ class UsersDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
-print(response.body);
-
         return response.body;
 
     } catch (error) {
@@ -172,10 +172,7 @@ print(response.body);
           'Authorization': 'Bearer $token',
         },
       );
-      print(response.body);
-
       return response.body;
-
     } catch (error) {
       throw Exception(error);
     }
@@ -233,10 +230,7 @@ print(response.body);
       await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/follow/following?idUserLogged=$userId&idUserLooking=$userLooking"),headers: {
         'Authorization': 'Bearer $token',
       },);
-      print(response.body);
-
       if (response.statusCode == 200) {
-
         return FollowerModel.toFollowerList(response.body);
       } else {
         throw Exception(response.body);
@@ -274,6 +268,9 @@ print(response.body);
       await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/follow/followers/quantity?idUser=$userId"),headers: {
         'Authorization': 'Bearer $token',
       },);
+      print('response.body followers');
+
+      print(response.body);
 
       if (response.statusCode == 200) {
 
@@ -313,7 +310,6 @@ print(response.body);
         'Authorization': 'Bearer $token',
       },);
 
-      print(response.body);
       if (response.statusCode == 200) {
 
         return int.parse(response.body);
@@ -408,7 +404,6 @@ print(response.body);
       await http.delete(Uri.parse("${BaseUrlConfig.baseUrl}/locks/unblock?idBlockingUser=$idBlockingUser&idBlocked=$idBlocked"),headers: {
         'Authorization': 'Bearer $token',
       },);
-      print(response.body);
       if (response.statusCode == 200) {
 
         return response.body;
@@ -421,8 +416,7 @@ print(response.body);
   }
 
   Future<bool> checkBlock(int userId, int userLooking) async {
-    print(userId);
-    print(userLooking);
+
     try {
       String? token = await SharedPreferencesManager.getToken();
 
@@ -430,9 +424,7 @@ print(response.body);
       await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/locks/verify-blocking?idUserLogged=$userId&idUserLooking=$userLooking"),headers: {
         'Authorization': 'Bearer $token',
       },);
-      print('esta bloqueado');
 
-      print(response.body);
 
       if (response.statusCode == 200) {
         return bool.parse(response.body);

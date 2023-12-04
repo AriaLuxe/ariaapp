@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
+import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat/chat_screen.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
@@ -24,26 +25,32 @@ class ProfileScreen extends StatelessWidget {
   final userLoggedId = GetIt.instance<UserLogged>().user.id;
   @override
   Widget build(BuildContext context) {
-    print('Id perfil: ${user?.id}');
-    double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
-
     final followerCounterBloc = BlocProvider.of<FollowerCounterBloc>(context);
-
     followerCounterBloc.fetchFollowerCounter(user?.id ?? 0);
-
     profileBloc.checkFollow(user?.id ?? 0);
     profileBloc.checkBlock(user?.id ?? 0);
-    profileBloc.fetchChat(userLoggedId!, user?.id ?? 0);
+
+    String formatFollowers(int number) {
+      if (number < 1000) {
+        return number.toString();
+      } else if (number < 1000000) {
+        double formattedNumber = number / 1000.0;
+        return '${formattedNumber.toStringAsFixed(1)}K';
+      } else {
+        double formattedNumber = number / 1000000.0;
+        return '${formattedNumber.toStringAsFixed(1)}M';
+      }
+    }
+
 
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
-        int chatIdX = state.chatId;
         return Column(
           children: [
             Stack(
@@ -139,57 +146,77 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10,),
 
-                      Text('${user?.nameUser} ${user?.lastName}',style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 21),),
+                      Text('${user?.nameUser} ${user?.lastName}',
+                        textAlign: TextAlign.center,
+                        style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 21),),
 
-                      Text('${user?.nickname}',style: const TextStyle(color: Colors.white,fontSize: 18),),
+                      Text('${user?.nickname}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white,fontSize: 18),),
                       const SizedBox(height: 10,),
                       SizedBox(
                         width: screenWidth*.8,
                         child: BlocBuilder<FollowerCounterBloc, FollowerCounterState>(
-                          builder: (context, state) {
-                            return Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Text(state.numberOfSubscribers.toString(),style: const TextStyle(color: Colors.white,fontSize: 21,fontWeight: FontWeight.bold),),
-                                const Text('Suscritos',style: TextStyle(color: Colors.white),),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: (){
-                                //followerBloc.followersFetched();
-                                final followerBloc = BlocProvider.of<FollowBloc>(context);
+                         builder: (context, state) {
+                      return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                      InkWell(
+                      onTap: (){
+                      showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                      return CustomDialogAccept(
+                      text: 'La informacion de los suscritos no esta disponible',
+                      onAccept: () {
+                      Navigator.pop(context);
+                        },
+                      );
+                       },
+                      );
+                      },
+                      child: Column(
+                      children: [
+                      Text(formatFollowers(state.numberOfSubscribers),style: const TextStyle(color: Colors.white,fontSize: 21,fontWeight: FontWeight.bold),),
+                      const Text('Suscritos',style: TextStyle(color: Colors.white),),
+                      ],
+                      ),
+                      ),
+                      InkWell(
+                      onTap: (){
+                      //followerBloc.followersFetched();
+                      final followerBloc = BlocProvider.of<FollowBloc>(context);
 
-                                followerBloc.followersFetched(userLoggedId!,user!.id ?? 0);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  const FollowersList()));
-                              },
-                              child: Column(
-                                children: [
-                                  Text(state.numberOfFollowers.toString(),style: const TextStyle(color: Colors.white,fontSize: 21,fontWeight: FontWeight.bold),),
-                                  const Text('Seguidores',style: TextStyle(color: Colors.white),),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: (){
-                                final followerBloc = BlocProvider.of<FollowBloc>(context);
+                      followerBloc.followersFetched(userLoggedId!,user!.id ?? 0);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const FollowersList()));
+                      },
+                      child: Column(
+                      children: [
+                      Text(formatFollowers(state.numberOfFollowers),style: const TextStyle(color: Colors.white,fontSize: 21,fontWeight: FontWeight.bold),),
+                      const Text('Seguidores',style: TextStyle(color: Colors.white),),
+                      ],
+                      ),
+                      ),
+                      InkWell(
+                      onTap: (){
+                      final followerBloc = BlocProvider.of<FollowBloc>(context);
 
-                                followerBloc.followingsFetched(userLoggedId!, user!.id ?? 0);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const FollowingList()));
+                      followerBloc.followingsFetched(userLoggedId!, user!.id ?? 0);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const FollowingList(isMyProfile: false,)));
 
-                              },
-                              child: Column(
-                                children: [
-                                  Text(state.numberOfFollowings.toString(),style: const TextStyle(color: Colors.white,fontSize: 21, fontWeight: FontWeight.bold),),
-                                  const Text('Seguidos',style: TextStyle(color: Colors.white),),
-                                ],
-                              ),
-                            )
-                          ],
-                        );
-  },
-),
+                      },
+                      child: Column(
+                      children: [
+                      Text(formatFollowers(state.numberOfFollowings),style: const TextStyle(color: Colors.white,fontSize: 21, fontWeight: FontWeight.bold),),
+                      const Text('Seguidos',style: TextStyle(color: Colors.white),),
+                      ],
+                      ),
+                      )
+                      ],
+                      );
+                      })
+
+
                       ),
                       const SizedBox(height: 30,),
                       Container(
@@ -204,12 +231,13 @@ class ProfileScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                            GestureDetector(
+                            BlocBuilder<FollowerCounterBloc, FollowerCounterState>(
+  builder: (context, state) {
+    return GestureDetector(
                             onTap: (){
-
-                                profileBloc.toggleFollowProfile(user?.id ?? 0, state.isFollowed);
-
-
+                                //profileBloc.toggleFollowProfile(user?.id ?? 0, state.isFollowed);
+                                final followerCounterBloc = BlocProvider.of<FollowerCounterBloc>(context);
+                                followerCounterBloc.toggleFollowProfile(user?.id ?? 0,state.isFollowed);
                             },
                               child:
                               Container(
@@ -228,7 +256,9 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            ),
+                            );
+  },
+),
                                 GestureDetector(
                                   onTap: () async {
                                     if(state.isBlock){
@@ -247,11 +277,28 @@ class ProfileScreen extends StatelessWidget {
                                       chatBloc.clearMessages();
                                       chatBloc.dataChatFetched(user!.id!);
                                       final  chatsDataProvider = ChatsDataProvider();
-                                      final chat = await chatsDataProvider.createChat(userLoggedId!, user!.id!);
-                                      chatBloc.messageFetched(chat.chatId!,0,8);
-                                      Navigator.push(context,MaterialPageRoute(
-                                          builder: (context) =>  ChatScreen(userId: user!.id!, chatId: chat.chatId!, userReceivedId: user!.id!,)));
-                                    }
+                                      final response = await chatsDataProvider.validateCreateChat(userLoggedId!, user!.id!);
+                                      if(response == 'chat created'){
+                                        final chat = await chatsDataProvider.createChat(userLoggedId!, user!.id!);
+                                        chatBloc.messageFetched(chat.chatId!,0,8);
+                                        Navigator.push(context,MaterialPageRoute(
+                                            builder: (context) =>  ChatScreen(userId: user!.id!, chatId: chat.chatId!, userReceivedId: user!.id!,)));
+
+                                      }else if(response == 'This user is not a creator'){
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CustomDialogAccept(
+                                              text: '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                                              onAccept: () {
+                                                Navigator.pop(context);
+                                              },
+                                            );
+                                          },
+                                        );
+
+                                      }
+                                     }
                                     },
                                   child:
                                   Container(
@@ -276,9 +323,7 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-
                                 ),
-
                               ],
                             ),
 
@@ -294,7 +339,7 @@ class ProfileScreen extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-                            user?.state?.isNotEmpty == true ? user!.state! : 'Sin estado',
+                            user?.state?.isNotEmpty == true ? user!.state! : 'Chatea conmigo',
                             style: const TextStyle(color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
@@ -303,20 +348,20 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(
                         height: 35,
                       ),
-                      SizedBox(
+                      user?.isCreator ?? false ? SizedBox(
                         width: MediaQuery.of(context).size.width*.8,
 
                         child: ListTile(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          leading: const Icon(Icons.people, color: Colors.white,size: 36,),
+                          leading: const Icon(Icons.done_outline, color: Colors.green,size: 36,),
                           tileColor: const Color(0xFF354271).withOpacity(0.97),
                           textColor: Colors.white,
-                          title: const Text('Suscritos'),
-                          subtitle: Text(state.numberOfSubscribers.toString()),
+                          title: const Text('Usuario creador'),
+
                         ),
-                      ),
+                      ): const SizedBox(),
                       const SizedBox(
                         height: 6,
                       ),
@@ -346,7 +391,7 @@ class ProfileScreen extends StatelessWidget {
                           leading: const Icon(Icons.flag, color: Colors.white,size: 36,),
                           tileColor: const Color(0xFF354271).withOpacity(0.97),
                           textColor: Colors.white,
-                          title: const Text('Pais'),
+                          title: const Text('País'),
                           subtitle: Text('${user?.country}'),
                         ),
                       ),
@@ -369,7 +414,7 @@ class ProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                                 child: ListTile(
-                                  title: const Text('Favoritos', style: TextStyle(color: Colors.green)),
+                                  title: const Text('Mensajes favoritos', style: TextStyle(color: Colors.green)),
                                   trailing: const Icon(Icons.star, color: Colors.green),
                                   onTap: () {},
                                 ),
@@ -394,7 +439,6 @@ class ProfileScreen extends StatelessWidget {
                                 height: 6,
                               ),
                               BlocBuilder<ChatListBloc, ChatListState>(
-
                               builder: (context, state) {
                                  return Container(
                                 decoration: BoxDecoration(
@@ -404,24 +448,58 @@ class ProfileScreen extends StatelessWidget {
                                 child: state.isLoadingDeleteChat? const Center(child:CircularProgressIndicator()):ListTile(
                                   title: const Text('Eliminar chat usuario', style: TextStyle(color: Colors.red)),
                                   trailing: const Icon(Icons.delete, color: Colors.red),
-                                  onTap: () {
-                                    chatListBloc.deleteChat(chatIdX);
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text: 'Chat eliminado',
-                                          onAccept: () {
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
+                                  onTap: () async {
+                                    final chatRepository = GetIt.instance<ChatRepository>();
+                                    final  chatsDataProvider = ChatsDataProvider();
+                                    final response = await chatsDataProvider.validateCreateChat(userLoggedId!, user!.id!);
+                                    if(response == 'chat created'){
+                                      final chat = await chatRepository.createChat(userLoggedId!,user!.id!);
+                                      chatListBloc.deleteChat(chat.chatId!);
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: 'Chat eliminado' ,
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }else if(response == 'This user is not a creator'){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: '¡Oops!\nEl chat no existe.',
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }else{
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: '¡Oops!\nEl chat no existe.',
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+
+
+
+                                    }
+
                                 ),
                               );
   },
-),
+)
                             ],
                           ),
                         )

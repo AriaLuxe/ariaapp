@@ -1,11 +1,12 @@
+import 'package:ariapp/app/config/styles.dart';
 import 'package:flutter/material.dart';
 
-class CustomButtonBlue extends StatelessWidget {
+class CustomButtonVoiceClone extends StatelessWidget {
   final String text;
   final dynamic onPressed;
   final double width;
 
-  const CustomButtonBlue({
+  const CustomButtonVoiceClone({
     Key? key,
     required this.text,
     required this.onPressed,
@@ -20,9 +21,17 @@ class CustomButtonBlue extends StatelessWidget {
       onTap: isButtonEnabled ? onPressed : null,
       child:
       Container(
+
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFF5368d6),
+          shape: BoxShape.rectangle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 100,
+            ),
+          ],
+          color: Styles.primaryColor,
           borderRadius: BorderRadius.circular(30.0),
         ),
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),

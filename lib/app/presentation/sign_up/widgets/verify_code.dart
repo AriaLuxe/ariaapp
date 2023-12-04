@@ -2,9 +2,9 @@ import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_pro
 import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/reset_password.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
+import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'dart:async';
 
 import '../../../domain/entities/user_aria.dart';
@@ -31,7 +31,7 @@ class _VerifyCodeState extends State<VerifyCode> {
   @override
   void initState() {
     super.initState();
-    countdown = 120;
+    countdown = 180;
     startCountdown();
   }
 
@@ -53,7 +53,7 @@ class _VerifyCodeState extends State<VerifyCode> {
 
   void resetCountdown() {
     setState(() {
-      countdown = 120;
+      countdown = 180;
       isResendButtonEnabled = false;
       isCountdownVisible = true;
     });
@@ -73,24 +73,7 @@ class _VerifyCodeState extends State<VerifyCode> {
   }
   final usersRepository = GetIt.instance<UserAriaRepository>();
 
-  final  noMatchSnackBar = const SnackBar(
-      backgroundColor: Colors.red,
-      content: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error,size: 60,),
-            Column(
-              children: [
-                Text('Error verifique su codigo', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
 
-              ],
-            ),
-          ],
-        ),
-      )
-
-  );
   final  successSnackBar = const SnackBar(
       backgroundColor: Colors.green,
       content: Center(
@@ -170,8 +153,8 @@ class _VerifyCodeState extends State<VerifyCode> {
               width: double.infinity,
               height: size.height * 0.08,
               child: Image.asset(
-                'assets/images/logo-aia.jpg',
-                key: const ValueKey<String>('assets/images/logo-aia.jpg'),
+                'assets/images/tree_oficial.png',
+                key: const ValueKey<String>('assets/images/tree_oficial.png'),
               ),
             ),
             const Spacer(),
@@ -192,7 +175,7 @@ class _VerifyCodeState extends State<VerifyCode> {
             const Spacer(),
             SizedBox(
               width: size.width * 0.8,
-              child:  CodeInput(label: 'Código OTP',controller: _controller,),
+              child:  CodeInput(label: 'Ingrese código',controller: _controller,),
             ),
             const Spacer(),
             if (isCountdownVisible)
@@ -203,10 +186,8 @@ class _VerifyCodeState extends State<VerifyCode> {
                 final emailValidation = EmailValidationDataProvider();
 
                 if(widget.isResetPassword){
-                  print('enviado');
                   await emailValidation.sendEmailToResetPassword(widget.email);
                 }else {
-                  print('enviado1');
                   await emailValidation.sendEmailToRegisterUser(widget.email);
 
                 }
@@ -224,29 +205,27 @@ class _VerifyCodeState extends State<VerifyCode> {
             SizedBox(
                 width: size.width*0.8,
                 child: CustomButton(text: widget.verify, onPressed: isLoading ? null : ()async{
-                  print(widget.isResetPassword);
                   if(widget.isResetPassword){
-
+                    //resetar password
                     final emailValidation = EmailValidationDataProvider();
                     //otro
                     print(widget.email);
                     final response = await emailValidation.verifyCodeToResetPassword(widget.email, _controller.text);
+                    print(response);
 
                     if(response == 'Code valid'){
                       setState(()  {
                         isLoading = true;
                       });
-                      await Future.delayed(const Duration(seconds: 2));
-                      setState(()  {
-                        isLoading = false;
-                      });
+
                       //context.pushNamed('/reset_password',pathParameters: {'email':widget.email.trim() });
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPassword(email: widget.email.trim(),)));
                       setState(() {
                         isLoading = false;
                       });
 
-                    }else if(response == 'No match code'){
+                    }
+                    else if(response == 'No match code'){
                       setState(()  {
                         isLoading = true;
                       });
@@ -254,99 +233,143 @@ class _VerifyCodeState extends State<VerifyCode> {
                       setState(()  {
                         isLoading = false;
                       });
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(noMatchSnackBar)
-                          .closed;
-                    }else if(response == 'There is no code with this email'){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: 'Código incorrecto',
+                            onAccept: () {
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
+                    }
+                    else if(response == 'Does not exist a code with this email'){
                       setState(()  {
                         isLoading = true;
                       });
-                      await Future.delayed(const Duration(seconds: 2));
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: 'Código vencido, por favor, reenviar nuevamente',
+                            onAccept: () {
+                              setState(()  {
+                                isLoading = false;
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
+                    }
+                    else if(response == 'There is no code with this email'){
+                      setState(()  {
+                        isLoading = true;
+                      });
 
-                      setState(()  {
-                        isLoading = false;
-                      });
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(notCodeSnackBar)
-                          .closed;
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: 'Usuario no registrado con este correo',
+                            onAccept: () {
+                              setState(()  {
+                                isLoading = false;
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
                     }
 
-
-                  }else {
-
+                  }
+                  else {
+                    //registrar user
                     final emailValidation = EmailValidationDataProvider();
                     final response = await emailValidation.verifyCodeWithEmailToRegisterUser(widget.email, _controller.text);
-
-
                     if(response == 'Code valid')
                     {
                       setState(()  {
                         isLoading = true;
                       });
-                      await Future.delayed(const Duration(seconds: 2));
-                      setState(()  {
-                        isLoading = false;
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: '¡Felicidades!\nSu cuenta ha sido creada con éxito. Inicie sesión para comenzar.',
+                            onAccept: () async{
+                              final user = UserAria(
+                                  nameUser: widget.user!.nameUser,
+                                  lastName: widget.user!.lastName,
+                                  email: widget.user!.email,
+                                  password: widget.user!.password,
+                                  gender: widget.user!.gender,
+                                  country:widget.user!.country,
+                                  city: widget.user!.city,
+                                  nickname: widget.user!.nickname,
+                                  dateBirth: widget.user!.dateBirth,
+                                  role: widget.user!.role
+                              );
+                              await usersRepository.signUpUser(user);
 
-                      final user = UserAria(
-                        nameUser: widget.user!.nameUser,
-                        lastName: widget.user!.lastName,
-                        email: widget.user!.email,
-                        password: widget.user!.password,
-                        gender: widget.user!.gender,
-                        country:widget.user!.country,
-                        city: widget.user!.city,
-                        nickname: widget.user!.nickname,
-                        dateBirth: widget.user!.dateBirth,
-                        role: widget.user!.role
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SignInScreen(),
+                                ),
+                              );
+                              setState(()  {
+                                isLoading = true;
+                              });
+                            },
+                          );
+                        },
                       );
-                      await usersRepository.signUpUser(user);
-                      print('register');
 
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(successSnackBar)
-                          .closed;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignInScreen(),
-                        ),
-                      );
-                    } else if(response == 'No match code'){
-                      setState(()  {
-                        isLoading = true;
-                      });
-                      await Future.delayed(const Duration(seconds: 2));
-                      setState(()  {
-                        isLoading = false;
-                      });
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(noMatchSnackBar)
-                          .closed;
-                    }else if(response == 'There is no code with this email'){
-                      setState(()  {
-                        isLoading = true;
-                      });
-                      await Future.delayed(const Duration(seconds: 2));
-
-                      setState(()  {
-                        isLoading = false;
-                      });
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(notCodeSnackBar)
-                          .closed;
-                      setState(() {
-                        isLoading = false;
-                      });
                     }
-
-
+                    else if(response == 'No match code'){
+                      setState(()  {
+                        isLoading = true;
+                      });
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: 'Código incorrecto',
+                            onAccept: () {
+                              setState(()  {
+                                isLoading = false;
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
+                    }
+                    else if(response == 'There is no code with this email'){
+                      setState(()  {
+                        isLoading = true;
+                      });
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomDialogAccept(
+                            text: 'Código vencido, por favor, reenviar nuevamente',
+                            onAccept: () {
+                              setState(()  {
+                                isLoading = false;
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
+                    }
                   }
-
-
                 }, width: 0.5)),
-
-
             const Spacer(flex: 5,),
           ],
         ),

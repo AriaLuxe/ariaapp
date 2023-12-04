@@ -74,7 +74,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                       ),
                       const SizedBox(height: 10),
                       buildInfoTile(
-                          Icons.description, 'title', state.title),
+                          Icons.description, 'Título de voz', state.title),
                       const SizedBox(height: 5),
                       buildInfoTile(Icons.description, 'Descripción',
                           state.description),
@@ -213,13 +213,18 @@ class _VoiceScreenState extends State<VoiceScreen> {
                         int? userId = await SharedPreferencesManager
                             .getUserId();
                         //TODO
-                        voiceRepository.editSettingsVoiceClone(4,
+                        print(state.similarity);
+                        voiceBloc.updateSimilarity(double.parse(state.similarity));
+                        voiceBloc.updateStability(double.parse(state.stability));
+                        voiceRepository.editSettingsVoiceClone(
+                            userId!,
                             double.parse(state.stability),
                             double.parse(state.similarity));
-                      }, width: 0.5) :
-                      const SizedBox(),
-                      const SizedBox(height: 15),
 
+
+
+                      }, width: 0.5) :
+                      const SizedBox(height: 15),
                       const Text(
                         'Probar voz',
                         style: TextStyle(
@@ -233,14 +238,13 @@ class _VoiceScreenState extends State<VoiceScreen> {
                               0.26),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: TextFormField(
                             controller: _testVoice,
                             cursorColor: Colors.white,
                             decoration: const InputDecoration(
                               floatingLabelBehavior: FloatingLabelBehavior
                                   .never,
-
                               labelText: 'Ingrese texto aquí',
                               border: InputBorder.none,
                               labelStyle: TextStyle(color: Colors.white),

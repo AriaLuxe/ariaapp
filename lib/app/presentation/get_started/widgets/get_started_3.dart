@@ -1,4 +1,3 @@
-import 'package:ariapp/app/presentation/get_started/widgets/animated_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/custom_button.dart';
@@ -15,7 +14,6 @@ class GetStarted3 extends StatefulWidget {
 
 class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -26,13 +24,7 @@ class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStat
       duration: Duration(milliseconds: 500),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(-1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+
 
     // Inicia la animación cuando se carga el widget
     _controller.forward();
@@ -75,6 +67,7 @@ class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStat
                             const Text(
                               'Imagina Controla y Transforma el mundo!',
                             //  textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -88,6 +81,8 @@ class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStat
                               style: TextStyle(
                                 fontSize: 24,
                               ),
+                              textAlign: TextAlign.center,
+
                             ),
                             const SizedBox(
                               height: 15,

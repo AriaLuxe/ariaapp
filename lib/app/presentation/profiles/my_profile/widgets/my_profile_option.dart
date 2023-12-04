@@ -11,7 +11,7 @@ class MyProfileOption extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
       ),
-      leading:  Icon(icon, color: Colors.white,size: 36,),
+      leading:  Icon(icon, color: Colors.white,size: 27,),
       tileColor: const Color(0xFF354271).withOpacity(0.97),
       textColor: Colors.white,
       title:  Text(title),

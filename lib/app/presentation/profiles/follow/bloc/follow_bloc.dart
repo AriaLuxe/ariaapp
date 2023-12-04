@@ -37,10 +37,11 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
       ) async {
     emit(state.copyWith(followersStatus: FollowStatus.initial));
     try {
-      int? userId = await  SharedPreferencesManager.getUserId();
       final List<Follower> followers = await userAriaRepository.getFollowers(event.userId, event.userLooking);
       List<Follower> followersUpdated = [];
-
+      print('followers.length');
+      print('followers.length');
+      print(followers.length);
       for (final chat in followers) {
         followersUpdated.add(chat);
       }
@@ -62,8 +63,14 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
     emit(state.copyWith(followingStatus: FollowStatus.loading));
 
     try {
-      int? userId = await SharedPreferencesManager.getUserId();
       final List<Follower> following = await userAriaRepository.getFollowing(event.userId, event.userLooking);
+      List<Follower> followersUpdated = [];
+      print('following.length');
+      print('following.length');
+      print(following.length);
+      for (final chat in following) {
+        followersUpdated.add(chat);
+      }
       emit(state.copyWith(
         followingStatus: FollowStatus.success,
         following: following,
@@ -79,8 +86,7 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
     emit(state.copyWith(subscribersStatus: FollowStatus.loading));
 
     try {
-      int? userId = await SharedPreferencesManager.getUserId();
-      final List<Follower> subscribers = await userAriaRepository.getSubscribers(userId!);
+      final List<Follower> subscribers = await userAriaRepository.getSubscribers(event.userId);
 
       emit(state.copyWith(
         subscribersStatus: FollowStatus.success,
@@ -91,8 +97,8 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
     }
   }
 
-  void subscribersFetched() {
-    add(const FetchSubscribers());
+  void subscribersFetched(int userId) {
+    add( FetchSubscribers(userId));
   }
 
 
@@ -102,16 +108,13 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
       int? userId = await SharedPreferencesManager.getUserId();
 
       if(event.isFollowing){
-        print('event.follower.idUser!');
 
-        print(event.follower.idUser!);
-        final response = await userAriaRepository.follow(userId!,event.follower.idUser!);
+        final response = await userAriaRepository.follow(userId!,event.follower.idUser);
         print(response);
         print('siguiendo');
     }
     else {
-        print('event.follower.idRequest');
-        print(event.requestId);
+
         final response = await userAriaRepository.unFollow(event.requestId);
         if(response == 'Request deleted' ){
           print('se dejo de seguir');

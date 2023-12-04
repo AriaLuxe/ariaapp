@@ -11,41 +11,6 @@ import 'chat_list/chats_list.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({super.key});
-  void _newMessage(BuildContext context, ChatListBloc chatListBloc) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-            initialChildSize: 0.9,
-            expand: false,
-            builder: (context, scrollController) => Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const Text(
-                          'Nuevo Chat',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            chatListBloc.chatsAdded(1, 2);
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Crear'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ));
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +19,20 @@ class ChatsScreen extends StatelessWidget {
     final userId = GetIt.instance<UserLogged>().user.id;
     final profileBloc = context.watch<ProfileBloc>();
     profileBloc.fetchDataProfile(userId!);
-    return  const SafeArea(
+    return   SafeArea(
       child:  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 25.0, right:25, top:  15),
                     child: Text('Chats',style: TextStyle(color: Colors.white,fontSize: 24),),
                   ),
-                  CustomSearchBar(title:'Buscar chat'),
-                  ChatsList(),
+                  CustomSearchBar(
+                    title: 'Buscar usuario...',
+                    onChanged: (keyword){
+                      chatListBloc.searchChats(keyword,userId);
+                    },),
+                  const ChatsList(),
                 ],
             ),
     );

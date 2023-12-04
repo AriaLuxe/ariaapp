@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../config/styles.dart';
 
 class TextInput extends StatelessWidget {
-  TextInput({
+   const TextInput({
     super.key,
     required this.label,
     required this.verticalPadding,
@@ -28,7 +28,7 @@ class TextInput extends StatelessWidget {
   final bool readOnly;
   final bool enabled;
   final FloatingLabelBehavior isAnimated;
-  void Function()? onTap;
+  final void Function()? onTap;
   final TextInputType? textInputType;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
@@ -54,8 +54,7 @@ style: const TextStyle(color: Colors.white),
         floatingLabelBehavior: isAnimated,
         prefixIcon: Icon(
           prefixIcon,
-          color: Colors.white
-          ,
+          color: Colors.white,
         ),
         suffixIcon: suffixIcon,
         hintStyle: const TextStyle(

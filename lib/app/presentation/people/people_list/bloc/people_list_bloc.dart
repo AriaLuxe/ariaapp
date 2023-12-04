@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../domain/entities/user_aria.dart';
-import '../../../../security/shared_preferences_manager.dart';
 
 part 'people_list_event.dart';
 part 'people_list_state.dart';
@@ -22,6 +21,7 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
     });
     on<PeopleFetched>(_onPeopleFetched);
     on<SearchPeople>(_onSearchPeople);
+    on<LoadMoreUsers>(_onLoadMoreUsers);
   }
 
   Future<void> _onPeopleFetched(
@@ -32,7 +32,7 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
     // print(userLogged.userAria.id!);
     try {
       final List<UserAria> users =
-      await usersRepository.getAllFriends();
+      await usersRepository.getAllFriends(event.page,event.pageSize);
       List<UserAria> usersUpdated = [];
 
       for (final user in users) {
@@ -50,8 +50,8 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
     }
   }
 
-  void peopleFetched() {
-    add(PeopleFetched());
+  void peopleFetched(int page, int pageSize) {
+    add(PeopleFetched(page,pageSize));
   }
 
   Future<void> _onSearchPeople(
@@ -77,4 +77,33 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
   void searchPeople(String keyword){
     add(SearchPeople(keyword));
   }
+
+  Future<void> _onLoadMoreUsers(
+      LoadMoreUsers event,
+      Emitter<PeopleListState> emit,
+      ) async {
+    try {
+      final List<UserAria> users =
+      await usersRepository.getAllFriends(event.page,event.pageSize);
+      List<UserAria> moreUsers = [];
+
+      for (final user in users) {
+        moreUsers.add(user);
+      }
+      emit(
+        state.copyWith(
+          peopleListStatus:  PeopleListStatus.success,
+          users: [...state.users, ...moreUsers],
+          hasMoreMessages: moreUsers.isNotEmpty,
+        ),
+      );
+    } catch (e) {
+      print(e);
+      emit(state.copyWith(peopleListStatus:  PeopleListStatus.error));
+    }
+  }
+  void loadMoreUsers( int page, int pageSize) {
+    add(LoadMoreUsers(page, pageSize));
+  }
+
 }

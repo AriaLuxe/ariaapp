@@ -1,4 +1,3 @@
-import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:flutter/material.dart';
 
 
@@ -21,18 +20,21 @@ class GetStarted1 extends StatelessWidget {
               children: [
                 SizedBox(
                   width: double.infinity,
-                  height: size.height * 0.1,
+                  height: 100,
                   child: Image.asset(
-                    'assets/images/logo-aia.jpg',
-                    key: const ValueKey<String>('assets/images/logo-aia.jpg'),
+                    'assets/images/tree_oficial.png',
+                    key: const ValueKey<String>('assets/images/tree_oficial.png'),
                   ),
+                ),
+                 SizedBox(
+                  height: size.height * 0.05,
                 ),
                 SizedBox(
                   width: double.infinity,
-                  height: size.height * 0.08,
+                  height: 50,
                   child: Image.asset(
-                    'assets/images/aia.jpg',
-                    key: const ValueKey<String>('assets/images/aia.jpg'),
+                    'assets/images/aia.png',
+                    key: const ValueKey<String>('assets/images/aia.png'),
                   ),
                 ),
               ],

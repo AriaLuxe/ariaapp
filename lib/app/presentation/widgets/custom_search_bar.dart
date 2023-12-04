@@ -19,21 +19,21 @@ class CustomSearchBar extends StatelessWidget {
           filled: true,
 
           enabledBorder:  OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(18.0)),
             borderSide: BorderSide(
               color: Styles.inputColor,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: const BorderRadius.all(Radius.circular(18)),
               borderSide: BorderSide(
                 color: Styles.inputColor,
               )),
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          contentPadding: EdgeInsets.symmetric(vertical: 3.0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 3.0),
           labelText: title,
-          prefixIcon: Icon(Icons.search, color: Colors.grey),
-          labelStyle: TextStyle(color: Colors.grey),
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          labelStyle: const TextStyle(color: Colors.grey),
         ),
       ),
     );

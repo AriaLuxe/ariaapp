@@ -20,9 +20,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: BlocProvider(
         create: (context) => SignUpBloc(),
         child: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: const SingleChildScrollView(child: SignUpForm()),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: const SingleChildScrollView(child: SignUpForm()),
+            ),
           ),
         ),
       ),

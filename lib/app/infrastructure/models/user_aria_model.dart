@@ -15,7 +15,7 @@ class UserAriaModel extends UserAria {
     required String country,
     required String city,
     required String registerDate,
-    required bool enabled,
+    required bool isCreator,
     required String nickname,
     required String role,
     required String state,
@@ -31,7 +31,7 @@ class UserAriaModel extends UserAria {
           country: country,
           city: city,
           registerDate: registerDate,
-          enabled: enabled,
+      isCreator: isCreator,
           nickname: nickname,
           role: role,
       state:state
@@ -52,7 +52,7 @@ class UserAriaModel extends UserAria {
         country: json['country'] ?? '',
         city: json['city'] ?? '',
         registerDate: json['registerDate'] ?? '',
-        enabled: json['enabled'] ?? false,
+      isCreator: json['isCreator'] ?? false,
         nickname: json['nickName'] ?? '',
         role: json['role'] ?? '',
         state: json['state'] ?? '',
@@ -73,7 +73,7 @@ class UserAriaModel extends UserAria {
       'country': country,
       'city': city,
       'registerDate': registerDate,
-      'enabled': enabled,
+      'isCreator': isCreator,
       'nickname': nickname,
       'role': role
     };

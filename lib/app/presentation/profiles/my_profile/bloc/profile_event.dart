@@ -54,14 +54,7 @@ class ProfileDefaultPhoto extends ProfileEvent {
   List<Object?> get props => [url];
 }
 
-class FetchChat extends ProfileEvent {
-  final int userLogger;
-  final int user;
-  const FetchChat(this.userLogger, this.user);
 
-  @override
-  List<Object> get props => [userLogger,user];
-}
 class LoadingDeleteChat extends ProfileEvent {
   final bool isLoadingDeleteChat;
 

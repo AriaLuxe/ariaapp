@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../sign_in/sing_in_screen.dart';
 import '../../widgets/custom_button.dart';
 
@@ -15,7 +14,6 @@ final dynamic onPress;
 class _GetStarted4State extends State<GetStarted4> with SingleTickerProviderStateMixin {
 
   late AnimationController _controller;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -26,13 +24,6 @@ class _GetStarted4State extends State<GetStarted4> with SingleTickerProviderStat
       duration: Duration(milliseconds: 500),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(-1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
 
     // Inicia la animación cuando se carga el widget
     _controller.forward();
@@ -90,6 +81,7 @@ class _GetStarted4State extends State<GetStarted4> with SingleTickerProviderStat
                               style: TextStyle(
                                 fontSize: 24,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(
                               height: 15,
@@ -119,25 +111,20 @@ class _GetStarted4State extends State<GetStarted4> with SingleTickerProviderStat
                                         border: Border.all(
                                             color: Colors.white,
                                             width: 4
-// Color del borde blanco
                                         ),
                                         borderRadius: BorderRadius.circular(30.0), // Bordes circulares
                                       ),
                                       child: CustomButton(text: 'Comenzar', onPressed: (){
                                         Navigator.push(context,MaterialPageRoute(builder: (context) => const SignInScreen()));
-                                      //  context.push('/sign_in');
-
                                       }, width: 0.4),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            // Resto de tu contenido
                           ],
                         ),
                       ),),
-
             ],
           ),
         ),

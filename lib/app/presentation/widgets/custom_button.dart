@@ -15,7 +15,6 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isButtonEnabled = onPressed != null;
-    final baseColor = Color(0xFF9269BE);
 
     return GestureDetector(
       onTap: isButtonEnabled ? onPressed : null,
@@ -27,8 +26,8 @@ class CustomButton extends StatelessWidget {
               begin: Alignment.centerRight,
               end: Alignment.centerLeft,
               colors: isButtonEnabled
-                  ? [Color(0xFF9269BE), Color(0xFF5368D6)]
-                  : [Color(0xFF9269BE).withOpacity(0.36), Color(0xFF5368D6).withOpacity(0.36)], // Color gris para botón bloqueado
+                  ? [const Color(0xFF9269BE), const Color(0xFF5368D6)]
+                  : [const Color(0xFF9269BE).withOpacity(0.36), const Color(0xFF5368D6).withOpacity(0.36)], // Color gris para botón bloqueado
             ),
             borderRadius: BorderRadius.circular(30.0),
           ),

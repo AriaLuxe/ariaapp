@@ -10,7 +10,7 @@ class UserAria {
   final String country;
   final String city;
   final String? registerDate;
-  final bool? enabled;
+  final bool? isCreator;
   final String nickname;
   final String? role;
   final String? state;
@@ -26,7 +26,7 @@ class UserAria {
       required this.gender,
       required this.country,
       required this.city,
-      this.enabled,
+      this.isCreator,
       this.registerDate,
       required this.nickname,
       this.role,

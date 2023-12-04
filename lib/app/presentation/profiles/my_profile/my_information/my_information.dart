@@ -1,20 +1,12 @@
 import 'package:ariapp/app/presentation/widgets/header.dart';
-import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/user_logged.dart';
-import 'package:country_picker/country_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
-import '../../../../config/styles.dart';
 import '../../../../infrastructure/repositories/user_aria_repository.dart';
-import '../../../../security/user_logged.dart';
-import '../../../../security/user_logged.dart';
 import '../../../sign_in/widgets/text_input.dart';
-import '../../../widgets/arrow_back.dart';
 import '../../../widgets/custom_button.dart';
 import '../update_information/bloc/my_profile_bloc.dart';
 
@@ -95,6 +87,9 @@ class _MyInformationState extends State<MyInformation> {
                   child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      SizedBox(
+                        height: size.height*0.02,
+                      ),
                       Header(title: 'Mi información',onTap: (){
                         Navigator.pop(context);
                       },),

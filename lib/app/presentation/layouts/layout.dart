@@ -48,23 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
 final userRepository = GetIt.instance<UserAriaRepository>();
   final userLogged = GetIt.instance<UserLogged>();
 
-  final List<Widget> _pages = [
-    const ChatsScreen(),
-    const PeopleScreen(),
-    const VoiceScreen(),
-     const MyProfileScreen(),
-  ];
+
   Future<void> _loadUserData() async {
     int? userId = await SharedPreferencesManager.getUserId();
     user = await userRepository.getUserById(userId!);
     //final userId = GetIt.instance<UserLogged>().user.id;
 
   }
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+
   int backButtonCounter = 0;
 
 
@@ -81,9 +72,7 @@ final userRepository = GetIt.instance<UserAriaRepository>();
       onWillPop: ()async{
         backButtonCounter++;
         if (backButtonCounter > 1) {
-          print('1');
           SystemNavigator.pop();
-
           return true;
         } else {
           backButtonCounter = 0;
@@ -127,7 +116,7 @@ final userRepository = GetIt.instance<UserAriaRepository>();
               child: widget.navigationShell,
             ),//_pages[_selectedIndex],
             bottomNavigationBar: SizedBox(
-              height: 80,
+              height: 52,
               child: Stack(
                 children: [
                   Container(
@@ -151,18 +140,20 @@ final userRepository = GetIt.instance<UserAriaRepository>();
                   Theme(
                     data: Theme.of(context).copyWith(
                         canvasColor: Colors.transparent,
-                      //  primaryColor: Styles.primaryColor,
                         textTheme: Theme
                             .of(context)
                             .textTheme
                             .copyWith(
                             bodySmall: const TextStyle(color: Colors.white))),
                     child: BottomNavigationBar(
-
+                      unselectedFontSize: 13,
+                      selectedFontSize: 13,
                       elevation: 0,
-                     // selectedItemColor: Styles.primaryColor,
                       selectedIconTheme: const IconThemeData(
-                        size: 30
+                        size: 20
+                      ),
+                      unselectedIconTheme: const IconThemeData(
+                          size: 20
                       ),
                       items:  [
                         const BottomNavigationBarItem(
@@ -171,11 +162,11 @@ final userRepository = GetIt.instance<UserAriaRepository>();
                         ),
                         const BottomNavigationBarItem(
                           icon: Icon(Icons.travel_explore),
-                          label: 'People',
+                          label: 'Personas',
                         ),
                         const BottomNavigationBarItem(
                           icon: Icon(Icons.graphic_eq),
-                          label: 'Voice',
+                          label: 'Crear',
                         ),
                         BottomNavigationBarItem(
                           icon: BlocBuilder<ProfileBloc, ProfileState>(
@@ -195,7 +186,6 @@ final userRepository = GetIt.instance<UserAriaRepository>();
                         setState(() {
                           _selectedIndex = index;
                         });
-
                         _goBranch(_selectedIndex);
                       },
                     ),
@@ -221,7 +211,7 @@ final userRepository = GetIt.instance<UserAriaRepository>();
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      radius: 19,
+      radius: 13,
       backgroundImage: NetworkImage(profileImageURL),
       backgroundColor: Styles.primaryColor,
     );

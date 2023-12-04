@@ -2,7 +2,6 @@ import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/player_response.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/response_record.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,14 +24,13 @@ class _QuestionResponseState extends State<QuestionResponse> {
       width: MediaQuery.of(context).size.width*0.8,
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.77),
+        color: Colors.white.withOpacity(0.67),
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: Column(
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width*0.7,
-
             child: Text(
               widget.question,style: TextStyle(
                 color: Styles.primaryColor,
