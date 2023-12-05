@@ -62,3 +62,17 @@ class LoadMoreMessages extends ChatEvent {
   @override
   List<Object> get props => [chatId, page, pageSize];
 }
+class SelectedMessage extends ChatEvent {
+  final int index;
+  final int userId;
+
+  const SelectedMessage(this.index, this.userId);
+  @override
+  List<Object> get props => [index, userId];
+
+}
+class DeleteMessage extends ChatEvent {
+  final int messageId;
+  final int index;
+  const DeleteMessage(this.messageId, this.index);
+}

@@ -4,6 +4,7 @@ enum ChatStatus { initial, loading, error, success }
 
 class ChatState extends Equatable {
   final List<ChatMessageWidget> messages;
+  final List<Message> messagesData;
   final List<AudioPlayer> audioControllers;
   final ChatStatus chatStatus;
   final bool isRecording;
@@ -14,14 +15,16 @@ class ChatState extends Equatable {
   final int userId;
   final bool isFirstMessage;
 
+
   final int currentPage;
   final bool hasMoreMessages;
-  const ChatState( {
+  const ChatState({
     this.userId = 0,
     this.isFirstMessage = false,
     this.name = '',
     this.urlPhoto = '',
     this.messages = const <ChatMessageWidget>[],
+    this.messagesData = const <Message>[],
     this.audioControllers = const [],
     this.chatStatus = ChatStatus.initial,
     this.isRecording = false,
@@ -33,6 +36,7 @@ class ChatState extends Equatable {
 
   ChatState copyWith({
     List<ChatMessageWidget>? messages,
+    List<Message>? messagesData,
     List<AudioPlayer>? audioControllers,
     ChatStatus? chatStatus,
     bool? isRecording,
@@ -44,9 +48,11 @@ class ChatState extends Equatable {
      int? currentPage,
      bool? hasMoreMessages,
     int? userId,
+    int? selectedMessageIndex,
+
   }) {
     return ChatState(
-      isFirstMessage: isFirstMessage ?? this.isFirstMessage,
+        isFirstMessage: isFirstMessage ?? this.isFirstMessage,
       name: name ?? this.name,
       urlPhoto: urlPhoto ?? this.urlPhoto,
       messages: messages ?? this.messages,
@@ -57,7 +63,9 @@ class ChatState extends Equatable {
       path: path ?? this.path,
       currentPage: currentPage ?? this.currentPage,
         hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
-        userId: userId ?? this.userId
+        userId: userId ?? this.userId,
+        messagesData: messagesData ?? this.messagesData,
+
     );
   }
 
@@ -74,6 +82,7 @@ class ChatState extends Equatable {
     recordingResponse,
     currentPage,
     hasMoreMessages,
-    userId
+    userId,
+    messagesData,
   ];
 }

@@ -7,6 +7,7 @@ import 'package:ariapp/app/presentation/chats/chat/widgets/chat_message_widget.d
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -38,6 +39,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<DataChatFetched>(_onDataChatFetched);
     on<ClearMessages>(_onClearMessage);
     on<LoadMoreMessages>(_onLoadMoreMessages);
+    on<SelectedMessage>(_onSelectedMessage);
+    on<DeleteMessage>(_onDeleteMessage);
 
   }
 
@@ -59,10 +62,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final chatMessage = _processMessages(messages,userId);
 
       emit(state.copyWith(
-            messages: chatMessage,
+        messages: chatMessage,
             chatStatus: ChatStatus.success,
             isFirstMessage: chatMessage.isEmpty ? true: false,
             currentPage: 0,
+        messagesData: messages,
           )
         );
 
@@ -111,6 +115,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _clearAudioPlayer(state.audioControllers);
       emit(state.copyWith(
         messages: [],
+        messagesData: []
         ));
     } catch (e) {
       print(e);
@@ -133,6 +138,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       int? userId = await SharedPreferencesManager.getUserId();
       List<ChatMessageWidget> updatedMessage = List.from(state.messages);
+      List<Message> updatedMessageData = List.from(state.messagesData);
+
       // 1. Agregar mensaje del usuario actual
       final userMessage = _createUserMessage(event.audioPath);
       updatedMessage.insert(
@@ -140,17 +147,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           userMessage);
       emit(state.copyWith(messages: updatedMessage,recordingResponse: true));
       // 2. Enviar mensaje a la api
-      await messageRepository.createMessage(
+      final messageCreated = await messageRepository.createMessage(
         event.chatId,
         userId!,
         event.audioPath,
       );
+      updatedMessageData.insert(0, messageCreated);
+      emit(state.copyWith(messagesData: updatedMessageData));
+
       final messageResponse = await messageRepository.responseMessage(
         event.chatId,
         event.userReceivedId,
         event.audioPath,
       );
       // 3. Agregar mensaje de respuesta
+      updatedMessageData.insert(0, messageResponse);
+
       final responseMessage = _createResponseMessage(messageResponse);
       List<ChatMessageWidget> finalMessages = List.from(state.messages);
 
@@ -161,6 +173,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(state.copyWith(
         chatStatus: ChatStatus.success,
         messages: finalMessages,
+        messagesData: updatedMessageData,
         recordingResponse: false,
       ));
     } catch (e) {
@@ -177,6 +190,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       audioPlayer.setFilePath(audioPath);
     }
     return ChatMessageWidget(
+      color: const Color(0xFF354271),
       dateTime: DateTime.now(),
       read: false,
       isMe: true,
@@ -191,6 +205,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     audioPlayerResponse.setUrl('https://uploadsaria.blob.core.windows.net/files/${messageResponse.content}');
 
     return ChatMessageWidget(
+      color: const Color(0xFF354271),
       dateTime: DateTime.now(),
       read: messageResponse.read,
       isMe: false,
@@ -225,6 +240,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       chatMessages.add(
         //  0,
           ChatMessageWidget(
+            color: const Color(0xFF354271),
             audioPlayer: audioPlayer!,
             audioUrl: audioUrl,
             dateTime: message.date,
@@ -235,7 +251,60 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
     return chatMessages;
   }
+  Future<void> _onSelectedMessage(
+      SelectedMessage event,
+      Emitter<ChatState> emit,
+      ) async {
 
+    try {
+      final List<ChatMessageWidget> updatedMessages = List.from(state.messages);
+
+      if (event.index < updatedMessages.length) {
+        final ChatMessageWidget processedMessage =
+        _processMessageSelected(state.messagesData[event.index], event.userId);
+
+        state.messages[event.index] = processedMessage;
+      }
+
+      emit(state.copyWith(
+        messages: updatedMessages,
+      ));
+    } catch (e) {
+      emit(state.copyWith(chatStatus: ChatStatus.error));
+    }
+  }
+
+  void selectedMessage(int id,int userId) {
+    add(SelectedMessage(id,userId));
+  }
+  ChatMessageWidget _processMessageSelected(Message message, int userId) {
+
+    final List<AudioPlayer> audioControllers = [];
+    final List<ChatMessageWidget> chatMessages = [];
+
+      String? audioUrl;
+      AudioPlayer? audioPlayer;
+
+      audioUrl = message.content;
+      print(message.date);
+      if (audioUrl != null) {
+        audioPlayer = AudioPlayer();
+        audioPlayer.setUrl('https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+        audioControllers.add(audioPlayer);
+      }
+
+
+          return ChatMessageWidget(
+            color: const Color(0xFF5368d6),
+            audioPlayer: audioPlayer!,
+            audioUrl: audioUrl,
+            dateTime: message.date,
+            read: message.read,
+            isMe: message.sender ==userId,
+          );
+
+
+  }
 
   Future<void> _onShowPlayer(
   ShowPlayer event,
@@ -301,6 +370,31 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
   void loadMoreMessages(int id, int page, int pageSize) {
     add(LoadMoreMessages(id,page, pageSize));
+  }
+  Future<void> _onDeleteMessage(
+      DeleteMessage event,
+      Emitter<ChatState> emit,
+      ) async {
+    try {
+      final List<ChatMessageWidget> updatedMessages = List.from(state.messages);
+      final List<Message> updatedMessagesData = List.from(state.messagesData);
+      await messageRepository.deleteMessage(event.messageId);
+      if (event.index < updatedMessages.length) {
+        // Elimina el mensaje del estado y de la lista de datos
+        updatedMessages.removeAt(event.index);
+        updatedMessagesData.removeAt(event.index);
+      }
+
+      emit(state.copyWith(
+        messages: updatedMessages,
+        messagesData: updatedMessagesData,
+      ));
+    } catch (e) {
+      emit(state.copyWith(chatStatus: ChatStatus.error));
+    }
+  }
+  void deleteMessage(int messageId, int index) {
+    add(DeleteMessage(messageId,index));
   }
 
 }

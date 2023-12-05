@@ -2,15 +2,21 @@ import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../config/styles.dart';
 import '../chat/chat_screen.dart';
 import 'bloc/chat_list_bloc.dart';
 
-class ChatsList extends StatelessWidget {
+class ChatsList extends StatefulWidget {
   const ChatsList({super.key});
 
+  @override
+  State<ChatsList> createState() => _ChatsListState();
+}
+
+class _ChatsListState extends State<ChatsList> {
   String formatDuration(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
@@ -18,6 +24,11 @@ class ChatsList extends StatelessWidget {
     final secondsStr = remainingSeconds.toString().padLeft(2, '0');
     print(minutesStr);
     return '$minutesStr:$secondsStr';
+  }
+
+  Future<void> refresh() async {
+    final chatListBloc = BlocProvider.of<ChatListBloc>(context);
+    chatListBloc.chatsFetched();
   }
 
   @override
@@ -67,157 +78,163 @@ class ChatsList extends StatelessWidget {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
 
-                  child: ListView.builder(
-                    itemCount: state.chats.length,
-                    itemBuilder: (context, index) {
-                      final chat = state.chats[index];
-                      return Slidable(
-                        endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
+                  child: RefreshIndicator(
+                    onRefresh: refresh,
 
-                              onPressed: (BuildContext context) {
-                                chatListBloc.deleteChat(chat.chatId!);
-                              },
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
-                              icon: Icons.delete_outline,
-                              label: 'Borrar',
-                            ),
-                          ],
-                        ),
-                        key: UniqueKey(),
-                        child: GestureDetector(
-                          onTap: () {
-                            chatBloc.dataChatFetched(chat.userId);
-                            chatBloc.messageFetched(chat.chatId!,0,8);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>  ChatScreen(userId: chat.chatId!, chatId: chat.chatId!, userReceivedId: chat.userId,),
+                    child: ListView.builder(
+                      itemCount: state.chats.length,
+                      itemBuilder: (context, index) {
+                        final chat = state.chats[index];
+                        return Slidable(
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+
+                                onPressed: (BuildContext context) {
+                                  chatListBloc.deleteChat(chat.chatId!);
+                                },
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                icon: Icons.delete_outline,
+                                label: 'Borrar',
                               ),
-                            );
-                          },
-                          child: Padding(
-                            padding:  chat.unread ?? true ? const EdgeInsets.only(right:12.0):  const EdgeInsets.only(top: 0.0) ,
+                            ],
+                          ),
+                          key: UniqueKey(),
+                          child: GestureDetector(
+                            onTap: () {
+                              chatBloc.dataChatFetched(chat.userId);
+                              chatBloc.messageFetched(chat.chatId!,0,8);
+
+                             /*Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>  ChatScreen(userId: chat.chatId!, chatId: chat.chatId!, userReceivedId: chat.userId,),
+                                ),
+                              );*/
+                              context.push('/chat/${chat.chatId}/${chat.chatId!}/${chat.userId}');
+                            },
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0,
-                                      vertical: 0.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: chat.unread ?? true
-                                          ? const BorderRadius.only(
+                              padding:  chat.unread ?? true ? const EdgeInsets.only(right:12.0):  const EdgeInsets.only(top: 0.0) ,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0,
+                                        vertical: 0.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: chat.unread ?? true
+                                            ? const BorderRadius.only(
 
-                                        topRight: Radius.circular(20),
-                                        bottomRight: Radius.circular(20),
-                                      )
-                                          : const BorderRadius.only(
-                                        topLeft: Radius.circular(40),
-                                        topRight: Radius.circular(40),
-                                        bottomRight: Radius.circular(40),
-                                      ),                                color: chat.unread ?? false
-                                          ? const Color(0xff354271)
-                                          : Styles.primaryColor,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 30.0,
-                                                backgroundImage: NetworkImage(
-                                                  'https://uploadsaria.blob.core.windows.net/files/${chat.imgProfile}',
+                                          topRight: Radius.circular(20),
+                                          bottomRight: Radius.circular(20),
+                                        )
+                                            : const BorderRadius.only(
+                                          topLeft: Radius.circular(40),
+                                          topRight: Radius.circular(40),
+                                          bottomRight: Radius.circular(40),
+                                        ),                                color: chat.unread ?? false
+                                            ? const Color(0xff354271)
+                                            : Styles.primaryColor,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 30.0,
+                                                  backgroundImage: NetworkImage(
+                                                    'https://uploadsaria.blob.core.windows.net/files/${chat.imgProfile}',
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(width: 10.0),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '${chat.nameUser} ${chat.lastName}',
-                                                    maxLines: 1,
-                                                    style: const TextStyle(
-                                                      overflow: TextOverflow.ellipsis,
-                                                      color: Colors.white,
-                                                      fontSize: 15.0,
-                                                      fontWeight: FontWeight.bold,
+                                                const SizedBox(width: 10.0),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${chat.nameUser} ${chat.lastName}',
+                                                      maxLines: 1,
+                                                      style: const TextStyle(
+                                                        overflow: TextOverflow.ellipsis,
+                                                        color: Colors.white,
+                                                        fontSize: 15.0,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(height: 5.0),
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                        Icons.mic_rounded,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            MediaQuery.of(context)
-                                                                    .size
-                                                                    .width *
-                                                                0.45,
-                                                        child: Text(
-                                                          formatDuration(
-                                                              chat.durationSeconds ??
-                                                                  0),
-                                                          style: const TextStyle(
-                                                              color: Colors.grey,
-
-                                                            fontSize: 15.0,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                    const SizedBox(height: 5.0),
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.mic_rounded,
+                                                          color: Colors.grey,
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                '${DateFormat.jm().format(chat.dateLastMessage!)}',
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 15.0,
-                                                  fontWeight: FontWeight.bold,
+                                                        SizedBox(
+                                                          width:
+                                                              MediaQuery.of(context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.45,
+                                                          child: Text(
+                                                            formatDuration(
+                                                                chat.durationSeconds ??
+                                                                    0),
+                                                            style: const TextStyle(
+                                                                color: Colors.grey,
+
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight.w600,
+                                                            ),
+                                                            overflow: TextOverflow
+                                                                .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ),
-                                              const SizedBox(height: 5),
-                                              chat.unread ?? false
-                                                  ? const CircleAvatar(
-                                                    radius: 8,
-                                                    backgroundColor: Color(0xFF5368d6),
-                                                  )
-                                                  : const Text(''),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  DateFormat.jm().format(chat.dateLastMessage!),
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 15.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                chat.unread ?? false
+                                                    ? const CircleAvatar(
+                                                      radius: 8,
+                                                      backgroundColor: Color(0xFF5368d6),
+                                                    )
+                                                    : const Text(''),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               );

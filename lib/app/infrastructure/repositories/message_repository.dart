@@ -27,4 +27,16 @@ class MessageRepository extends MessageInterface {
     return response;
 
   }
+
+  @override
+  Future<void> deleteMessage(int messageId) {
+    final response = messageDataProvider.deleteMessage(messageId);
+    return response;
+  }
+
+  @override
+  Future<void> likedMessage(int messageId) {
+    final response = messageDataProvider.likedMessage(messageId);
+    return response;
+  }
 }

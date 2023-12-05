@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:ariapp/app/config/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
+
+
 
 class AudioRecorderView extends StatefulWidget {
 
@@ -157,44 +160,82 @@ class _RecordControlState extends State<RecordControl> {
   @override
   Widget build(BuildContext context) {
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildCancelButton(),
+    return Container(
+      height: MediaQuery.of(context).size.height*0.13,
+      decoration:  BoxDecoration(
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(23),topRight: Radius.circular(23)),
+        color: widget.isRecording ?  Colors.white: Styles.primaryColor,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          widget.isRecording? Padding(
+            padding: const EdgeInsets.only(bottom: 6.0),
+            child: Text('Grabando audio',style: TextStyle(color: Styles.primaryColor),),
+          ): const SizedBox(),
 
-        _buildRecordButton(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildCancelButton(),
 
-        _buildSendButton(),
-      ],
+              _buildRecordButton(),
+
+              _buildSendButton(),
+            ],
+          ),
+        ],
+      ),
     );
 
   }
 
   Widget _buildCancelButton() {
     return IconButton(
-        icon: const Icon(Icons.backspace),
-        onPressed: widget.onCancel,
+        icon:  Icon(Icons.backspace, color: widget.isRecording? Styles.primaryColor: Colors.grey),
+        onPressed: widget.isRecording? widget.onCancel: null,
     );
   }
 
   Widget _buildRecordButton() {
     if (widget.isRecording) {
-      return IconButton(
-        icon: Flash(
-          duration: const Duration(seconds: 2),
-          infinite: widget.isRecording,
-          child: Icon(widget.isPause?Icons.play_arrow:Icons.pause, color: Colors.white),
+      return Container(
+        decoration:  BoxDecoration(
+          shape: BoxShape.circle,
+          color: Styles.primaryColor,
         ),
-        onPressed:  widget.onPause
-         // _stopTimer;
-        ,
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: IconButton(
+            icon: Flash(
+              duration: const Duration(seconds: 2),
+              infinite: widget.isRecording,
+              child: Icon(widget.isPause?Icons.mic:Icons.pause, color: Colors.white),
+            ),
+            onPressed:  widget.onPause
+             // _stopTimer;
+            ,
+          ),
+        ),
       );
     } else {
-      return IconButton(
-        icon: const Icon(Icons.mic),
-        onPressed: widget.onStart,
-
-
+      return Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              spreadRadius: 0,
+              blurRadius: 15,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        child: IconButton(
+          icon:  Icon(Icons.mic,color: Styles.primaryColor,),
+          onPressed: widget.onStart,
+        ),
       );
     }
   }
@@ -202,8 +243,8 @@ class _RecordControlState extends State<RecordControl> {
   Widget _buildSendButton() {
 
     return IconButton(
-        icon: const Icon(Icons.send),
-        onPressed: widget.onStop,
+        icon:  Icon(Icons.send,color: widget.isRecording? Styles.primaryColor: Colors.grey),
+        onPressed: widget.isRecording? widget.onStop : null,
         );
   }
 }

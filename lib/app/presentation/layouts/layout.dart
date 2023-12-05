@@ -81,9 +81,12 @@ final userRepository = GetIt.instance<UserAriaRepository>();
         },
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
+          /*BlocProvider(
             create: (context) => ChatListBloc(),
-          ),
+          ),*/
+          /*BlocProvider(
+            create: (context) => ChatBloc(),
+          ),*/
           BlocProvider(
             create: (context) => FollowBloc(),
           ),
@@ -102,9 +105,7 @@ final userRepository = GetIt.instance<UserAriaRepository>();
           BlocProvider(
             create: (context) => FollowerCounterBloc(),
           ),
-          BlocProvider(
-            create: (context) => ChatBloc(),
-          ),
+
           BlocProvider(
             create: (context) => VoiceCloneBloc(),
           ),

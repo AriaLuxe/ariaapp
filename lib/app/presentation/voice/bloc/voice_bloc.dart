@@ -80,6 +80,7 @@ on<ShowView>(_onShowView);
       FetchProfileVoice event,
       Emitter<VoiceState> emit,
       ) async {
+    print('entre1');
     try {
       int? userId = await SharedPreferencesManager.getUserId();
       final response = await voiceRepository.getProfileVoice(userId!);
@@ -121,6 +122,7 @@ on<ShowView>(_onShowView);
     emit(state.copyWith(
       stability: event.newStability.toString(),
     ));
+    print('nuevo valor de stability: ${state.stability}');
   }
 
   void updateStability(double newValue) {
@@ -131,6 +133,8 @@ on<ShowView>(_onShowView);
     emit(state.copyWith(
       similarity: event.newSimilarity.toString(),
     ));
+
+    print('nuevo valor de similarity: ${state.similarity}');
   }
 
   void updateSimilarity(double newValue) {

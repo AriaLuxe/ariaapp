@@ -1,9 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -68,14 +70,13 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
-
     return Scaffold(
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           final messages = state.messages;
+
           if (state.chatStatus == ChatStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.chatStatus == ChatStatus.error) {
@@ -124,7 +125,15 @@ class _ChatState extends State<Chat> {
                         itemBuilder: (context, index) {
                           if (index < messages.length) {
                             final message = messages.toList();
-                            return message[index];
+                            return GestureDetector(
+                                onLongPressStart: (longPressStartDetails){
+
+                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                                  final tapPosition = overlay.globalToLocal(longPressStartDetails.globalPosition);
+                                  _showPopupMenu(context, tapPosition,state.messagesData[index].id, index);
+
+                                },
+                                child: message[index]);
                           } else {
                             return  Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -164,6 +173,68 @@ class _ChatState extends State<Chat> {
           );
         },
       ),
+
     );
   }
+  void _showPopupMenu(BuildContext context, Offset tapPosition, int messageId, int index) async {
+    final RenderBox overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        tapPosition,
+        tapPosition,
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    await showMenu(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(22.0),
+      ),
+      color: Colors.white.withOpacity(0.48),
+      context: context,
+      position: position,
+      items: [
+        PopupMenuItem(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF354271).withOpacity(0.97),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: ListTile(
+              title: const Text('Favoritos  ', style: TextStyle(color: Colors.green)),
+              trailing: const Icon(Icons.bookmark_add, color: Colors.green),
+              onTap: () {
+                final messageRepository = GetIt.instance<MessageRepository>();
+                messageRepository.likedMessage(messageId);
+                Navigator.pop(context);
+
+              },
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF354271).withOpacity(0.97),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: ListTile(
+                title: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+                trailing: const Icon(Icons.bookmark_add, color: Colors.red),
+                onTap: () async{
+                  final chatBloc = BlocProvider.of<ChatBloc>(context);
+                  chatBloc.deleteMessage(messageId,index);
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
 }

@@ -30,6 +30,11 @@ class _PeopleListState extends State<PeopleList> {
   });
     super.initState();
   }
+
+  Future<void> refresh() async {
+    final peopleListBloc = BlocProvider.of<PeopleListBloc>(context);
+    peopleListBloc.peopleFetched(0,10);
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PeopleListBloc, PeopleListState>(builder: (context, state){
@@ -69,32 +74,34 @@ class _PeopleListState extends State<PeopleList> {
                 onPanDown: (_) {
                   FocusScope.of(context).requestFocus(FocusNode());
                 },
-                child: ListView.builder(
-                      itemCount: state.users.length+1,
-                      controller: _scrollController,
-                      itemBuilder: (context, index) {
+                child: RefreshIndicator(
+                  onRefresh: refresh,
+                  child: ListView.builder(
+                        itemCount: state.users.length+1,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) {
       if (index < users.length) {
         final user = state.users[index];
         return GestureDetector(
           child: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: ListTile(
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user: user)));
-                },
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage('${BaseUrlConfig.baseUrlImage}${user.imgProfile}'),
-                ),
-                title: Text('${user.nameUser} ${user.lastName}',
-                  maxLines: 1,
-                  style:  const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.white),),
-                subtitle: Text(user.nickname,
-                  maxLines: 1,
-                  style: const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Color(0xFFc0c0c0)),),
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user: user)));
+                  },
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage('${BaseUrlConfig.baseUrlImage}${user.imgProfile}'),
+                  ),
+                  title: Text('${user.nameUser} ${user.lastName}',
+                    maxLines: 1,
+                    style:  const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        color: Colors.white),),
+                  subtitle: Text(user.nickname,
+                    maxLines: 1,
+                    style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        color: Color(0xFFc0c0c0)),),
               )
           ),
         );
@@ -106,8 +113,9 @@ class _PeopleListState extends State<PeopleList> {
       }
 
 
-                      },
-                    ),
+                        },
+                      ),
+                ),
               ),
             );
 

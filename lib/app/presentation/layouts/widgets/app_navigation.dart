@@ -1,3 +1,4 @@
+import 'package:ariapp/app/presentation/chats/chat/chat_screen.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
 import 'package:ariapp/app/presentation/layouts/layout.dart';
 import 'package:ariapp/app/presentation/people/people_screen.dart';
@@ -30,6 +31,7 @@ class AppNavigation {
 
   // Private navigators
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
   static final _shellNavigatorChats =
   GlobalKey<NavigatorState>(debugLabel: 'shellChats');
   static final _shellNavigatorPeople =
@@ -62,35 +64,9 @@ class AppNavigation {
                 name: "Chats",
                 builder: (BuildContext context, GoRouterState state) =>
                 const ChatsScreen(),
-
               ),
             ],
           ),
-         /* StatefulShellBranch(
-            navigatorKey: _shellNavigatorChats,
-            routes: <RouteBase>[
-              GoRoute(
-                path: "/chats",
-                name: "Chats",
-                builder: (BuildContext context, GoRouterState state) =>
-                const ChatsScreen(),
-                routes: [
-                  GoRoute(
-                    path: 'chat',
-                    name: 'Chat',
-                    pageBuilder: (context, state) =>
-                        CustomTransitionPage<void>(
-                          key: state.pageKey,
-                          child: ChatScreen(chatId: 0),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) =>
-                              FadeTransition(opacity: animation, child: child),
-                        ),
-                  ),
-                ],
-              ),
-            ],
-          ),*/
           StatefulShellBranch(
             navigatorKey: _shellNavigatorPeople,
             routes: <RouteBase>[
@@ -127,9 +103,6 @@ class AppNavigation {
                 name: "Voice",
                 builder: (BuildContext context, GoRouterState state) =>
                 const VoiceScreen(),
-                routes: [
-
-                ],
               ),
             ],
           ),
@@ -220,6 +193,7 @@ class AppNavigation {
                   ),
 
                   GoRoute(
+
                     path: "profile_image",
                     name: "ProfileImage",
                     pageBuilder: (context, state) {
@@ -240,7 +214,7 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  UpdateImage(urlPhoto: '',),
+                        child:  const UpdateImage(urlPhoto: '',),
                         transitionsBuilder: (context,
                             animation,
                             secondaryAnimation,
@@ -255,17 +229,7 @@ class AppNavigation {
           ),
         ],
       ),
-     /* GoRoute(
-        path: "/update_image",
-        name: "UpdateImage",
-        builder: (context, state) {
-          return
-            const UpdateImage(urlPhoto: '',
-                );
-        },
-      ),
-      */
-      /// Player
+
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/get_started',
@@ -322,13 +286,23 @@ class AppNavigation {
                 key: state.pageKey, email: state.uri.queryParameters['email']!
             ),
       ),
-     /* GoRoute(
+      GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
-        path: '/chat',
+        path: '/chat/:userId/:chatId/:userReceivedId',
         name: "Chat",
-        builder: (context, state) =>
-            const ChatScreen(chatId: 0),
-            ),*/
+        builder: (context, state) {
+          final userId = int.tryParse(state.pathParameters["userId"] ?? "0") ?? 0;
+          final chatId = int.tryParse(state.pathParameters["chatId"] ?? "0") ?? 0;
+          final userReceivedId = int.tryParse(state.pathParameters["userReceivedId"] ?? "0") ?? 0;
+
+          return ChatScreen(
+            key: state.pageKey,
+            chatId: userId,
+            userId: chatId,
+            userReceivedId: userReceivedId,
+          );
+        },
+      ),
 
 
     ],

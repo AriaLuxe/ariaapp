@@ -11,13 +11,14 @@ class ChatMessageWidget extends StatelessWidget {
   final String audioUrl;
 final bool? read;
 final bool? isMe;
+final Color color;
   const ChatMessageWidget({
     super.key,
     required this.dateTime,
     required this.read,
     required this.isMe,
     required this.audioPlayer,
-    required this.audioUrl,
+    required this.audioUrl, required this.color,
   });
 
   @override
@@ -50,9 +51,9 @@ final bool? isMe;
           Container(
             padding: const EdgeInsets.all(9),
             margin: const EdgeInsets.only(bottom: 5, left: 55, right: 10),
-            decoration:const  BoxDecoration(
-              color: Color(0xFF354271),
-              borderRadius: BorderRadius.only(
+            decoration:  BoxDecoration(
+              color: color,//Color(0xFF354271),
+              borderRadius: const BorderRadius.only(
                  topLeft : Radius.circular(30),
                  topRight : Radius.circular(0),
                  bottomLeft : Radius.circular(30),

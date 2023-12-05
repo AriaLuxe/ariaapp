@@ -105,5 +105,34 @@ class MessageDataProvider {
     }
   }
 
+  Future<void> deleteMessage(int messageId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
 
+      final response = await http.delete(
+        Uri.parse('${BaseUrlConfig.baseUrl}/messages/delete/$messageId'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print(response);
+
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
+  Future<void> likedMessage(int messageId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.put(
+        Uri.parse('${BaseUrlConfig.baseUrl}/messages/like?idMessage=$messageId'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print(response.body);
+
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
 }
