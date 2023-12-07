@@ -2,10 +2,13 @@ import 'dart:ui';
 
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat/chat_screen.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/bloc/follower_counter_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/bloc/favorites_messages_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/favorites_messages_screen.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +29,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final favoritesMessagesBloc = BlocProvider.of<FavoritesMessagesBloc>(context);
+
     final profileBloc = BlocProvider.of<ProfileBloc>(context);
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
@@ -416,7 +421,56 @@ class ProfileScreen extends StatelessWidget {
                                 child: ListTile(
                                   title: const Text('Mensajes favoritos', style: TextStyle(color: Colors.green)),
                                   trailing: const Icon(Icons.star, color: Colors.green),
-                                  onTap: () {},
+                                  onTap: () async{
+                                    final  messageRepository = GetIt.instance<MessageRepository>();
+                                    final response = await messageRepository.getFavoritesMessages(userLoggedId!, user!.id!);
+                                    print(response);
+                                    if(response == 'Chat does not exists'){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: 'Lo sentimo, no tienes chat con este usuario',
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+
+                                    }else if(response == 'No messages'){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: 'No tienes mensajes favoritos, selecciona algunos para poder verlos',
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+
+                                    }else if(response == 'No chat'){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogAccept(
+                                            text: 'Lo sentimo, no tienes chat con este usuario',
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      );
+
+                                    }else{
+                                      favoritesMessagesBloc.favoritesMessageFetched(user!.id!);
+                                      Navigator.push(context,MaterialPageRoute(
+                                          builder: (context) =>  FavoritesMessagesScreen(userLookingId: user!.id!,)));
+                                    }
+
+                                  },
                                 ),
                               ),
                               const SizedBox(
@@ -491,8 +545,6 @@ class ProfileScreen extends StatelessWidget {
                                         },
                                       );
                                     }
-
-
 
                                     }
 

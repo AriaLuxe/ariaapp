@@ -6,5 +6,6 @@ abstract class MessageInterface {
   Future<Message> responseMessage(int chatId, int userReceivedId, String audioPath);
   Future<void> deleteMessage(int messageId);
   Future<void> likedMessage(int messageId);
+  Future<dynamic> getFavoritesMessages(int userLogged, int idUserLooking);
 
 }

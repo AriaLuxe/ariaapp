@@ -10,6 +10,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:intl/intl.dart';
+
 
 import '../../../../domain/entities/message.dart';
 
@@ -115,8 +117,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _clearAudioPlayer(state.audioControllers);
       emit(state.copyWith(
         messages: [],
-        messagesData: []
-        ));
+        messagesData: [],
+        hasMoreMessages: true,
+      ));
     } catch (e) {
       print(e);
       emit(state.copyWith(chatStatus: ChatStatus.error));
@@ -203,10 +206,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatMessageWidget _createResponseMessage(Message messageResponse) {
     final audioPlayerResponse = AudioPlayer();
     audioPlayerResponse.setUrl('https://uploadsaria.blob.core.windows.net/files/${messageResponse.content}');
-
+    final now = DateTime.now();
+    final formatter = DateFormat('dd/MM/yyyy HH:mm');
+    final formattedDate = formatter.format(now.toLocal());
+    print(formattedDate);
     return ChatMessageWidget(
       color: const Color(0xFF354271),
-      dateTime: DateTime.now(),
+      dateTime: now,
       read: messageResponse.read,
       isMe: false,
       audioPlayer: audioPlayerResponse,
@@ -280,7 +286,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatMessageWidget _processMessageSelected(Message message, int userId) {
 
     final List<AudioPlayer> audioControllers = [];
-    final List<ChatMessageWidget> chatMessages = [];
 
       String? audioUrl;
       AudioPlayer? audioPlayer;

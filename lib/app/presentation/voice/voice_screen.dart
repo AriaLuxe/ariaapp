@@ -249,6 +249,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0),
                             child: TextFormField(
+                              enabled: !testAudio,
                               controller: _testVoice,
                               cursorColor: Colors.white,
                               decoration: const InputDecoration(
@@ -294,7 +295,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                             int? userId = await SharedPreferencesManager.getUserId();
                             final voiceCloneDataProvider = VoiceCloneDataProvider();
                             final path = await voiceCloneDataProvider.testAudio(userId!, _testVoice.text);
-                            _audioPlayer.setUrl('https://uploadsaria.blob.core.windows.net/files/${path}');
+                            _audioPlayer.setUrl('https://uploadsaria.blob.core.windows.net/files/$path');
                             setState(() {
                               loadingVoiceTest = false;
                               testAudio = !testAudio;
@@ -320,9 +321,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
   }
 
   Widget buildInfoTile(IconData icon, String title, String subtitle) {
-    print('subtitle');
 
-    print(subtitle);
     return ListTile(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),

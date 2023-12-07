@@ -39,4 +39,10 @@ class MessageRepository extends MessageInterface {
     final response = messageDataProvider.likedMessage(messageId);
     return response;
   }
+
+  @override
+  Future<dynamic> getFavoritesMessages(int userLogged, int idUserLooking) {
+    final response = messageDataProvider.getFavoritesMessages( userLogged,  idUserLooking);
+    return response;
+  }
 }

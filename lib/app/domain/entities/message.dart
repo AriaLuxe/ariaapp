@@ -3,7 +3,6 @@ class Message {
   final int sender;
   final String content;
   final int durationSeconds;
-
   final DateTime date;
   final bool read;
   final bool isLiked;

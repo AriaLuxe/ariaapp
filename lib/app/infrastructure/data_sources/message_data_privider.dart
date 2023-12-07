@@ -29,6 +29,35 @@ class MessageDataProvider {
       throw Exception(e);
     }
   }
+  Future<dynamic> getFavoritesMessages(int userLogged, int idUserLooking) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.get(
+        Uri.parse('${BaseUrlConfig.baseUrl}/messages/favourites?idUserLogged=$userLogged&idUserLooking=$idUserLooking'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      print(response.body);
+
+      // Verifica si la respuesta comienza con '[' (indicando una lista JSON)
+      if (response.body.trim().startsWith('[')) {
+        // Convierte la respuesta JSON a una lista de MessageModel
+        List<MessageModel> messages = (json.decode(response.body) as List)
+            .map((content) => MessageModel.fromJson(content))
+            .toList();
+        return messages;
+      } else {
+        // Si la respuesta no comienza con '[', devuelve la cadena directamente
+        return response.body;
+      }
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
+
+
 
 
   Future<MessageModel> createMessage(int chatId, int userId, String audioPath) async {
@@ -54,8 +83,6 @@ class MessageDataProvider {
       var streamedResponse = await request.send();
       if (streamedResponse.statusCode == 200) {
         final response = await http.Response.fromStream(streamedResponse);
-        print('response.body1');
-        print(response.body);
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         return MessageModel.fromJson(responseData);
       } else {

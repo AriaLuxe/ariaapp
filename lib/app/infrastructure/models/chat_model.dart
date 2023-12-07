@@ -31,19 +31,19 @@ class ChatModel extends Chat {
 
   factory ChatModel.fromMap(Map<String, dynamic> json) {
     return ChatModel(
-      chatId: json['idChat'] ?? 0, // Valor predeterminado para chatId
-      userId: json['idUser'] ?? 0, // Valor predeterminado para userId
-      nameUser: json['nameUser'] ?? '', // Valor predeterminado para nameUser
-      lastName: json['lastName'] ?? '', // Valor predeterminado para lastName
+      chatId: json['idChat'] ?? 0,
+      userId: json['idUser'] ?? 0,
+      nameUser: json['nameUser'] ?? '',
+      lastName: json['lastName'] ?? '',
       imgProfile:
-          json['imgProfile'] ?? '', // Valor predeterminado para imgProfile
+          json['imgProfile'] ?? '',
       lastMessage:
-          json['lastMessage'] ?? '', // Valor predeterminado para lastMessage
+          json['lastMessage'] ?? '',
       dateLastMessage: json['dateLastMessage'] != null
           ? DateTime.parse(json['dateLastMessage'])
-          : DateTime.now(), // Fecha actual como valor predeterminado
-      unread: json['unread'] ?? false, // Valor predeterminado para unread
-      iaChat: json['iaChat'] ?? false, // Valor predeterminado para iaChat
+          : DateTime.now(),
+      unread: json['unread'] ?? false,
+      iaChat: json['iaChat'] ?? false,
 
       durationSeconds: json['durationSeconds'] ?? 0,
       counterNewMessage: json['durationSeconds'] ??

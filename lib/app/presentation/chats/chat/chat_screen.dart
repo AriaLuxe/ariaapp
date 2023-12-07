@@ -93,6 +93,7 @@ class _ChatState extends State<Chat> {
                       width: MediaQuery.of(context).size.width*0.9,
                       //TODO: Agregar navegacion hacia el perfile al tocar la foto
                       child: HeaderChat(title: state.name, onTap: (){
+
                         chatBloc.clearMessages();
                         Navigator.pop(context);
                       }, url: '${BaseUrlConfig.baseUrlImage}${state.urlPhoto}',
@@ -130,14 +131,17 @@ class _ChatState extends State<Chat> {
 
                                   final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
                                   final tapPosition = overlay.globalToLocal(longPressStartDetails.globalPosition);
-                                  _showPopupMenu(context, tapPosition,state.messagesData[index].id, index);
+                                  _showPopupMenu(context, tapPosition,state.messagesData[index].id, index,state.messagesData[index].isLiked);
 
                                 },
                                 child: message[index]);
                           } else {
-                            return  Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: state.hasMoreMessages ? const Center(child: CircularProgressIndicator()): Flash(child: const Center(child:  Text('No hay mas mensajes',style: TextStyle(color: Colors.grey),)))
+                            return  Visibility(
+                              visible: !(messages.length<8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: state.hasMoreMessages ? const Center(child: CircularProgressIndicator()): Flash(child: const Center(child:  Text('No hay mas mensajes',style: TextStyle(color: Colors.grey),)))
+                              ),
                             );
                           }
                         }
@@ -176,8 +180,8 @@ class _ChatState extends State<Chat> {
 
     );
   }
-  void _showPopupMenu(BuildContext context, Offset tapPosition, int messageId, int index) async {
-    final RenderBox overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
+  void _showPopupMenu(BuildContext context, Offset tapPosition, int messageId, int index, bool isFavorite) async {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         tapPosition,
@@ -202,7 +206,7 @@ class _ChatState extends State<Chat> {
             ),
             child: ListTile(
               title: const Text('Favoritos  ', style: TextStyle(color: Colors.green)),
-              trailing: const Icon(Icons.bookmark_add, color: Colors.green),
+              trailing:  Icon(isFavorite ? Icons.bookmark_remove : Icons.bookmark_add , color: Colors.green),
               onTap: () {
                 final messageRepository = GetIt.instance<MessageRepository>();
                 messageRepository.likedMessage(messageId);
@@ -222,7 +226,7 @@ class _ChatState extends State<Chat> {
               ),
               child: ListTile(
                 title: const Text('Eliminar', style: TextStyle(color: Colors.red)),
-                trailing: const Icon(Icons.bookmark_add, color: Colors.red),
+                trailing: const Icon(Icons.delete, color: Colors.red),
                 onTap: () async{
                   final chatBloc = BlocProvider.of<ChatBloc>(context);
                   chatBloc.deleteMessage(messageId,index);

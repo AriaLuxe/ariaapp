@@ -58,7 +58,7 @@ class AudioMessageContentState extends State<AudioMessageContent> {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     return SizedBox(
-      width: size.width * 0.5,
+      width: size.width * 0.6,
 
       child:isReadyToPlay? Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -103,7 +103,7 @@ class AudioMessageContentState extends State<AudioMessageContent> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: size.width * 0.35,
+                width: size.width * 0.4,
                 child: StreamBuilder<PositionData>(
                   stream: _positionDataStream,
                   builder: (context, snapshot) {

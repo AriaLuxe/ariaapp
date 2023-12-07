@@ -173,7 +173,10 @@ class _RecordControlState extends State<RecordControl> {
             padding: const EdgeInsets.only(bottom: 6.0),
             child: Text('Grabando audio',style: TextStyle(color: Styles.primaryColor),),
           ): const SizedBox(),
-
+          widget.isRecording?  const SizedBox(): const Divider(
+              color: Color(0xFF354271),
+              thickness: 2
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
