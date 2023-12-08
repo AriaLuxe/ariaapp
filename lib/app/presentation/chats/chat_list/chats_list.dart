@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../config/styles.dart';
-import '../chat/chat_screen.dart';
 import 'bloc/chat_list_bloc.dart';
 
 class ChatsList extends StatefulWidget {
@@ -80,7 +79,6 @@ class _ChatsListState extends State<ChatsList> {
 
                   child: RefreshIndicator(
                     onRefresh: refresh,
-
                     child: ListView.builder(
                       itemCount: state.chats.length,
                       itemBuilder: (context, index) {
@@ -207,7 +205,7 @@ class _ChatsListState extends State<ChatsList> {
                                             Column(
                                               children: [
                                                 Text(
-                                                  DateFormat.jm().format(chat.dateLastMessage!),
+                                                  DateFormat.jm().format(chat.dateLastMessage!.subtract(const Duration(hours: 5))),
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 15.0,

@@ -358,17 +358,19 @@ class _VoiceScreenState extends State<VoiceScreen> {
                   return CustomDialog(
                     text: '¿Estás seguro que desea eliminar la voz clonada?',
                     onOk: () async {
+                      Navigator.pop(context);
                       await voiceCloneDataProvider.deleteVoice(voiceId);
                       setState(() {
                         loadingDeleteVoiceClone = false;
                       });
-                      Navigator.pop(context);
                       voiceBloc.showView(false);
-
                       //Navigator.push(context, MaterialPageRoute(builder: (context) => const VoiceClone()));
                     },
                     onCancel: () {
                       Navigator.of(context).pop();
+                      setState(() {
+                        loadingDeleteVoiceClone = false;
+                      });
                     },
                   );
                 },

@@ -108,10 +108,11 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                             child: CustomButton(text: 'Continuar',
                                 onPressed: (){
                               final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
-                              print('voiceBloc.state.audioPaths;');
-                              print(voiceBloc.state.audioPaths);
-                              if(voiceBloc.state.audioPaths.length == 5){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => VoiceTrainingFinish()));
+
+                              if(voiceBloc.state.audioPaths.length >= 5){
+                                print('voiceBloc.state.audioPaths.length');
+                                print(voiceBloc.state.audioPaths.length);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const VoiceTrainingFinish()));
 
                               }else{
                                 showDialog(

@@ -17,7 +17,7 @@ class VoiceCloneBloc extends Bloc<VoiceCloneEvent, VoiceCloneState> {
     on<CollectAudio>(_onAddedPath);
     on<DeleteAudio>(_onDeletePath);
     on<ClearPaths>(_onClearPaths);
-
+    on<BackAudio>(_onBackPath);
 
     //on<GetResponses>(_onGetResponse);
   }
@@ -98,6 +98,31 @@ class VoiceCloneBloc extends Bloc<VoiceCloneEvent, VoiceCloneState> {
     } catch (e) {
       print(e);
     }
+  }
+  Future<void> _onBackPath(
+      BackAudio event,
+      Emitter<VoiceCloneState> emit
+      ) async {
+    try {
+
+
+      final List<String> paths = List.from(state.audioPaths);
+
+        for(int i = paths.length-1; i >= 0; i--){
+          if(i > 4){
+            paths.removeAt(i);
+          }
+        }
+        emit(state.copyWith(audioPaths: paths, ));
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void backAudio() {
+
+    add(const BackAudio());
   }
   void deleteAudio() {
     add(const DeleteAudio());

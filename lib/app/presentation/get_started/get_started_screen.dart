@@ -21,30 +21,33 @@ class GetStartedScreen extends StatefulWidget {
 class _GetStartedScreenState extends State<GetStartedScreen> {
   late PageController _pageController;
   bool isLoadingPage = false;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     checkLogin();
-
   }
+
   void checkLogin() async {
     setState(() {
       isLoadingPage = true;
     });
     final usersRepository = GetIt.instance<UserAriaRepository>();
-    int? userId =  await SharedPreferencesManager.getUserId();
+    int? userId = await SharedPreferencesManager.getUserId();
 
+    String? token = await SharedPreferencesManager.getToken();
+    bool? hasSeenGetStarted =
+        await SharedPreferencesManager.getHasSeenGetStarted();
+    await Future.delayed(const Duration(seconds: 3));
 
-    String? token =  await SharedPreferencesManager.getToken();
-    bool? hasSeenGetStarted = await SharedPreferencesManager.getHasSeenGetStarted();
-    if (hasSeenGetStarted == null ||hasSeenGetStarted == false  ){
+    if (hasSeenGetStarted == null || hasSeenGetStarted == false) {
       setState(() {
         isLoadingPage = false;
       });
       SharedPreferencesManager.saveHasSeenGetStarted(true);
       return;
-    }else {
+    } else {
       if (token != null) {
         final user = await usersRepository.getUserById(userId!);
         userLogged(user);
@@ -67,74 +70,85 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
       isLoadingPage = false;
     });
   }
+
   @override
   void dispose() {
     _pageController.dispose();
 
-
     super.dispose();
   }
+
   void navigateToPage(int page) {
-    _pageController.animateToPage(page, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+    _pageController.animateToPage(page,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: isLoadingPage ?Column(
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: isLoadingPage
+          ? Column(
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: size.height * 0.1,
-                  child: Image.asset(
-                    'assets/images/aia.png',
-                    key: const ValueKey<String>('assets/images/aia.png'),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 100,
+                        child: Image.asset(
+                          'assets/images/tree_oficial.png',
+                          key: const ValueKey<String>(
+                              'assets/images/tree_oficial.png'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.05,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: Image.asset(
+                          'assets/images/aia.png',
+                          key: const ValueKey<String>('assets/images/aia.png'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.05,
+                      ),
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    ],
                   ),
                 ),
-               const Center(child: CircularProgressIndicator(),)
               ],
-            ),
-          ),
-        ],
-      ) :PageView(
-allowImplicitScrolling: false,
-          controller: _pageController,
-        children: [
-           GetStarted1(onPress: (){
-              navigateToPage(1);
-            }),
-
-          GetStarted2(
-              onBack:(){
-                navigateToPage(0);
-              },
-              onPress: (){
-            navigateToPage(2);
-          }),
-          GetStarted3(
-              onBack:(){
-                navigateToPage(1);
-              },
-              onPress: (){
-            navigateToPage(3);
-          }),
-          GetStarted4(
-              onBack:(){
-                navigateToPage(2);
-              },
-              onPress: (){
-          }())
-        ]
-      ),
-
+            )
+          : PageView(
+              allowImplicitScrolling: false,
+              controller: _pageController,
+              children: [
+                  GetStarted1(onPress: () {
+                    navigateToPage(1);
+                  }),
+                  GetStarted2(onBack: () {
+                    navigateToPage(0);
+                  }, onPress: () {
+                    navigateToPage(2);
+                  }),
+                  GetStarted3(onBack: () {
+                    navigateToPage(1);
+                  }, onPress: () {
+                    navigateToPage(3);
+                  }),
+                  GetStarted4(
+                      onBack: () {
+                        navigateToPage(2);
+                      },
+                      onPress: () {}())
+                ]),
     );
   }
 }

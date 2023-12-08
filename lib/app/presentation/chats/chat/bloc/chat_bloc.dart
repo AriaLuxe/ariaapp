@@ -10,8 +10,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:intl/intl.dart';
-
 
 import '../../../../domain/entities/message.dart';
 
@@ -173,6 +171,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           0,
           responseMessage
       );
+      final AudioPlayer _audioPlayerNotify = AudioPlayer();
+      _audioPlayerNotify.setAsset('assets/audio/Eureka.mp3');
+      _audioPlayerNotify.play();
       emit(state.copyWith(
         chatStatus: ChatStatus.success,
         messages: finalMessages,
@@ -186,8 +187,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
 // Función para crear el mensaje del usuario actual
   ChatMessageWidget _createUserMessage(String audioPath) {
-    print('audioPath');
-    print(audioPath);
     final audioPlayer = AudioPlayer();
     if (audioPath != null && audioPath.isNotEmpty) {
       audioPlayer.setFilePath(audioPath);
@@ -206,13 +205,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatMessageWidget _createResponseMessage(Message messageResponse) {
     final audioPlayerResponse = AudioPlayer();
     audioPlayerResponse.setUrl('https://uploadsaria.blob.core.windows.net/files/${messageResponse.content}');
-    final now = DateTime.now();
-    final formatter = DateFormat('dd/MM/yyyy HH:mm');
-    final formattedDate = formatter.format(now.toLocal());
-    print(formattedDate);
+
     return ChatMessageWidget(
       color: const Color(0xFF354271),
-      dateTime: now,
+      dateTime: DateTime.now(),
       read: messageResponse.read,
       isMe: false,
       audioPlayer: audioPlayerResponse,
@@ -231,12 +227,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final List<ChatMessageWidget> chatMessages = [];
 
     for (final message in messages) {
-
       String? audioUrl;
       AudioPlayer? audioPlayer;
 
           audioUrl = message.content;
-      print(message.date);
           if (audioUrl != null) {
             audioPlayer = AudioPlayer();
             audioPlayer.setUrl('https://uploadsaria.blob.core.windows.net/files/$audioUrl');

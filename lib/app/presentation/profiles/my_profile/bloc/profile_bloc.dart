@@ -10,17 +10,17 @@ import '../../../../infrastructure/repositories/user_aria_repository.dart';
 import '../../../../security/shared_preferences_manager.dart';
 
 part 'profile_event.dart';
+
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UserAriaRepository userAriaRepository;
   final ChatRepository chatRepository;
 
-  ProfileBloc() :
-        userAriaRepository = GetIt.instance<UserAriaRepository>(),
+  ProfileBloc()
+      : userAriaRepository = GetIt.instance<UserAriaRepository>(),
         chatRepository = GetIt.instance<ChatRepository>(),
-
-      super(const ProfileState()) {
+        super(const ProfileState()) {
     on<ProfileEvent>((event, emit) {
       // TODO: implement event handler
     });
@@ -30,179 +30,169 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<CheckBlockStatus>(_onCheckBlockStatus);
     on<ToggleBlock>(_onToggleBlock);
     on<ProfileDefaultPhoto>(_onProfilePhotoDefault);
-
   }
 
   void _onFetchDataProfile(
-      FetchDataProfile event,
-      Emitter<ProfileState> emit,
-      ) async {
+    FetchDataProfile event,
+    Emitter<ProfileState> emit,
+  ) async {
+    //emit(state.copyWith(profileStatus: ProfileStatus.loading));
     //final userId = await SharedPreferencesManager.getUserId();
     final user = await userAriaRepository.getUserById(event.userId);
 
-    final numberOfFollowers = await userAriaRepository.getFollowersCounter(event.userId);
-    final numberOfFollowings = await userAriaRepository.getFollowingCounter(event.userId);
+    final numberOfFollowers =
+        await userAriaRepository.getFollowersCounter(event.userId);
+    final numberOfFollowings =
+        await userAriaRepository.getFollowingCounter(event.userId);
 
     emit(state.copyWith(
       name: user.nameUser,
       lastName: user.lastName,
-      email:user.email,
+      email: user.email,
       state: user.state,
       urlProfile: user.imgProfile,
       numberOfFollowers: numberOfFollowers,
-        numberOfFollowings:  numberOfFollowings,
+      numberOfFollowings: numberOfFollowings,
+      //profileStatus: ProfileStatus.success,
     ));
   }
 
-  void fetchDataProfile(int userId){
+  void fetchDataProfile(int userId) {
     add(FetchDataProfile(userId));
   }
 
+  void _onCheckFollowStatus(
+      CheckFollowStatus event, Emitter<ProfileState> emit) async {
+    try {
+      final currentUserId = await SharedPreferencesManager.getUserId();
+      final response = await userAriaRepository.checkFollow(
+          currentUserId!, event.userLooking);
 
-  void _onCheckFollowStatus(CheckFollowStatus event, Emitter<ProfileState> emit) async {
-
-  try{
-
-    final currentUserId = await SharedPreferencesManager.getUserId();
-    final response = await userAriaRepository.checkFollow(currentUserId!, event.userLooking);
-
-      if(response == 'false'){
+      if (response == 'false') {
         emit(state.copyWith(isFollowed: false));
-      }else {
-          emit(state.copyWith(isFollowed: true));
+      } else {
+        emit(state.copyWith(isFollowed: true));
       }
-
-
-    }catch(e){
-    //emit(state.copyWith(isFollowed: false));
-
-}
-
+    } catch (e) {
+      //emit(state.copyWith(isFollowed: false));
+    }
   }
-  void checkFollow(int userLooking){
+
+  void checkFollow(int userLooking) {
     add(CheckFollowStatus(userLooking));
   }
 
-  Future<void> _onToggleFollow(ToggleFollow event, Emitter<ProfileState> emit) async {
-
-    try{
+  Future<void> _onToggleFollow(
+      ToggleFollow event, Emitter<ProfileState> emit) async {
+    try {
       int? userId = await SharedPreferencesManager.getUserId();
 
-      if(!event.isFollowing){
+      if (!event.isFollowing) {
         emit(state.copyWith(isFollowed: true));
 
-        await userAriaRepository.follow(userId!,event.userLooking);
-        final numberOfFollowers = await userAriaRepository.getFollowersCounter(event.userLooking);
+        await userAriaRepository.follow(userId!, event.userLooking);
+        final numberOfFollowers =
+            await userAriaRepository.getFollowersCounter(event.userLooking);
         emit(state.copyWith(
           numberOfFollowers: numberOfFollowers,
         ));
-
-      }
-      else {
+      } else {
         emit(state.copyWith(isFollowed: false));
-        final follower = await userAriaRepository.checkFollow(userId!, event.userLooking);
+        final follower =
+            await userAriaRepository.checkFollow(userId!, event.userLooking);
         final followerDecode = jsonDecode(follower);
 
-        final response = await userAriaRepository.unFollow(followerDecode['idRequest']);
+        final response =
+            await userAriaRepository.unFollow(followerDecode['idRequest']);
 
-        if(response == 'Request deleted' ){
-          final numberOfFollowers = await userAriaRepository.getFollowersCounter(event.userLooking);
+        if (response == 'Request deleted') {
+          final numberOfFollowers =
+              await userAriaRepository.getFollowersCounter(event.userLooking);
           emit(state.copyWith(
             numberOfFollowers: numberOfFollowers,
           ));
           print('se dejo de seguir');
-        }else {
+        } else {
           print('error');
         }
         print(response);
       }
-    }catch(e){
+    } catch (e) {
       print(e);
     }
-
   }
-  void toggleFollowProfile(int userLooking, bool isFollowing){
+
+  void toggleFollowProfile(int userLooking, bool isFollowing) {
     add(ToggleFollow(userLooking, isFollowing));
   }
 
-  void _onCheckBlockStatus(CheckBlockStatus event, Emitter<ProfileState> emit) async {
-
-    try{
-
+  void _onCheckBlockStatus(
+      CheckBlockStatus event, Emitter<ProfileState> emit) async {
+    try {
       final currentUserId = await SharedPreferencesManager.getUserId();
 
-      final response = await userAriaRepository.checkBlock(currentUserId!, event.userLooking);
+      final response = await userAriaRepository.checkBlock(
+          currentUserId!, event.userLooking);
 
-
-      if(response == false){
+      if (response == false) {
         print('no esta bloqueado');
         emit(state.copyWith(isBlock: false));
-      }else {
+      } else {
         print('esta bloqueado');
         emit(state.copyWith(isBlock: true));
       }
-
-
-    }catch(e){
+    } catch (e) {
       emit(state.copyWith(isBlock: false));
-
     }
-
   }
-  void checkBlock(int userLooking){
+
+  void checkBlock(int userLooking) {
     add(CheckBlockStatus(userLooking));
   }
 
-  Future<void> _onToggleBlock(ToggleBlock event, Emitter<ProfileState> emit) async {
-
-    try{
+  Future<void> _onToggleBlock(
+      ToggleBlock event, Emitter<ProfileState> emit) async {
+    try {
       int? userId = await SharedPreferencesManager.getUserId();
-      if(!event.isBlock){
+      if (!event.isBlock) {
         emit(state.copyWith(isBlock: true));
 
-       await userAriaRepository.block(userId!,event.idBlocked);
+        await userAriaRepository.block(userId!, event.idBlocked);
 
         print('se bloqueo');
-
-
-      }
-      else {
-
+      } else {
         emit(state.copyWith(isBlock: false));
-        final response = await userAriaRepository.unBlock(userId!, event.idBlocked);
-        if(response == 'User unblock successfully' ){
+        final response =
+            await userAriaRepository.unBlock(userId!, event.idBlocked);
+        if (response == 'User unblock successfully') {
           print('se dejo de bloquear');
-        }else {
+        } else {
           print('error');
         }
         print(response);
       }
-    }catch(e){
+    } catch (e) {
       print(e);
     }
-
   }
 
-
-  void toggleBlockProfile(int userLooking, bool isFollowing){
+  void toggleBlockProfile(int userLooking, bool isFollowing) {
     add(ToggleBlock(userLooking, isFollowing));
   }
 
   void _onProfilePhotoDefault(
-      ProfileDefaultPhoto event,
-      Emitter<ProfileState> emit,
-      ) async {
+    ProfileDefaultPhoto event,
+    Emitter<ProfileState> emit,
+  ) async {
     //final userId = await SharedPreferencesManager.getUserId();
 
     print(event.url);
     emit(state.copyWith(
       urlProfile: event.url,
-
     ));
   }
 
-  void updateDefaultPhoto(String urlPhoto){
+  void updateDefaultPhoto(String urlPhoto) {
     add(ProfileDefaultPhoto(urlPhoto));
   }
-
 }

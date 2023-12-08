@@ -8,13 +8,18 @@ import '../models/chat_model.dart';
 
 class ChatsDataProvider {
   String endPoint = 'chats/ordinary';
+
   Future<List<ChatModel>> getAllChatsByUserId(int id) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
-      final response =
-          await http.get(Uri.parse('${BaseUrlConfig.baseUrl}/chats/IA/$id'),headers: {
-            'Authorization': 'Bearer $token',
-          },);
+      final response = await http.get(
+        Uri.parse('${BaseUrlConfig.baseUrl}/chats/IA/$id'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print(response.body);
+
       List<ChatModel> chats = ChatModel.toChatsList(response.body);
       return chats;
     } catch (error) {
@@ -23,7 +28,7 @@ class ChatsDataProvider {
     }
   }
 
-  Future<ChatModel> createChat(int senderId, int receiverId) async {
+  Future<dynamic> createChat(int senderId, int receiverId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
@@ -35,19 +40,14 @@ class ChatsDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
-      print('response.body 1');
-      print('response.body 1');
-
-
-      print(response.body);
 
       if (response.statusCode == 200) {
         final createdChat = ChatModel.fromMap(jsonDecode(response.body));
-        print('todo nice creado: ');
-        print(response.body);
 
         return createdChat;
-      } else {
+      } else if(response.statusCode ==400){
+          return response.body;
+        }else {
         throw Exception('Error al crear el chat: ${response.statusCode}');
       }
     } catch (error) {
@@ -55,45 +55,38 @@ class ChatsDataProvider {
       throw Exception(error);
     }
   }
+
   Future<String> validateCreateChat(int senderId, int receiverId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
-      final response = await http.post(
+      final response = await http.delete(
         Uri.parse(
-            '${BaseUrlConfig.baseUrl}/chats/add/IA/$senderId/$receiverId'),
+            '${BaseUrlConfig.baseUrl}/chats/delete?idUserLogged=$senderId&idUserLooking=$receiverId'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
         },
       );
-      print(response.body);
-
-      if (response.body.startsWith('{')) {
-
-        return 'chat created';
-      } else if(response.body == 'This user is not a creator' ) {
-        return 'This user is not a creator';
-      }else {
-        return 'error';
-      }
+      return response.body;
     } catch (error) {
       print(error);
       throw Exception(error);
     }
   }
 
+
   Future<String> deleteChat(int chatId) async {
     try {
-
       String? token = await SharedPreferencesManager.getToken();
 
-      final response = await http
-          .delete(Uri.parse('${BaseUrlConfig.baseUrl}/chats/delete/$chatId'),headers: {
-        'Authorization': 'Bearer $token',
-      },);
+      final response = await http.delete(
+        Uri.parse('${BaseUrlConfig.baseUrl}/chats/delete/$chatId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
       return response.body;
-
     } catch (e) {
       print(e);
       throw Exception(e);
@@ -101,17 +94,18 @@ class ChatsDataProvider {
   }
 
   Future<List<ChatModel>> searchChats(String keyword, int userId) async {
-
     try {
       String? token = await SharedPreferencesManager.getToken();
 
-      final response =
-      await http.get(Uri.parse("${BaseUrlConfig.baseUrl}/chats/search?keyword=$keyword&idUser=$userId"),headers: {
-        'Authorization': 'Bearer $token',
-      },);
+      final response = await http.get(
+        Uri.parse(
+            "${BaseUrlConfig.baseUrl}/chats/search?keyword=$keyword&idUser=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
       if (response.statusCode == 200) {
-        final List<ChatModel> chats =
-        ChatModel.toChatsList(response.body);
+        final List<ChatModel> chats = ChatModel.toChatsList(response.body);
         return chats;
       } else {
         throw Exception(response.body);

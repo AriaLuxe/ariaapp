@@ -52,3 +52,12 @@ class ClearPaths extends VoiceCloneEvent {
   List<Object?> get props => throw UnimplementedError();
 
 }
+
+class BackAudio extends VoiceCloneEvent {
+  const BackAudio();
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
+}

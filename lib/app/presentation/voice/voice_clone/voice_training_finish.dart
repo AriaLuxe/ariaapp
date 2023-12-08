@@ -53,6 +53,8 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                               GestureDetector(
                                 onTap: (){
                                   Navigator.pop(context);
+                                  final voiceCloneBloc = BlocProvider.of<VoiceCloneBloc>(context);
+                                  voiceCloneBloc.backAudio();
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(10.0),
@@ -107,7 +109,6 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                 child:isLoadingClone? const Center(child: CircularProgressIndicator(),)
                                     : CustomButtonVoiceClone(text: 'Crear voz',
                                     onPressed: ()async{
-
                                       setState(() {
                                         isLoadingClone = true;
                                       });

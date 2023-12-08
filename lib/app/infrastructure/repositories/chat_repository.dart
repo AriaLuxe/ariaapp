@@ -19,7 +19,7 @@ class ChatRepository extends ChatInterface {
   }
 
   @override
-  Future<Chat> createChat(int senderId, int receiverId) {
+  Future<dynamic> createChat(int senderId, int receiverId) {
     return chatsDataProvider.createChat(senderId, receiverId);
   }
 

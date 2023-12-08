@@ -85,7 +85,7 @@ class _MyInformationState extends State<MyInformation> {
                 child: SizedBox(
                   width: size.width*0.9,
                   child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
                         height: size.height*0.02,

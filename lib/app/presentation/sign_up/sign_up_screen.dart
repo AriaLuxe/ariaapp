@@ -16,7 +16,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: BlocProvider(
         create: (context) => SignUpBloc(),
         child: Center(
@@ -27,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
-              child: const SingleChildScrollView(child: SignUpForm()),
+              child:  const SafeArea(child: SingleChildScrollView(child: SignUpForm())),
             ),
           ),
         ),

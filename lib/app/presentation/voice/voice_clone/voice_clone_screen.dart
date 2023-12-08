@@ -12,7 +12,6 @@ class VoiceClone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -44,7 +43,7 @@ class VoiceClone extends StatelessWidget {
                         ),
                       ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height*0.3,
+                      height: MediaQuery.of(context).size.height*0.2,
                     ),
                     Align(
                       alignment: Alignment.centerLeft,

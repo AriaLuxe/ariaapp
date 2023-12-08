@@ -32,7 +32,6 @@ class _PeopleScreenState extends State<PeopleScreen> {
               peopleListBloc.searchPeople(keyword);
             },),
             const PeopleList(),
-
           ],
         ),
     );

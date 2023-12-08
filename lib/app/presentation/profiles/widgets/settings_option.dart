@@ -7,9 +7,11 @@ class SettingsOption extends StatelessWidget {
     required this.icon,
     this.onTap,
   });
+
   final String title;
   final IconData icon;
   final void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

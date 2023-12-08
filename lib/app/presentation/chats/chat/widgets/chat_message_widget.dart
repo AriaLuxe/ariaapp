@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:timezone/timezone.dart';
 
 import 'audio_message_content.dart';
 
@@ -67,7 +68,7 @@ class ChatMessageWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  DateFormat('h:mm a').format(dateTime),
+                  DateFormat('h:mm a').format(dateTime.subtract(const Duration(hours: 5))),
                   style: textTheme.bodySmall?.copyWith(color: Colors.white),
                 ),
                 const SizedBox(width: 3),
@@ -110,7 +111,7 @@ class ChatMessageWidget extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(bottom: 8, left: 15, right: 50),
             child: Text(
-              DateFormat('h:mm a').format(dateTime),
+              DateFormat('h:mm a').format(dateTime.subtract(const Duration(hours: 5))),
               style: textTheme.bodySmall?.copyWith(color: Colors.white),
             ),
           ),

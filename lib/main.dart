@@ -1,6 +1,9 @@
+
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/profile/bloc/follower_counter_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/bloc/favorites_messages_bloc.dart';
 import 'package:ariapp/injections.dart';
 import 'package:device_preview/device_preview.dart';
@@ -9,12 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app/presentation/layouts/widgets/app_navigation.dart';
 
-void main() {
+void main() async{
+
   usersDependencies();
   chatsDependencies();
   messagesDependencies();
   voiceDependencies();
   runApp(const MyApp());
+
   /*runApp(
     DevicePreview(
       builder: (_) => MyApp(),
@@ -39,6 +44,12 @@ class MyApp extends StatelessWidget {
           ),
         BlocProvider(
           create: (context) => FavoritesMessagesBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ProfileBloc(),
+        ),
+        BlocProvider(
+          create: (context) => FollowerCounterBloc(),
         ),
       ],
       child: MaterialApp.router(

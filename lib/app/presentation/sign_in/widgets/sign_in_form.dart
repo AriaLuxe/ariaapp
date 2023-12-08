@@ -132,42 +132,45 @@ class _SignInFormState extends State<SignInForm> {
                           final emailValidation = EmailValidationDataProvider();
                           final response = await emailValidation.sendEmailToResetPassword(email.text.trim());
                           print(response);
-                          if(response == 'Email sent sucessfully'){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
-                            );
-                          }else if(response == 'A code has already been sent'){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
-                            );
-                          }else if(response == 'Does not exist an account with this email'){
+                          if(email.text.isEmpty){
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return CustomDialogAccept(
-                                  text: 'No existe una cuenta con este correo, por favor, ingrese nuevamente',
+                                  text: 'Por favor, ingresa tu correo electrónico para recuperar tu contraseña.',
                                   onAccept: () {
                                     Navigator.pop(context);
                                   },
                                 );
                               },
                             );
+                          } else{
+                            if(response == 'Email sent sucessfully'){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
+                              );
+                            }else if(response == 'A code has already been sent'){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => VerifyCode(email: email.text.trim(), verify: 'Verificar código', isResetPassword: true)),
+                              );
+                            }else if(response == 'Does not exist an account with this email'){
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomDialogAccept(
+                                    text: 'No existe una cuenta con este correo, por favor, ingrese nuevamente',
+                                    onAccept: () {
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              );
+                            }
                           }
-                          else{
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return CustomDialogAccept(
-                                  text: 'Ingrese correo electrónico',
-                                  onAccept: () {
-                                    Navigator.pop(context);
-                                  },
-                                );
-                              },
-                            );
-                          }
+
+
                         },
                         child:  Text(
                           '¿Olvidaste tu contraseña?',
