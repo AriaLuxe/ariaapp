@@ -1,16 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
-import 'package:ariapp/app/presentation/widgets/custom_button.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../config/styles.dart';
@@ -19,6 +16,7 @@ import '../bloc/profile_bloc.dart';
 
 class EditImage extends StatefulWidget {
   const EditImage({super.key, required this.photoPath});
+
   final String photoPath;
 
   @override
@@ -27,15 +25,12 @@ class EditImage extends StatefulWidget {
 
 class _EditImageState extends State<EditImage> {
   late CustomImageCropController controller;
-  CustomCropShape _currentShape = CustomCropShape.Square;
-  CustomImageFit _imageFit = CustomImageFit.fitVisibleSpace;
-  final TextEditingController _widthController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _radiusController = TextEditingController();
+  final CustomCropShape _currentShape = CustomCropShape.Square;
+  final CustomImageFit _imageFit = CustomImageFit.fitVisibleSpace;
 
-  double _width = 16;
-  double _height = 9;
-  double _radius = 4;
+  final double _width = 16;
+  final double _height = 9;
+  final double _radius = 4;
 
   @override
   void initState() {
@@ -49,49 +44,20 @@ class _EditImageState extends State<EditImage> {
     super.dispose();
   }
 
-  void _changeCropShape(CustomCropShape newShape) {
-    setState(() {
-      _currentShape = newShape;
-    });
-  }
-
-  void _changeImageFit(CustomImageFit imageFit) {
-    setState(() {
-      _imageFit = imageFit;
-    });
-  }
-
-  void _updateRatio() {
-    setState(() {
-      if (_widthController.text.isNotEmpty) {
-        _width = double.tryParse(_widthController.text) ?? 16;
-      }
-      if (_heightController.text.isNotEmpty) {
-        _height = double.tryParse(_heightController.text) ?? 9;
-      }
-      if (_radiusController.text.isNotEmpty) {
-        _radius = double.tryParse(_radiusController.text) ?? 4;
-      }
-    });
-    FocusScope.of(context).unfocus();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height*0.7,
+                height: MediaQuery.of(context).size.height * 0.7,
                 child: CustomImageCrop(
                   backgroundColor: Styles.primaryColor,
                   cropController: controller,
-                  image:  FileImage(
-                      File(widget.photoPath)),
+                  image: FileImage(File(widget.photoPath)),
                   shape: _currentShape,
                   ratio: _currentShape == CustomCropShape.Ratio
                       ? Ratio(width: _width, height: _height)
@@ -100,7 +66,7 @@ class _EditImageState extends State<EditImage> {
                   canMove: true,
                   canScale: true,
                   borderRadius:
-                  _currentShape == CustomCropShape.Ratio ? _radius : 0,
+                      _currentShape == CustomCropShape.Ratio ? _radius : 0,
                   customProgressIndicator: const CupertinoActivityIndicator(),
                   imageFit: _imageFit,
                   pathPaint: Paint()
@@ -111,22 +77,28 @@ class _EditImageState extends State<EditImage> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height*0.05,
+                height: MediaQuery.of(context).size.height * 0.05,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width*0.4,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     child: CustomButtonBlue(
-                        text: 'Cancelar', onPressed: (){
-                          Navigator.pop(context);
-                    }, width: 0.8,),
+                      text: 'Cancelar',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      width: 0.8,
+                    ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width*0.4,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     child: CustomButtonBlue(
-                      text: 'Guardar', onPressed: _saveCroppedImage, width: 0.8,),
+                      text: 'Guardar',
+                      onPressed: _saveCroppedImage,
+                      width: 0.8,
+                    ),
                   ),
                 ],
               ),
@@ -137,6 +109,7 @@ class _EditImageState extends State<EditImage> {
       ),
     );
   }
+
   Future<void> _saveCroppedImage() async {
     final croppedImage = await controller.onCropImage();
     if (croppedImage != null) {
@@ -148,20 +121,17 @@ class _EditImageState extends State<EditImage> {
       final file = File('${directory.path}/$fileName');
       await file.writeAsBytes(bytes);
 
-
       final userDataProvider = UsersDataProvider();
-      final response = await userDataProvider.updateUserImageProfile(userId!,file);
+      final response =
+          await userDataProvider.updateUserImageProfile(userId!, file);
       if (response == 'imgProfile is updated') {
-        print('nice');
-       context.read<ProfileBloc>().fetchDataProfile(userId);
+        context.read<ProfileBloc>().fetchDataProfile(userId);
         context.go('/my_profile');
       } else {
-        print('error');
+        log('error');
       }
     }
   }
-
-
 
   Widget getShapeIcon(CustomCropShape shape) {
     switch (shape) {

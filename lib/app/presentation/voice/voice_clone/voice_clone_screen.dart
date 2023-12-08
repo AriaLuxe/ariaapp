@@ -1,8 +1,6 @@
-import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_training_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../widgets/custom_button.dart';
 

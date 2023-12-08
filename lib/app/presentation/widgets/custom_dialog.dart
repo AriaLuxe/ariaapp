@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../config/styles.dart';
-
 class CustomDialog extends StatelessWidget {
   final String text;
   final VoidCallback onOk;
@@ -20,7 +18,10 @@ class CustomDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(22.0),
       ),
-      title: Text(text,textAlign: TextAlign.center,),
+      title: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
       content: ButtonBar(
         alignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -32,10 +33,13 @@ class CustomDialog extends StatelessWidget {
                 color: const Color(0xFF354271),
               ),
               child: const Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child:  Text(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Text(
                   'No',
-                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
                 ),
               ),
             ),
@@ -48,10 +52,13 @@ class CustomDialog extends StatelessWidget {
                 color: const Color(0xFF354271),
               ),
               child: const Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child:  Text(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Text(
                   'Sí',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 16),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
                 ),
               ),
             ),

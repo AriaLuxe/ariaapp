@@ -48,12 +48,12 @@ class SharedPreferencesManager {
 
   static Future<void> saveToken(String token) async {
     final preference = await SharedPreferences.getInstance();
-    await preference.setString(_keyToken , token);
+    await preference.setString(_keyToken, token);
   }
 
   static Future<String?> getToken() async {
     final preference = await SharedPreferences.getInstance();
-    return preference.getString(_keyToken );
+    return preference.getString(_keyToken);
   }
 
   static Future<void> clearToken() async {

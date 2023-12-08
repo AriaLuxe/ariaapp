@@ -48,30 +48,41 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   final usersRepository = GetIt.instance<UserAriaRepository>();
-  final  errorSnackBar = const SnackBar(
+  final errorSnackBar = const SnackBar(
       backgroundColor: Colors.red,
       content: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error,size: 60,),
+            Icon(
+              Icons.error,
+              size: 60,
+            ),
             Column(
               children: [
-                Text('Correo invalido', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
-
-                Text('Verifique su correo', style: TextStyle(color: Colors.white,fontSize: 16,),),
+                Text(
+                  'Correo invalido',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Verifique su correo',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
               ],
             ),
           ],
         ),
-      )
+      ));
 
-  );
   @override
   Widget build(BuildContext context) {
     final signUpBloc = context.watch<SignUpBloc>();
-
-
 
     final nameUser = signUpBloc.state.nameInputValidator;
     final lastName = signUpBloc.state.lastNameInputValidator;
@@ -86,9 +97,12 @@ class _SignUpFormState extends State<SignUpForm> {
       builder: (context, state) {
         return Column(
           children: [
-            Header(title: 'Crear cuenta', onTap: (){
-              Navigator.pop(context);
-            },),
+            Header(
+              title: 'Crear cuenta',
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
             const SizedBox(
               height: 25,
             ),
@@ -105,7 +119,6 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             TextInput(
               verticalPadding: 15,
-
               prefixIcon: Icons.person,
               label: 'Ingresa tus apellidos',
               onChanged: (lastName) =>
@@ -117,7 +130,6 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             TextInput(
               verticalPadding: 15,
-
               prefixIcon: Icons.verified_user,
               label: 'Ingresa tu nickname',
               onChanged: (nickname) =>
@@ -127,10 +139,8 @@ class _SignUpFormState extends State<SignUpForm> {
             const SizedBox(
               height: 20,
             ),
-
             TextInput(
               verticalPadding: 15,
-
               readOnly: true,
               onTap: () {
                 context
@@ -181,14 +191,11 @@ class _SignUpFormState extends State<SignUpForm> {
               controller: _birthDateController,
               errorMessage: state.birthDateInputValidator.errorMessage,
             ),
-
-
             const SizedBox(
               height: 20,
             ),
             TextInput(
               verticalPadding: 15,
-
               errorMessage: state.genderInputValidator.errorMessage,
               controller: _genderController,
               onTap: () {
@@ -203,21 +210,21 @@ class _SignUpFormState extends State<SignUpForm> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
-                          title: Text('Femenino'),
+                          title: const Text('Femenino'),
                           onTap: () {
                             onGenderChanged('Femenino');
                             Navigator.of(context).pop();
                           },
                         ),
                         ListTile(
-                          title: Text('Masculino'),
+                          title: const Text('Masculino'),
                           onTap: () {
                             onGenderChanged('Masculino');
                             Navigator.of(context).pop();
                           },
                         ),
                         ListTile(
-                          title: Text('Otro'),
+                          title: const Text('Otro'),
                           onTap: () {
                             onGenderChanged('Otro');
                             Navigator.of(context).pop();
@@ -231,7 +238,6 @@ class _SignUpFormState extends State<SignUpForm> {
               readOnly: true,
               label: 'Género',
               prefixIcon: Icons.circle_outlined,
-
             ),
             const SizedBox(
               height: 20,
@@ -243,7 +249,6 @@ class _SignUpFormState extends State<SignUpForm> {
                   width: MediaQuery.of(context).size.width * 0.45,
                   child: TextInput(
                     verticalPadding: 15,
-
                     controller: _countryController,
                     readOnly: true,
                     onTap: () {
@@ -265,7 +270,6 @@ class _SignUpFormState extends State<SignUpForm> {
                                 .add(CountryChanged(_countryController.text));
                           });
                     },
-
                     prefixIcon: Icons.flag,
                     label: 'Pais',
                     errorMessage: state.countryInputValidator.errorMessage,
@@ -275,7 +279,6 @@ class _SignUpFormState extends State<SignUpForm> {
                   width: MediaQuery.of(context).size.width * 0.4,
                   child: TextInput(
                     verticalPadding: 15,
-
                     prefixIcon: Icons.location_on,
                     label: 'Ciudad',
                     onChanged: (city) =>
@@ -290,7 +293,6 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             TextInput(
               verticalPadding: 15,
-
               prefixIcon: Icons.mail,
               label: 'Ingresa tu correo',
               onChanged: (email) =>
@@ -302,13 +304,11 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             TextInput(
               verticalPadding: 15,
-
               obscureText: _obscureText,
               label: 'Contraseña',
               prefixIcon: Icons.lock,
               suffixIcon: IconButton(
                 icon: Icon(
-
                   _obscureText ? Icons.visibility_off : Icons.visibility,
                   color: Colors.white,
                 ),
@@ -330,105 +330,133 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             SizedBox(
                 width: double.infinity,
-                child: isLoadingSignUp ? const Center(child: CircularProgressIndicator(),):CustomButton(
-                    onPressed: signUpBloc.state.isValid
-                        ? () async{
-                      setState(() {
-                        isLoadingSignUp = true;
-                      });
-                      final emailValidation = EmailValidationDataProvider();
-                      final response = await emailValidation.sendEmailToRegisterUser(email.value);
-                      print(response);
-                      if(response == 'Email sent successfully'){
-                        final user = UserAria(
-                          nameUser: nameUser.value.trim(),
-                          lastName: lastName.value.trim(),
-                          email: email.value.trim(),
-                          password: password.value,
-                          gender: _genderController.text.trim(),
-                          country: _countryController.text.trim(),
-                          city: country.value.trim(),
-                          nickname: nickname.value.trim(),
-                          dateBirth: DateTime.parse(DateFormat('yyyy-MM-dd')
-                              .format(DateTime.parse(birthDate.value))),
-                          role: 'USER'
-                        );
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Verificar y Registrarse', isResetPassword: false,user: user)));
-                        setState(() {
-                          isLoadingSignUp = false;
-                        });
-                      } else if(response == 'Has already exists an account with this email'){
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CustomDialogAccept(
-                              text: 'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
-                              onAccept: () {
+                child: isLoadingSignUp
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : CustomButton(
+                        onPressed: signUpBloc.state.isValid
+                            ? () async {
                                 setState(() {
                                   isLoadingSignUp = true;
                                 });
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
-                        );
-                      }
-                      else if(response == 'Code already send to this email'){
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CustomDialogAccept(
-                              text: 'Ya se envio un codigo a este correo',
-                              onAccept: () {
-                                setState(() {
-                                  isLoadingSignUp = true;
-                                });
-                                final user = UserAria(
-                                    nameUser: nameUser.value.trim(),
-                                    lastName: lastName.value.trim(),
-                                    email: email.value.trim(),
-                                    password: password.value,
-                                    gender: _genderController.text.trim(),
-                                    country: _countryController.text.trim(),
-                                    city: country.value.trim(),
-                                    nickname: nickname.value.trim(),
-                                    dateBirth: DateTime.parse(DateFormat('yyyy-MM-dd')
-                                        .format(DateTime.parse(birthDate.value))),
-                                    role: 'USER'
-                                );
-                                Navigator.pop(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  VerifyCode(email: email.value.trim(),verify: 'Crear cuenta', isResetPassword: false,user: user)));
+                                final emailValidation =
+                                    EmailValidationDataProvider();
+                                final response = await emailValidation
+                                    .sendEmailToRegisterUser(email.value);
+                                if (response == 'Email sent successfully') {
+                                  final user = UserAria(
+                                      nameUser: nameUser.value.trim(),
+                                      lastName: lastName.value.trim(),
+                                      email: email.value.trim(),
+                                      password: password.value,
+                                      gender: _genderController.text.trim(),
+                                      country: _countryController.text.trim(),
+                                      city: country.value.trim(),
+                                      nickname: nickname.value.trim(),
+                                      dateBirth: DateTime.parse(
+                                          DateFormat('yyyy-MM-dd').format(
+                                              DateTime.parse(birthDate.value))),
+                                      role: 'USER');
 
-                                setState(() {
-                                  isLoadingSignUp = false;
-                                });
-                              },
-                            );
-                          },
-                        );
-                      }
-                      else{
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CustomDialogAccept(
-                              text: 'Verifique sus datos',
-                              onAccept: () {
-                                setState(() {
-                                  isLoadingSignUp = true;
-                                });
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
-                        );
-                      }
-                    }
-                        : null,
-                    text: 'Siguiente', width: 0.8,))
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => VerifyCode(
+                                              email: email.value.trim(),
+                                              verify: 'Verificar y Registrarse',
+                                              isResetPassword: false,
+                                              user: user)));
+                                  setState(() {
+                                    isLoadingSignUp = false;
+                                  });
+                                } else if (response ==
+                                    'Has already exists an account with this email') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomDialogAccept(
+                                        text:
+                                            'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
+                                        onAccept: () {
+                                          setState(() {
+                                            isLoadingSignUp = true;
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    },
+                                  );
+                                } else if (response ==
+                                    'Code already send to this email') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomDialogAccept(
+                                        text:
+                                            'Ya se envio un codigo a este correo',
+                                        onAccept: () {
+                                          setState(() {
+                                            isLoadingSignUp = true;
+                                          });
+                                          final user = UserAria(
+                                              nameUser: nameUser.value.trim(),
+                                              lastName: lastName.value.trim(),
+                                              email: email.value.trim(),
+                                              password: password.value,
+                                              gender:
+                                                  _genderController.text.trim(),
+                                              country: _countryController.text
+                                                  .trim(),
+                                              city: country.value.trim(),
+                                              nickname: nickname.value.trim(),
+                                              dateBirth: DateTime.parse(
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(DateTime.parse(
+                                                          birthDate.value))),
+                                              role: 'USER');
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      VerifyCode(
+                                                          email: email.value
+                                                              .trim(),
+                                                          verify:
+                                                              'Crear cuenta',
+                                                          isResetPassword:
+                                                              false,
+                                                          user: user)));
 
-
+                                          setState(() {
+                                            isLoadingSignUp = false;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomDialogAccept(
+                                        text: 'Verifique sus datos',
+                                        onAccept: () {
+                                          setState(() {
+                                            isLoadingSignUp = true;
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    },
+                                  );
+                                }
+                              }
+                            : null,
+                        text: 'Siguiente',
+                        width: 0.8,
+                      ))
           ],
         );
       },

@@ -6,15 +6,13 @@ class SignUpDateInput extends StatelessWidget {
       required this.title,
       this.suffixIcon,
       required this.labelText});
+
   final String title;
   final IconData? suffixIcon;
   final String labelText;
   final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide.none // Cambiar el color del borde aquí
+      borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none);
 
-      //borderSide: BorderSide.none,
-      );
   @override
   Widget build(BuildContext context) {
     return Column(

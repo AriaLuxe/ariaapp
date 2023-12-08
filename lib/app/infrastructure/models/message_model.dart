@@ -7,7 +7,7 @@ class MessageModel extends Message {
     required int id,
     required int sender,
     required String content,
-     required int durationSeconds,
+    required int durationSeconds,
     required DateTime date,
     required bool read,
     required bool isLiked,
@@ -31,8 +31,7 @@ class MessageModel extends Message {
       durationSeconds: json['durationSeconds'] ?? 0,
       date:
           json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
-      read: json['read'] ??
-          false,
+      read: json['read'] ?? false,
       isLiked: json['isliked'] ?? false,
       chat: json['chat'] ?? 0,
     );
@@ -55,5 +54,4 @@ class MessageModel extends Message {
     final List<dynamic> parsedJson = jsonDecode(str);
     return parsedJson.map((json) => MessageModel.fromJson(json)).toList();
   }
-
 }

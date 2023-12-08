@@ -1,7 +1,7 @@
 import '../domain/entities/user_aria.dart';
 
 class UserLogged {
-   UserAria user;
+  UserAria user;
 
   UserLogged({
     required this.user,
@@ -13,8 +13,4 @@ class UserLogged {
       UserLogged(
         user: user ?? this.user,
       );
-
-
 }
-
-

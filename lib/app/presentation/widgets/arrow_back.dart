@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ArrowBack extends StatelessWidget {
   const ArrowBack({super.key, this.onTap});
+
   final void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

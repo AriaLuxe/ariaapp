@@ -8,24 +8,28 @@ class MessageRepository extends MessageInterface {
   MessageRepository({
     required this.messageDataProvider,
   });
+
   @override
   Future<Message> createMessage(int chatId, int userId, String audioPath) {
-    final response = messageDataProvider.createMessage(chatId, userId, audioPath);
-  return response;
-  }
-
-  @override
-  Future<List<Message>> getMessagesByChatId(int chatId, int userId, int page, int pageSize) async {
     final response =
-        await messageDataProvider.getMessagesByChatId(chatId, userId, page, pageSize);
+        messageDataProvider.createMessage(chatId, userId, audioPath);
     return response;
   }
 
   @override
-  Future<Message> responseMessage(int chatId, int userReceivedId, String audioPath) {
-    final response = messageDataProvider.responseMessage(chatId, userReceivedId, audioPath);
+  Future<List<Message>> getMessagesByChatId(
+      int chatId, int userId, int page, int pageSize) async {
+    final response = await messageDataProvider.getMessagesByChatId(
+        chatId, userId, page, pageSize);
     return response;
+  }
 
+  @override
+  Future<Message> responseMessage(
+      int chatId, int userReceivedId, String audioPath) {
+    final response =
+        messageDataProvider.responseMessage(chatId, userReceivedId, audioPath);
+    return response;
   }
 
   @override
@@ -42,7 +46,8 @@ class MessageRepository extends MessageInterface {
 
   @override
   Future<dynamic> getFavoritesMessages(int userLogged, int idUserLooking) {
-    final response = messageDataProvider.getFavoritesMessages( userLogged,  idUserLooking);
+    final response =
+        messageDataProvider.getFavoritesMessages(userLogged, idUserLooking);
     return response;
   }
 }

@@ -35,19 +35,15 @@ class ChatModel extends Chat {
       userId: json['idUser'] ?? 0,
       nameUser: json['nameUser'] ?? '',
       lastName: json['lastName'] ?? '',
-      imgProfile:
-          json['imgProfile'] ?? '',
-      lastMessage:
-          json['lastMessage'] ?? '',
+      imgProfile: json['imgProfile'] ?? '',
+      lastMessage: json['lastMessage'] ?? '',
       dateLastMessage: json['dateLastMessage'] != null
           ? DateTime.parse(json['dateLastMessage'])
           : DateTime.now(),
       unread: json['unread'] ?? false,
       iaChat: json['iaChat'] ?? false,
-
       durationSeconds: json['durationSeconds'] ?? 0,
-      counterNewMessage: json['durationSeconds'] ??
-          0, // Valor predeterminado para durationSeconds
+      counterNewMessage: json['durationSeconds'] ?? 0,
     );
   }
 

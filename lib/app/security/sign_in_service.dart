@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:ariapp/app/security/shared_preferences_manager.dart';
+
 import 'package:http/http.dart' as http;
 
 import '../config/base_url_config.dart';
-import '../domain/entities/user_aria.dart';
 
 class SignInService {
   Future<Map<String, dynamic>> signIn(String email, String password) async {
@@ -20,16 +19,14 @@ class SignInService {
         body: jsonEncode(body),
         headers: headers,
       );
-print(response.body);
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
         return responseBody;
       } else if (response.statusCode == 401) {
-        //final responseBody = jsonDecode(response.body);
-        return { 'Unauthorized' : 'Unauthorized'};
+        return {'Unauthorized': 'Unauthorized'};
       } else {
-
-        throw HttpException('Código de estado inesperado: ${response.statusCode}');
+        throw HttpException(
+            'Código de estado inesperado: ${response.statusCode}');
       }
     } catch (error) {
       throw HttpException('Error de red: $error');

@@ -20,11 +20,8 @@ class CustomButtonPrimaryColor extends StatelessWidget {
 
     return GestureDetector(
       onTap: isButtonEnabled ? onPressed : null,
-      child:
-      Container(
-
+      child: Container(
         width: double.infinity,
-
         decoration: BoxDecoration(
           color: Styles.primaryColor,
           borderRadius: BorderRadius.circular(30.0),
@@ -33,15 +30,16 @@ class CustomButtonPrimaryColor extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style:  TextStyle(
-              color: isButtonEnabled ? Colors.white : Colors.white.withOpacity(0.36),
+            style: TextStyle(
+              color: isButtonEnabled
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.36),
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
           ),
         ),
       ),
-
     );
   }
 }

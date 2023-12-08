@@ -13,6 +13,7 @@ import '../validators/nickname_input_validator.dart';
 import '../validators/password_input_validator.dart';
 
 part 'sign_up_event.dart';
+
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {

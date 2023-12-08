@@ -18,8 +18,7 @@ class CustomButtonBlue extends StatelessWidget {
 
     return GestureDetector(
       onTap: isButtonEnabled ? onPressed : null,
-      child:
-      Container(
+      child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
           color: const Color(0xFF5368d6),
@@ -29,15 +28,16 @@ class CustomButtonBlue extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style:  TextStyle(
-              color: isButtonEnabled ? Colors.white : Colors.white.withOpacity(0.36),
+            style: TextStyle(
+              color: isButtonEnabled
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.36),
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
           ),
         ),
       ),
-
     );
   }
 }

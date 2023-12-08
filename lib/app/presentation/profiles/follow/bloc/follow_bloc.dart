@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:ariapp/app/domain/entities/follower.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
@@ -8,40 +9,33 @@ import 'package:get_it/get_it.dart';
 
 import '../../../../security/shared_preferences_manager.dart';
 
-
-
 part 'follow_event.dart';
+
 part 'follow_state.dart';
 
 class FollowBloc extends Bloc<FollowEvent, FollowState> {
   final UserAriaRepository userAriaRepository;
 
-  FollowBloc() :
-        userAriaRepository = GetIt.instance<UserAriaRepository>(),
+  FollowBloc()
+      : userAriaRepository = GetIt.instance<UserAriaRepository>(),
         super(const FollowState()) {
-        on<FollowEvent>((event, emit) {
-          // TODO: implement event handler
-        });
+    on<FollowEvent>((event, emit) {});
 
-        on<FetchFollowers>(_onFollowersFetched);
-        on<FetchFollowings>(_onFollowingFetched);
-        on<FetchSubscribers>(_onSubscribersFetched);
-        on<ToggleFollow>(_onToggleFollow);
-
-
+    on<FetchFollowers>(_onFollowersFetched);
+    on<FetchFollowings>(_onFollowingFetched);
+    on<FetchSubscribers>(_onSubscribersFetched);
+    on<ToggleFollow>(_onToggleFollow);
   }
 
   Future<void> _onFollowersFetched(
-      FetchFollowers event,
-      Emitter<FollowState> emit,
-      ) async {
+    FetchFollowers event,
+    Emitter<FollowState> emit,
+  ) async {
     emit(state.copyWith(followersStatus: FollowStatus.initial));
     try {
-      final List<Follower> followers = await userAriaRepository.getFollowers(event.userId, event.userLooking);
+      final List<Follower> followers = await userAriaRepository.getFollowers(
+          event.userId, event.userLooking);
       List<Follower> followersUpdated = [];
-      print('followers.length');
-      print('followers.length');
-      print(followers.length);
       for (final chat in followers) {
         followersUpdated.add(chat);
       }
@@ -52,22 +46,24 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(followersStatus: FollowStatus.success,));
+      emit(state.copyWith(
+        followersStatus: FollowStatus.success,
+      ));
     }
   }
-  void followersFetched(int userId,int userLooking) {
+
+  void followersFetched(int userId, int userLooking) {
     add(FetchFollowers(userId, userLooking));
   }
 
-  Future<void> _onFollowingFetched(FetchFollowings event, Emitter<FollowState> emit) async {
+  Future<void> _onFollowingFetched(
+      FetchFollowings event, Emitter<FollowState> emit) async {
     emit(state.copyWith(followingStatus: FollowStatus.loading));
 
     try {
-      final List<Follower> following = await userAriaRepository.getFollowing(event.userId, event.userLooking);
+      final List<Follower> following = await userAriaRepository.getFollowing(
+          event.userId, event.userLooking);
       List<Follower> followersUpdated = [];
-      print('following.length');
-      print('following.length');
-      print(following.length);
       for (final chat in following) {
         followersUpdated.add(chat);
       }
@@ -79,14 +75,18 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
       emit(state.copyWith(followingStatus: FollowStatus.error));
     }
   }
+
   void followingsFetched(int userId, int userLooking) {
-    add( FetchFollowings(userId, userLooking));
+    add(FetchFollowings(userId, userLooking));
   }
-  Future<void> _onSubscribersFetched(FetchSubscribers event, Emitter<FollowState> emit) async {
+
+  Future<void> _onSubscribersFetched(
+      FetchSubscribers event, Emitter<FollowState> emit) async {
     emit(state.copyWith(subscribersStatus: FollowStatus.loading));
 
     try {
-      final List<Follower> subscribers = await userAriaRepository.getSubscribers(event.userId);
+      final List<Follower> subscribers =
+          await userAriaRepository.getSubscribers(event.userId);
 
       emit(state.copyWith(
         subscribersStatus: FollowStatus.success,
@@ -98,41 +98,32 @@ class FollowBloc extends Bloc<FollowEvent, FollowState> {
   }
 
   void subscribersFetched(int userId) {
-    add( FetchSubscribers(userId));
+    add(FetchSubscribers(userId));
   }
 
-
-
-  Future<void> _onToggleFollow(ToggleFollow event, Emitter<FollowState> emit) async {
-      try{
+  Future<void> _onToggleFollow(
+      ToggleFollow event, Emitter<FollowState> emit) async {
+    try {
       int? userId = await SharedPreferencesManager.getUserId();
 
-      if(event.isFollowing){
-
-        final response = await userAriaRepository.follow(userId!,event.follower.idUser);
-        print(response);
-        print('siguiendo');
-    }
-    else {
-
+      if (event.isFollowing) {
+        final response =
+            await userAriaRepository.follow(userId!, event.follower.idUser);
+        log(response);
+      } else {
         final response = await userAriaRepository.unFollow(event.requestId);
-        if(response == 'Request deleted' ){
-          print('se dejo de seguir');
-
-        }else {
-          print('error');
+        if (response == 'Request deleted') {
+          log('se dejo de seguir');
+        } else {
+          log('error');
         }
-      print(response);
+      }
+    } catch (e) {
+      log(e.toString());
     }
-  }catch(e){
-    print(e);
   }
 
+  void toggleFollow(int requestId, bool isFollowing, Follower follower) {
+    add(ToggleFollow(requestId, isFollowing, follower));
   }
-  void toggleFollow(int requestId,  bool isFollowing, Follower follower){
-    add(ToggleFollow(requestId,isFollowing, follower));
-  }
-
-
-
 }

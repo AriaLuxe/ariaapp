@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../config/styles.dart';
-
 class CustomDialogAccept extends StatelessWidget {
   final String text;
   final VoidCallback onAccept;
@@ -18,7 +16,10 @@ class CustomDialogAccept extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(22.0),
       ),
-      title: Text(text,textAlign: TextAlign.center,),
+      title: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
       content: ButtonBar(
         alignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -30,10 +31,13 @@ class CustomDialogAccept extends StatelessWidget {
                 color: const Color(0xFF354271),
               ),
               child: const Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child:  Text(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Text(
                   'Aceptar',
-                  style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
                 ),
               ),
             ),

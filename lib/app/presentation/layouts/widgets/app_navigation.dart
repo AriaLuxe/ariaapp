@@ -2,8 +2,8 @@ import 'package:ariapp/app/presentation/chats/chat/chat_screen.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
 import 'package:ariapp/app/presentation/layouts/layout.dart';
 import 'package:ariapp/app/presentation/people/people_screen.dart';
-import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/my_information/my_information.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/profile_image.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/update_image.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_email/update_email.dart';
@@ -26,20 +26,17 @@ class AppNavigation {
 
   static String initial = "/get_started";
 
-
-
-
   // Private navigators
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static final _shellNavigatorChats =
-  GlobalKey<NavigatorState>(debugLabel: 'shellChats');
+      GlobalKey<NavigatorState>(debugLabel: 'shellChats');
   static final _shellNavigatorPeople =
-  GlobalKey<NavigatorState>(debugLabel: 'shellPeople');
+      GlobalKey<NavigatorState>(debugLabel: 'shellPeople');
   static final _shellNavigatorVoice =
-  GlobalKey<NavigatorState>(debugLabel: 'shellVoice');
+      GlobalKey<NavigatorState>(debugLabel: 'shellVoice');
   static final _shellNavigatorMyProfile =
-  GlobalKey<NavigatorState>(debugLabel: 'shellMyProfile');
+      GlobalKey<NavigatorState>(debugLabel: 'shellMyProfile');
 
   // GoRouter configuration
   static final GoRouter router = GoRouter(
@@ -47,7 +44,6 @@ class AppNavigation {
     debugLogDiagnostics: true,
     navigatorKey: _rootNavigatorKey,
     routes: [
-
       /// MainWrapper
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -63,7 +59,7 @@ class AppNavigation {
                 path: "/chats",
                 name: "Chats",
                 builder: (BuildContext context, GoRouterState state) =>
-                const ChatsScreen(),
+                    const ChatsScreen(),
               ),
             ],
           ),
@@ -74,7 +70,7 @@ class AppNavigation {
                 path: "/people",
                 name: "People",
                 builder: (BuildContext context, GoRouterState state) =>
-                const PeopleScreen(),
+                    const PeopleScreen(),
                 routes: [
                   GoRoute(
                     path: "profile",
@@ -82,11 +78,15 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  ProfileScreen(user: null,),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        child: ProfileScreen(
+                          user: null,
+                        ),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -102,7 +102,7 @@ class AppNavigation {
                 path: "/voice",
                 name: "Voice",
                 builder: (BuildContext context, GoRouterState state) =>
-                const VoiceScreen(),
+                    const VoiceScreen(),
               ),
             ],
           ),
@@ -123,10 +123,12 @@ class AppNavigation {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: const MyInformation(),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -137,11 +139,13 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:const  UpdateInformation(),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        child: const UpdateInformation(),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -153,10 +157,12 @@ class AppNavigation {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: const UpdateEmail(),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -168,10 +174,12 @@ class AppNavigation {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: const UpdatePassword(),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -182,28 +190,32 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child: const UpdateState(state: '',),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        child: const UpdateState(
+                          state: '',
+                        ),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
                   ),
-
                   GoRoute(
-
                     path: "profile_image",
                     name: "ProfileImage",
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
                         child: const ProfileImage(),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -214,11 +226,15 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child:  const UpdateImage(urlPhoto: '',),
-                        transitionsBuilder: (context,
-                            animation,
-                            secondaryAnimation,
-                            child,) =>
+                        child: const UpdateImage(
+                          urlPhoto: '',
+                        ),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) =>
                             FadeTransition(opacity: animation, child: child),
                       );
                     },
@@ -234,28 +250,25 @@ class AppNavigation {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/get_started',
         name: "GetStarted",
-        builder: (context, state) =>
-            GetStartedScreen(
-              key: state.pageKey,
-            ),
+        builder: (context, state) => GetStartedScreen(
+          key: state.pageKey,
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/sign_in',
         name: "SignIn",
-        builder: (context, state) =>
-            SignInScreen(
-              key: state.pageKey,
-            ),
+        builder: (context, state) => SignInScreen(
+          key: state.pageKey,
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/sign_up',
         name: "SignUp",
-        builder: (context, state) =>
-            SignUpScreen(
-              key: state.pageKey,
-            ),
+        builder: (context, state) => SignUpScreen(
+          key: state.pageKey,
+        ),
       ),
 
       GoRoute(
@@ -264,8 +277,8 @@ class AppNavigation {
         builder: (context, state) {
           final Map<String, String> pathParams = state.pathParameters;
 
-          final bool isResetPassword = bool.parse(
-              pathParams['isResetPassword']!);
+          final bool isResetPassword =
+              bool.parse(pathParams['isResetPassword']!);
           final String email = pathParams['email']!;
           final String verify = pathParams['verify']!;
 
@@ -281,19 +294,20 @@ class AppNavigation {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/reset_password/:email',
         name: "ResetPassword",
-        builder: (context, state) =>
-            ResetPassword(
-                key: state.pageKey, email: state.uri.queryParameters['email']!
-            ),
+        builder: (context, state) => ResetPassword(
+            key: state.pageKey, email: state.uri.queryParameters['email']!),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/chat/:userId/:chatId/:userReceivedId',
         name: "Chat",
         builder: (context, state) {
-          final userId = int.tryParse(state.pathParameters["userId"] ?? "0") ?? 0;
-          final chatId = int.tryParse(state.pathParameters["chatId"] ?? "0") ?? 0;
-          final userReceivedId = int.tryParse(state.pathParameters["userReceivedId"] ?? "0") ?? 0;
+          final userId =
+              int.tryParse(state.pathParameters["userId"] ?? "0") ?? 0;
+          final chatId =
+              int.tryParse(state.pathParameters["chatId"] ?? "0") ?? 0;
+          final userReceivedId =
+              int.tryParse(state.pathParameters["userReceivedId"] ?? "0") ?? 0;
 
           return ChatScreen(
             key: state.pageKey,
@@ -303,8 +317,6 @@ class AppNavigation {
           );
         },
       ),
-
-
     ],
   );
 }

@@ -2,14 +2,16 @@ part of 'people_list_bloc.dart';
 
 abstract class PeopleListEvent extends Equatable {
   const PeopleListEvent();
+
   @override
   List<Object> get props => [];
 }
 
-class PeopleFetched extends PeopleListEvent{
+class PeopleFetched extends PeopleListEvent {
   final int page;
   final int pageSize;
-  const PeopleFetched(this.page,this.pageSize);
+
+  const PeopleFetched(this.page, this.pageSize);
 }
 
 class SearchPeople extends PeopleListEvent {
@@ -23,9 +25,9 @@ class SearchPeople extends PeopleListEvent {
 
 class LoadMoreUsers extends PeopleListEvent {
   const LoadMoreUsers(
-      this.page,
-      this.pageSize,
-      );
+    this.page,
+    this.pageSize,
+  );
 
   final int page;
   final int pageSize;

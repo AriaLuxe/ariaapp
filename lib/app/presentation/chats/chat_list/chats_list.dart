@@ -21,7 +21,6 @@ class _ChatsListState extends State<ChatsList> {
     final remainingSeconds = seconds % 60;
     final minutesStr = minutes.toString().padLeft(2, '0');
     final secondsStr = remainingSeconds.toString().padLeft(2, '0');
-    print(minutesStr);
     return '$minutesStr:$secondsStr';
   }
 
@@ -65,7 +64,10 @@ class _ChatsListState extends State<ChatsList> {
                 child: Center(
                   child: Text(
                     'No tienes chats',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24,color: Colors.white),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Colors.white),
                   ),
                 ),
               );
@@ -76,7 +78,6 @@ class _ChatsListState extends State<ChatsList> {
                   onPanDown: (_) {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
-
                   child: RefreshIndicator(
                     onRefresh: refresh,
                     child: ListView.builder(
@@ -88,7 +89,6 @@ class _ChatsListState extends State<ChatsList> {
                             motion: const ScrollMotion(),
                             children: [
                               SlidableAction(
-
                                 onPressed: (BuildContext context) {
                                   chatListBloc.deleteChat(chat.chatId!);
                                 },
@@ -103,18 +103,14 @@ class _ChatsListState extends State<ChatsList> {
                           child: GestureDetector(
                             onTap: () {
                               chatBloc.dataChatFetched(chat.userId);
-                              chatBloc.messageFetched(chat.chatId!,0,8);
-
-                             /*Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>  ChatScreen(userId: chat.chatId!, chatId: chat.chatId!, userReceivedId: chat.userId,),
-                                ),
-                              );*/
-                              context.push('/chat/${chat.chatId}/${chat.chatId!}/${chat.userId}');
+                              chatBloc.messageFetched(chat.chatId!, 0, 8);
+                              context.push(
+                                  '/chat/${chat.chatId}/${chat.chatId!}/${chat.userId}');
                             },
                             child: Padding(
-                              padding:  chat.unread ?? true ? const EdgeInsets.only(right:12.0):  const EdgeInsets.only(top: 0.0) ,
+                              padding: chat.unread ?? true
+                                  ? const EdgeInsets.only(right: 12.0)
+                                  : const EdgeInsets.only(top: 0.0),
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 12.0),
                                 child: Column(
@@ -127,15 +123,17 @@ class _ChatsListState extends State<ChatsList> {
                                       decoration: BoxDecoration(
                                         borderRadius: chat.unread ?? true
                                             ? const BorderRadius.only(
-
-                                          topRight: Radius.circular(20),
-                                          bottomRight: Radius.circular(20),
-                                        )
+                                                topRight: Radius.circular(20),
+                                                bottomRight:
+                                                    Radius.circular(20),
+                                              )
                                             : const BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),                                color: chat.unread ?? false
+                                                topLeft: Radius.circular(40),
+                                                topRight: Radius.circular(40),
+                                                bottomRight:
+                                                    Radius.circular(40),
+                                              ),
+                                        color: chat.unread ?? false
                                             ? const Color(0xff354271)
                                             : Styles.primaryColor,
                                       ),
@@ -162,10 +160,12 @@ class _ChatsListState extends State<ChatsList> {
                                                       '${chat.nameUser} ${chat.lastName}',
                                                       maxLines: 1,
                                                       style: const TextStyle(
-                                                        overflow: TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         color: Colors.white,
                                                         fontSize: 15.0,
-                                                        fontWeight: FontWeight.bold,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                     const SizedBox(height: 5.0),
@@ -176,24 +176,27 @@ class _ChatsListState extends State<ChatsList> {
                                                           color: Colors.grey,
                                                         ),
                                                         SizedBox(
-                                                          width:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.45,
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.45,
                                                           child: Text(
                                                             formatDuration(
                                                                 chat.durationSeconds ??
                                                                     0),
-                                                            style: const TextStyle(
-                                                                color: Colors.grey,
-
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.grey,
                                                               fontSize: 15.0,
                                                               fontWeight:
-                                                                  FontWeight.w600,
+                                                                  FontWeight
+                                                                      .w600,
                                                             ),
-                                                            overflow: TextOverflow
-                                                                .ellipsis,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         ),
                                                       ],
@@ -205,7 +208,10 @@ class _ChatsListState extends State<ChatsList> {
                                             Column(
                                               children: [
                                                 Text(
-                                                  DateFormat.jm().format(chat.dateLastMessage!.subtract(const Duration(hours: 5))),
+                                                  DateFormat.jm().format(chat
+                                                      .dateLastMessage!
+                                                      .subtract(const Duration(
+                                                          hours: 5))),
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 15.0,
@@ -215,9 +221,10 @@ class _ChatsListState extends State<ChatsList> {
                                                 const SizedBox(height: 5),
                                                 chat.unread ?? false
                                                     ? const CircleAvatar(
-                                                      radius: 8,
-                                                      backgroundColor: Color(0xFF5368d6),
-                                                    )
+                                                        radius: 8,
+                                                        backgroundColor:
+                                                            Color(0xFF5368d6),
+                                                      )
                                                     : const Text(''),
                                               ],
                                             ),

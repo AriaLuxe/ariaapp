@@ -6,9 +6,10 @@ class ChatRepository extends ChatInterface {
   final ChatsDataProvider chatsDataProvider;
 
   ChatRepository({required this.chatsDataProvider});
+
   @override
-  Future<String> deleteChat(int chatId) async{
-    final response  = await chatsDataProvider.deleteChat(chatId);
+  Future<String> deleteChat(int chatId) async {
+    final response = await chatsDataProvider.deleteChat(chatId);
     return response;
   }
 
@@ -24,8 +25,7 @@ class ChatRepository extends ChatInterface {
   }
 
   @override
-  Future<List<Chat>> searchChats(String keyword,int userId) {
-    return chatsDataProvider.searchChats(keyword,userId);
-
+  Future<List<Chat>> searchChats(String keyword, int userId) {
+    return chatsDataProvider.searchChats(keyword, userId);
   }
 }

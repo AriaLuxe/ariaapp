@@ -1,4 +1,3 @@
-import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/chats/chat/widgets/custom_icon_button.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -6,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
-
-
 class AudioPlayerTest extends StatefulWidget {
   final AudioPlayer audioPlayer;
   final String audioUrl;
+
   const AudioPlayerTest({
     super.key,
     required this.audioPlayer,
@@ -27,13 +25,12 @@ class AudioPlayerTestState extends State<AudioPlayerTest> {
         widget.audioPlayer.positionStream,
         widget.audioPlayer.bufferedPositionStream,
         widget.audioPlayer.durationStream,
-            (position, bufferedPosition, duration) => PositionData(
+        (position, bufferedPosition, duration) => PositionData(
           position,
           bufferedPosition,
           duration ?? Duration.zero,
         ),
       );
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +74,8 @@ class AudioPlayerTestState extends State<AudioPlayerTest> {
                   onPressed: widget.audioPlayer.play,
                    icon: Icons.play_arrow,
                   iconColor: Styles.primaryColor,
-*/              return CustomIconButton(
+*/
+                return CustomIconButton(
                   background: Colors.white,
                   onPressed: () {
                     // Reiniciar la reproducción desde el principio
@@ -108,11 +106,10 @@ class AudioPlayerTestState extends State<AudioPlayerTest> {
                         progressBarColor: Styles.primaryColor,
                         thumbColor: const Color(0xFF5368d6),
                         timeLabelTextStyle: textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                        ),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                         progress: positionData?.position ?? Duration.zero,
-                        buffered: positionData?.bufferedPosition ?? Duration.zero,
+                        buffered:
+                            positionData?.bufferedPosition ?? Duration.zero,
                         total: positionData?.duration ?? Duration.zero,
                         onSeek: widget.audioPlayer.seek,
                       );
@@ -133,9 +130,10 @@ class PositionData {
   final Duration position;
   final Duration bufferedPosition;
   final Duration duration;
+
   const PositionData(
-      this.position,
-      this.bufferedPosition,
-      this.duration,
-      );
+    this.position,
+    this.bufferedPosition,
+    this.duration,
+  );
 }

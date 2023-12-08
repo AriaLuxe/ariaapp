@@ -8,11 +8,11 @@ class ChatListState extends Equatable {
   final ChatListStatus chatListStatus;
   final bool isLoadingDeleteChat;
   final String responseDeleteChat;
+
   const ChatListState({
     this.chatListStatus = ChatListStatus.initial,
     this.chats = const <Chat>[],
     this.chatsSearch = const <Chat>[],
-
     this.isLoadingDeleteChat = false,
     this.responseDeleteChat = '',
   });
@@ -23,17 +23,21 @@ class ChatListState extends Equatable {
     bool? isLoadingDeleteChat,
     String? responseDeleteChat,
     List<Chat>? chatsSearch,
-
   }) {
     return ChatListState(
-      chats: chats ?? this.chats,
-      chatListStatus: chatListStatus ?? this.chatListStatus,
-        isLoadingDeleteChat : isLoadingDeleteChat ?? this.isLoadingDeleteChat,
+        chats: chats ?? this.chats,
+        chatListStatus: chatListStatus ?? this.chatListStatus,
+        isLoadingDeleteChat: isLoadingDeleteChat ?? this.isLoadingDeleteChat,
         responseDeleteChat: responseDeleteChat ?? this.responseDeleteChat,
-        chatsSearch: chatsSearch ?? this.chatsSearch
-    );
+        chatsSearch: chatsSearch ?? this.chatsSearch);
   }
 
   @override
-  List<Object> get props => [isLoadingDeleteChat, chats, chatListStatus,responseDeleteChat,chatsSearch];
+  List<Object> get props => [
+        isLoadingDeleteChat,
+        chats,
+        chatListStatus,
+        responseDeleteChat,
+        chatsSearch
+      ];
 }

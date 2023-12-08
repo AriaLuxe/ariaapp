@@ -18,12 +18,10 @@ class ChatsDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
-      print(response.body);
 
       List<ChatModel> chats = ChatModel.toChatsList(response.body);
       return chats;
     } catch (error) {
-      print(error);
       throw Exception(error);
     }
   }
@@ -45,13 +43,12 @@ class ChatsDataProvider {
         final createdChat = ChatModel.fromMap(jsonDecode(response.body));
 
         return createdChat;
-      } else if(response.statusCode ==400){
-          return response.body;
-        }else {
+      } else if (response.statusCode == 400) {
+        return response.body;
+      } else {
         throw Exception('Error al crear el chat: ${response.statusCode}');
       }
     } catch (error) {
-      print(error);
       throw Exception(error);
     }
   }
@@ -70,11 +67,9 @@ class ChatsDataProvider {
       );
       return response.body;
     } catch (error) {
-      print(error);
       throw Exception(error);
     }
   }
-
 
   Future<String> deleteChat(int chatId) async {
     try {
@@ -88,7 +83,6 @@ class ChatsDataProvider {
       );
       return response.body;
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }

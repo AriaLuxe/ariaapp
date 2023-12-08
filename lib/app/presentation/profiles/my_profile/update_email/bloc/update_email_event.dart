@@ -6,6 +6,7 @@ abstract class UpdateEmailEvent extends Equatable {
 
 final class EmailChanged extends UpdateEmailEvent {
   const EmailChanged(this.email);
+
   final String email;
 
   @override
@@ -14,6 +15,7 @@ final class EmailChanged extends UpdateEmailEvent {
 
 final class PasswordChanged extends UpdateEmailEvent {
   const PasswordChanged(this.password);
+
   final String password;
 
   @override
@@ -24,6 +26,5 @@ final class SignInSubmitted extends UpdateEmailEvent {
   const SignInSubmitted();
 
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }

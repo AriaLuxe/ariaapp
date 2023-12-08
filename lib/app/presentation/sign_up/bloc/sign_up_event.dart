@@ -9,6 +9,7 @@ abstract class SignUpEvent extends Equatable {
 
 class NameChanged extends SignUpEvent {
   const NameChanged(this.name);
+
   final String name;
 
   @override
@@ -17,6 +18,7 @@ class NameChanged extends SignUpEvent {
 
 class EmailChanged extends SignUpEvent {
   const EmailChanged(this.email);
+
   final String email;
 
   @override
@@ -25,6 +27,7 @@ class EmailChanged extends SignUpEvent {
 
 class LastNameChanged extends SignUpEvent {
   const LastNameChanged(this.lastName);
+
   final String lastName;
 
   @override
@@ -33,6 +36,7 @@ class LastNameChanged extends SignUpEvent {
 
 class PasswordChanged extends SignUpEvent {
   const PasswordChanged(this.password);
+
   final String password;
 
   @override
@@ -41,6 +45,7 @@ class PasswordChanged extends SignUpEvent {
 
 class BirthDateChanged extends SignUpEvent {
   const BirthDateChanged(this.birthDate);
+
   final String birthDate;
 
   @override
@@ -53,11 +58,13 @@ class SignUpSubmitted extends SignUpEvent {
 
 class BirthDateSubmitted extends SignUpEvent {
   final String date;
+
   const BirthDateSubmitted(this.date);
 }
 
 class NicknameChanged extends SignUpEvent {
   const NicknameChanged(this.nickname);
+
   final String nickname;
 
   @override
@@ -66,6 +73,7 @@ class NicknameChanged extends SignUpEvent {
 
 class CountryChanged extends SignUpEvent {
   const CountryChanged(this.country);
+
   final String country;
 
   @override
@@ -74,6 +82,7 @@ class CountryChanged extends SignUpEvent {
 
 class CityChanged extends SignUpEvent {
   const CityChanged(this.city);
+
   final String city;
 
   @override
@@ -82,6 +91,7 @@ class CityChanged extends SignUpEvent {
 
 class GenderChanged extends SignUpEvent {
   const GenderChanged(this.gender);
+
   final String gender;
 
   @override

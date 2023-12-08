@@ -5,7 +5,8 @@ enum ConfirmPasswordPasswordInputError {
   empty,
 }
 
-class ConfirmPasswordInputValidator extends FormzInput<String, ConfirmPasswordPasswordInputError> {
+class ConfirmPasswordInputValidator
+    extends FormzInput<String, ConfirmPasswordPasswordInputError> {
   const ConfirmPasswordInputValidator.pure() : super.pure('');
 
   const ConfirmPasswordInputValidator.dirty(String value) : super.dirty(value);

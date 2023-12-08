@@ -1,5 +1,4 @@
 import 'package:ariapp/app/config/styles.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,11 +14,11 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   int backButtonCounter = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-
       backgroundColor: Styles.primaryColor,
       body: BlocProvider(
         create: (context) => SignInBloc(),
@@ -30,12 +29,9 @@ class _SignInScreenState extends State<SignInScreen> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: SizedBox(
-              width: MediaQuery.of(context).size.width *1,
-
+              width: MediaQuery.of(context).size.width * 1,
               child: const SingleChildScrollView(
-                child:  SignInForm(),
-
-
+                child: SignInForm(),
               ),
             ),
           ),

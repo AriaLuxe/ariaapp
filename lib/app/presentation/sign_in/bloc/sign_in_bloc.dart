@@ -7,6 +7,7 @@ import '../validations/sign_in_form_validator/email_input_validator.dart';
 import '../validations/sign_in_form_validator/password_input_validator.dart';
 
 part 'sign_in_event.dart';
+
 part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
@@ -50,15 +51,5 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         ),
       ),
     );
-  }
-
-  Future<void> _onSubmitted(
-    SignInSubmitted event,
-    Emitter<SignInState> emit,
-  ) async {
-    if (state.isValid) {
-      emit(state.copyWith(formStatus: FormzSubmissionStatus.success));
-      //login repository validacion
-    }
   }
 }

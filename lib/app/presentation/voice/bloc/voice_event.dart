@@ -6,16 +6,17 @@ abstract class VoiceEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
+
 class CollectAudio extends VoiceEvent {
   final String path;
 
   const CollectAudio(this.path);
-
 }
+
 class DeleteAudio extends VoiceEvent {
   const DeleteAudio();
-
 }
+
 class CloneVoice extends VoiceEvent {
   final String photoPath;
   final int ownerId;
@@ -23,18 +24,23 @@ class CloneVoice extends VoiceEvent {
   final String title;
   final String description;
 
-  const CloneVoice(this.photoPath, this.ownerId, this.audioPaths, this.title, this.description,);
+  const CloneVoice(
+    this.photoPath,
+    this.ownerId,
+    this.audioPaths,
+    this.title,
+    this.description,
+  );
 }
-class ShowPlayer extends VoiceEvent {
 
+class ShowPlayer extends VoiceEvent {
   final bool isRecording;
 
   const ShowPlayer(this.isRecording);
-
 }
+
 class FetchProfileVoice extends VoiceEvent {
   const FetchProfileVoice();
-
 }
 
 class UpdateStability extends VoiceEvent {
@@ -54,6 +60,7 @@ class UpdateSimilarity extends VoiceEvent {
   @override
   List<Object?> get props => [newSimilarity];
 }
+
 class FetchAudioTest extends VoiceEvent {
   final String text;
 
@@ -64,25 +71,19 @@ class FetchAudioTest extends VoiceEvent {
 }
 
 class ShowResponse extends VoiceEvent {
-
   final bool isThereAudio;
 
   const ShowResponse(this.isThereAudio);
-
 }
 
 class ShowRecordResponse extends VoiceEvent {
-
   final bool isRecordingResponse;
 
   const ShowRecordResponse(this.isRecordingResponse);
-
 }
 
 class ShowView extends VoiceEvent {
-
   final bool isThereClone;
 
   const ShowView(this.isThereClone);
-
 }

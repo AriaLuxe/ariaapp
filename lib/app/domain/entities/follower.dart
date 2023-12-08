@@ -5,7 +5,7 @@ class Follower {
   final String lastName;
   final String nickName;
   final String? imgProfile;
-   bool follow;
+  bool follow;
 
   Follower({
     this.idRequest,

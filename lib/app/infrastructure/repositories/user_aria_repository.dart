@@ -7,36 +7,17 @@ class UserAriaRepository extends UserAriaInterface {
   final UsersDataProvider usersDataProvider;
 
   UserAriaRepository({required this.usersDataProvider});
-  @override
-  Future<List<UserAria>> getAllFriends(int page, int pageSize) async {
-    final response = await usersDataProvider.getUsers(page,pageSize);
-    return response;
-  }
 
   @override
-  Future<List<UserAria>> searchUserByName() {
-    // TODO: implement searchUserByName
-    throw UnimplementedError();
+  Future<List<UserAria>> getAllFriends(int page, int pageSize) async {
+    final response = await usersDataProvider.getUsers(page, pageSize);
+    return response;
   }
 
   @override
   Future<String> updateEmail(int userId, String email, String password) async {
     return await usersDataProvider.updateUserEmail(userId, email, password);
   }
-
-  @override
-  Future<void> updateImgProfile() {
-    // TODO: implement updateImgProfile
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updatePassword() {
-    // TODO: implement updatePassword
-    throw UnimplementedError();
-  }
-
-
 
   @override
   Future<List<UserAria>> getFavoriteUsers() {
@@ -60,14 +41,24 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   @override
-  Future<String> updateUserData(String userId, String name, String lastName, String nickname, String gender, DateTime date, String country, String city ) async{
-    return await usersDataProvider.updateUserData(userId, name, lastName, nickname, gender, date,country,city);
-
+  Future<String> updateUserData(
+      String userId,
+      String name,
+      String lastName,
+      String nickname,
+      String gender,
+      DateTime date,
+      String country,
+      String city) async {
+    return await usersDataProvider.updateUserData(
+        userId, name, lastName, nickname, gender, date, country, city);
   }
 
   @override
-  Future<String> updateUserPassword(int userId, String newPassword, String currentPassword)async {
-    return await usersDataProvider.updateUserPassword(userId, newPassword, currentPassword);
+  Future<String> updateUserPassword(
+      int userId, String newPassword, String currentPassword) async {
+    return await usersDataProvider.updateUserPassword(
+        userId, newPassword, currentPassword);
   }
 
   @override
@@ -76,48 +67,47 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   @override
-  Future<List<Follower>> getFollowers(int userId, int userLooking)async {
-    return await usersDataProvider.getFollowers(userId,userLooking);
+  Future<List<Follower>> getFollowers(int userId, int userLooking) async {
+    return await usersDataProvider.getFollowers(userId, userLooking);
   }
 
   @override
-  Future<List<Follower>> getFollowing(int userId, int userLooking) async{
+  Future<List<Follower>> getFollowing(int userId, int userLooking) async {
     return await usersDataProvider.getFollowing(userId, userLooking);
   }
 
   @override
-  Future<List<Follower>> getSubscribers(int userId) async{
+  Future<List<Follower>> getSubscribers(int userId) async {
     return await usersDataProvider.getSubscribers(userId);
-
   }
 
   @override
-  Future<int> getFollowersCounter(int userId)async {
+  Future<int> getFollowersCounter(int userId) async {
     return await usersDataProvider.getFollowersCounter(userId);
   }
 
   @override
-  Future<int> getFollowingCounter(int userId) async{
+  Future<int> getFollowingCounter(int userId) async {
     return await usersDataProvider.getFollowingCounter(userId);
   }
 
   @override
-  Future<int> getSubscribersCounter(int userId) async{
+  Future<int> getSubscribersCounter(int userId) async {
     return await usersDataProvider.getSubscribersCounter(userId);
   }
 
   @override
-  Future<String> follow(int userId, int idReceiver)async{
-    return await usersDataProvider.follow(userId,idReceiver);
-
+  Future<String> follow(int userId, int idReceiver) async {
+    return await usersDataProvider.follow(userId, idReceiver);
   }
+
   @override
-  Future<String> unFollow(int idRequest)async{
+  Future<String> unFollow(int idRequest) async {
     return await usersDataProvider.unFollow(idRequest);
   }
 
   @override
-  Future<dynamic> checkFollow(int userId, int userLooking) async{
+  Future<dynamic> checkFollow(int userId, int userLooking) async {
     return await usersDataProvider.checkFollow(userId, userLooking);
   }
 
@@ -127,12 +117,17 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   @override
-  Future<bool> checkBlock(int userId, int userLooking) async{
+  Future<bool> checkBlock(int userId, int userLooking) async {
     return await usersDataProvider.checkBlock(userId, userLooking);
   }
 
   @override
-  Future<String> unBlock(int idBlockingUser, int idBlocked) async{
-    return await usersDataProvider.unBlock(idBlockingUser,idBlocked);
+  Future<String> unBlock(int idBlockingUser, int idBlocked) async {
+    return await usersDataProvider.unBlock(idBlockingUser, idBlocked);
+  }
+
+  @override
+  Future<List<UserAria>> searchUserByName() {
+    throw UnimplementedError();
   }
 }

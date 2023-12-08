@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import '../../../../domain/entities/user_aria.dart';
 
 part 'people_list_event.dart';
+
 part 'people_list_state.dart';
 
 class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
@@ -25,14 +26,13 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
   }
 
   Future<void> _onPeopleFetched(
-      PeopleFetched event,
-      Emitter<PeopleListState> emit,
-      ) async {
+    PeopleFetched event,
+    Emitter<PeopleListState> emit,
+  ) async {
     emit(state.copyWith(peopleListStatus: PeopleListStatus.loading));
-    // print(userLogged.userAria.id!);
     try {
       final List<UserAria> users =
-      await usersRepository.getAllFriends(event.page,event.pageSize);
+          await usersRepository.getAllFriends(event.page, event.pageSize);
       List<UserAria> usersUpdated = [];
 
       for (final user in users) {
@@ -40,29 +40,28 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
       }
       emit(
         state.copyWith(
-          peopleListStatus:  PeopleListStatus.success,
+          peopleListStatus: PeopleListStatus.success,
           users: usersUpdated,
         ),
       );
     } catch (e) {
-      print(e);
-      emit(state.copyWith(peopleListStatus:  PeopleListStatus.error));
+      emit(state.copyWith(peopleListStatus: PeopleListStatus.error));
     }
   }
 
   void peopleFetched(int page, int pageSize) {
-    add(PeopleFetched(page,pageSize));
+    add(PeopleFetched(page, pageSize));
   }
 
   Future<void> _onSearchPeople(
-      SearchPeople event,
-      Emitter<PeopleListState> emit,
-      ) async {
+    SearchPeople event,
+    Emitter<PeopleListState> emit,
+  ) async {
     emit(state.copyWith(peopleListStatus: PeopleListStatus.loading));
 
     try {
-
-      final List<UserAria> searchResults = await usersRepository.searchUser(event.keyword);
+      final List<UserAria> searchResults =
+          await usersRepository.searchUser(event.keyword);
       emit(
         state.copyWith(
           peopleListStatus: PeopleListStatus.success,
@@ -70,21 +69,21 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
         ),
       );
     } catch (e) {
-      print(e);
       emit(state.copyWith(peopleListStatus: PeopleListStatus.error));
     }
   }
-  void searchPeople(String keyword){
+
+  void searchPeople(String keyword) {
     add(SearchPeople(keyword));
   }
 
   Future<void> _onLoadMoreUsers(
-      LoadMoreUsers event,
-      Emitter<PeopleListState> emit,
-      ) async {
+    LoadMoreUsers event,
+    Emitter<PeopleListState> emit,
+  ) async {
     try {
       final List<UserAria> users =
-      await usersRepository.getAllFriends(event.page,event.pageSize);
+          await usersRepository.getAllFriends(event.page, event.pageSize);
       List<UserAria> moreUsers = [];
 
       for (final user in users) {
@@ -92,18 +91,17 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
       }
       emit(
         state.copyWith(
-          peopleListStatus:  PeopleListStatus.success,
+          peopleListStatus: PeopleListStatus.success,
           users: [...state.users, ...moreUsers],
           hasMoreMessages: moreUsers.isNotEmpty,
         ),
       );
     } catch (e) {
-      print(e);
-      emit(state.copyWith(peopleListStatus:  PeopleListStatus.error));
+      emit(state.copyWith(peopleListStatus: PeopleListStatus.error));
     }
   }
-  void loadMoreUsers( int page, int pageSize) {
+
+  void loadMoreUsers(int page, int pageSize) {
     add(LoadMoreUsers(page, pageSize));
   }
-
 }

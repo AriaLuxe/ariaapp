@@ -4,6 +4,7 @@ class CustomButtonFollow extends StatelessWidget {
   final String text;
   final dynamic onPressed;
   final Color color;
+
   const CustomButtonFollow({
     Key? key,
     required this.text,
@@ -17,27 +18,26 @@ class CustomButtonFollow extends StatelessWidget {
 
     return GestureDetector(
       onTap: isButtonEnabled ? onPressed : null,
-      child:
-      Container(
+      child: Container(
         height: 20,
         width: double.infinity,
         decoration: BoxDecoration(
-
           color: color,
           borderRadius: BorderRadius.circular(6.0),
         ),
         child: Center(
           child: Text(
             text,
-            style:  TextStyle(
-              color: isButtonEnabled ? Colors.white : Colors.white.withOpacity(0.36),
+            style: TextStyle(
+              color: isButtonEnabled
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.36),
               fontWeight: FontWeight.bold,
               fontSize: 10,
             ),
           ),
         ),
       ),
-
     );
   }
 }

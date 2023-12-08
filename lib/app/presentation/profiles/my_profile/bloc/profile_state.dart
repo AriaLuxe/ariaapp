@@ -15,7 +15,6 @@ class ProfileState extends Equatable {
     this.isFollowed = false,
     this.isBlock = false,
     this.chatId = 0,
-    //this.profileStatus = ProfileStatus.initial,
   });
 
   final String name;
@@ -29,7 +28,6 @@ class ProfileState extends Equatable {
   final bool isFollowed;
   final bool isBlock;
   final int chatId;
-  //final ProfileStatus profileStatus;
 
   ProfileState copyWith({
     String? name,
@@ -43,7 +41,6 @@ class ProfileState extends Equatable {
     bool? isFollowed,
     bool? isBlock,
     int? chatId,
-   // ProfileStatus? profileStatus,
   }) =>
       ProfileState(
         name: name ?? this.name,
@@ -57,12 +54,10 @@ class ProfileState extends Equatable {
         isFollowed: isFollowed ?? this.isFollowed,
         isBlock: isBlock ?? this.isBlock,
         chatId: chatId ?? this.chatId,
-        //profileStatus: profileStatus ?? this.profileStatus,
       );
 
   @override
   List<Object?> get props => [
-        //profileStatus,
         chatId,
         name,
         lastName,

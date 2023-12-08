@@ -1,5 +1,4 @@
 import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
-import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -7,29 +6,33 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../infrastructure/repositories/user_aria_repository.dart';
 import '../../../../security/shared_preferences_manager.dart';
-import '../../../sign_in/widgets/text_input.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/header.dart';
 import 'bloc/update_state_bloc.dart';
 
 class UpdateState extends StatelessWidget {
   const UpdateState({super.key, required this.state});
+
   final String state;
+
   @override
   Widget build(BuildContext context) {
-    return  BlocProvider(
-  create: (context) => UpdateStateBloc(),
-  child: Center(
-      child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: UpdateStateForm(state: state,)),
-    ),
-);
+    return BlocProvider(
+      create: (context) => UpdateStateBloc(),
+      child: Center(
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: UpdateStateForm(
+              state: state,
+            )),
+      ),
+    );
   }
 }
 
 class UpdateStateForm extends StatefulWidget {
-  UpdateStateForm({super.key, required this.state});
+  const UpdateStateForm({super.key, required this.state});
+
   final String state;
 
   @override
@@ -45,144 +48,149 @@ class _UpdateStateFormState extends State<UpdateStateForm> {
 
     super.initState();
   }
-  final  successSnackBar = const SnackBar(
+
+  final successSnackBar = const SnackBar(
       backgroundColor: Colors.green,
       content: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error,size: 60,),
+            Icon(
+              Icons.error,
+              size: 60,
+            ),
             Column(
               children: [
-
-                Text('Estado actualizado', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
+                Text(
+                  'Estado actualizado',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ],
         ),
-      )
+      ));
 
-  );
-
-  final  errorSnackBar = const SnackBar(
+  final errorSnackBar = const SnackBar(
       backgroundColor: Colors.red,
       content: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error,size: 60,),
+            Icon(
+              Icons.error,
+              size: 60,
+            ),
             Column(
               children: [
-
-                Text('Contraseña incorrecta', style: TextStyle(color: Colors.white,fontSize: 26,fontWeight: FontWeight.bold),),
+                Text(
+                  'Contraseña incorrecta',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ],
         ),
-      )
-
-  );
+      ));
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final updateStateBloc = context.watch<UpdateStateBloc>();
 
-   // _stateController.text =  updateStateBloc.state.stateInputValidator.value;
-
     return BlocBuilder<UpdateStateBloc, UpdateStateState>(
       builder: (context, state) {
-
         return Scaffold(
           body: SingleChildScrollView(
-            child:  SafeArea(
+            child: SafeArea(
               child: Column(
-
                 children: [
-                   Header(title: 'Cambiar estado', onTap: (){
-                    context.go('/my_profile');
-                    Navigator.pop(context);
-                  },),
-
-                  SizedBox(
-                    height: size.height*0.06,
+                  Header(
+                    title: 'Cambiar estado',
+                    onTap: () {
+                      context.go('/my_profile');
+                      Navigator.pop(context);
+                    },
                   ),
-                  /*TextInput(
-                    controller: _stateController,
-                    verticalPadding: 15,
-                    prefixIcon: Icons.lock,
-                    label: 'Ingresa tu contraseña',
-                    onChanged: (stateString) =>
-                        context.read<UpdateStateBloc>().add(StateChanged(stateString)),
-                    errorMessage: state.stateInputValidator.errorMessage,
-                  ),*/
                   SizedBox(
-                    height: size.height*0.15,
-
+                    height: size.height * 0.06,
+                  ),
+                  SizedBox(
+                    height: size.height * 0.15,
                     child: ListTile(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      tileColor: const  Color(0xFFebebeb).withOpacity(0.26),
+                      tileColor: const Color(0xFFebebeb).withOpacity(0.26),
                       textColor: Colors.white,
                       title: TextFormField(
                         textAlign: TextAlign.center,
                         controller: _stateController,
-                        onChanged: (stateString) =>
-                            context.read<UpdateStateBloc>().add(StateChanged(stateString)),
+                        onChanged: (stateString) => context
+                            .read<UpdateStateBloc>()
+                            .add(StateChanged(stateString)),
                         cursorColor: Colors.white,
                         maxLines: 4,
-                        decoration:  InputDecoration(
-                        errorText: state.stateInputValidator.errorMessage,
+                        decoration: InputDecoration(
+                          errorText: state.stateInputValidator.errorMessage,
                           border: InputBorder.none,
-
                           labelStyle: const TextStyle(color: Colors.white),
                         ),
-                        style: const TextStyle(color: Colors.white, ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                      onTap: (){
+                      onTap: () {
                         context.go("/my_profile/update_state");
                       },
                     ),
                   ),
-
                   SizedBox(
-                    height: size.height*0.1,
+                    height: size.height * 0.1,
                   ),
-
-
                   SizedBox(
-                      width: size.width*0.6,
+                      width: size.width * 0.6,
                       child: CustomButton(
-                        onPressed:  updateStateBloc.state.isValid ?
-                            () async{
-
-                              final userRepository = GetIt.instance<UserAriaRepository>();
-                          final userId = await SharedPreferencesManager.getUserId();
-                          print(userId);
-                          final response = await userRepository.updateUserState(userId!, _stateController.text.trim());
-                          print(response);
-                          _stateController.clear();
-                              context.read<ProfileBloc>().fetchDataProfile(userId);
-                          if(response == 'State is updated'){
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(successSnackBar)
-                                .closed;
-                            Navigator.pop(context);
-                            //context.go("/my_profile");
-                          }
-                          else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(errorSnackBar)
-                                .closed;
-                          }
-                        } : null,
-                        text: 'Guardar', width: 0.8,))
-
+                        onPressed: updateStateBloc.state.isValid
+                            ? () async {
+                                final userRepository =
+                                    GetIt.instance<UserAriaRepository>();
+                                final userId =
+                                    await SharedPreferencesManager.getUserId();
+                                print(userId);
+                                final response =
+                                    await userRepository.updateUserState(
+                                        userId!, _stateController.text.trim());
+                                print(response);
+                                _stateController.clear();
+                                context
+                                    .read<ProfileBloc>()
+                                    .fetchDataProfile(userId);
+                                if (response == 'State is updated') {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(successSnackBar)
+                                      .closed;
+                                  Navigator.pop(context);
+                                  //context.go("/my_profile");
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(errorSnackBar)
+                                      .closed;
+                                }
+                              }
+                            : null,
+                        text: 'Guardar',
+                        width: 0.8,
+                      ))
                 ],
               ),
             ),
-
           ),
         );
       },

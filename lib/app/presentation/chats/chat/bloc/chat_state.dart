@@ -15,9 +15,9 @@ class ChatState extends Equatable {
   final int userId;
   final bool isFirstMessage;
 
-
   final int currentPage;
   final bool hasMoreMessages;
+
   const ChatState({
     this.userId = 0,
     this.isFirstMessage = false,
@@ -45,44 +45,42 @@ class ChatState extends Equatable {
     String? name,
     String? urlPhoto,
     bool? isFirstMessage,
-     int? currentPage,
-     bool? hasMoreMessages,
+    int? currentPage,
+    bool? hasMoreMessages,
     int? userId,
     int? selectedMessageIndex,
-
   }) {
     return ChatState(
-        isFirstMessage: isFirstMessage ?? this.isFirstMessage,
+      isFirstMessage: isFirstMessage ?? this.isFirstMessage,
       name: name ?? this.name,
       urlPhoto: urlPhoto ?? this.urlPhoto,
       messages: messages ?? this.messages,
       audioControllers: audioControllers ?? this.audioControllers,
       chatStatus: chatStatus ?? this.chatStatus,
-        isRecording :isRecording ?? this.isRecording,
+      isRecording: isRecording ?? this.isRecording,
       recordingResponse: recordingResponse ?? this.recordingResponse,
       path: path ?? this.path,
       currentPage: currentPage ?? this.currentPage,
-        hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
-        userId: userId ?? this.userId,
-        messagesData: messagesData ?? this.messagesData,
-
+      hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
+      userId: userId ?? this.userId,
+      messagesData: messagesData ?? this.messagesData,
     );
   }
 
   @override
   List<Object> get props => [
-    isFirstMessage,
-    messages,
-    audioControllers,
-    chatStatus,
-    isRecording,
-    path,
-    name,
-    urlPhoto,
-    recordingResponse,
-    currentPage,
-    hasMoreMessages,
-    userId,
-    messagesData,
-  ];
+        isFirstMessage,
+        messages,
+        audioControllers,
+        chatStatus,
+        isRecording,
+        path,
+        name,
+        urlPhoto,
+        recordingResponse,
+        currentPage,
+        hasMoreMessages,
+        userId,
+        messagesData,
+      ];
 }

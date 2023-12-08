@@ -9,65 +9,61 @@ import '../models/message_model.dart';
 class MessageDataProvider {
   String endPoint = 'messages/ordinary';
 
-  Future<List<MessageModel>> getMessagesByChatId(int chatId, int userId, int page, int pageSize) async {
+  Future<List<MessageModel>> getMessagesByChatId(
+      int chatId, int userId, int page, int pageSize) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
       final response = await http.get(
-        Uri.parse('${BaseUrlConfig.baseUrl}/messages/IA/$chatId/$userId?page=$page&pageSize=$pageSize'),
+        Uri.parse(
+            '${BaseUrlConfig.baseUrl}/messages/IA/$chatId/$userId?page=$page&pageSize=$pageSize'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
       List<dynamic> contentList = json.decode(response.body)['content'];
 
-      // Mapea la lista de contenido a una lista de MessageModel
-      List<MessageModel> messages = contentList.map((content) => MessageModel.fromJson(content)).toList();
+      List<MessageModel> messages =
+          contentList.map((content) => MessageModel.fromJson(content)).toList();
 
       return messages;
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
-  Future<dynamic> getFavoritesMessages(int userLogged, int idUserLooking) async {
+
+  Future<dynamic> getFavoritesMessages(
+      int userLogged, int idUserLooking) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
       final response = await http.get(
-        Uri.parse('${BaseUrlConfig.baseUrl}/messages/favourites?idUserLogged=$userLogged&idUserLooking=$idUserLooking'),
+        Uri.parse(
+            '${BaseUrlConfig.baseUrl}/messages/favourites?idUserLogged=$userLogged&idUserLooking=$idUserLooking'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(response.body);
 
-      // Verifica si la respuesta comienza con '[' (indicando una lista JSON)
       if (response.body.trim().startsWith('[')) {
-        // Convierte la respuesta JSON a una lista de MessageModel
         List<MessageModel> messages = (json.decode(response.body) as List)
             .map((content) => MessageModel.fromJson(content))
             .toList();
         return messages;
       } else {
-        // Si la respuesta no comienza con '[', devuelve la cadena directamente
         return response.body;
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
 
-
-
-
-  Future<MessageModel> createMessage(int chatId, int userId, String audioPath) async {
+  Future<MessageModel> createMessage(
+      int chatId, int userId, String audioPath) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
       var request = http.MultipartRequest(
         'POST',
         Uri.parse('${BaseUrlConfig.baseUrl}/$endPoint/add'),
-
       );
       request.headers['Authorization'] = 'Bearer $token';
 
@@ -86,24 +82,23 @@ class MessageDataProvider {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         return MessageModel.fromJson(responseData);
       } else {
-        throw Exception('Error en la solicitud: ${streamedResponse.statusCode}');
+        throw Exception(
+            'Error en la solicitud: ${streamedResponse.statusCode}');
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
-  Future<MessageModel> responseMessage(int chatId, int userReceived, String audioPath) async {
+
+  Future<MessageModel> responseMessage(
+      int chatId, int userReceived, String audioPath) async {
     try {
-      print(userReceived);
-      print(chatId);
 
       String? token = await SharedPreferencesManager.getToken();
 
       var request = http.MultipartRequest(
         'POST',
         Uri.parse('${BaseUrlConfig.baseUrl}/messages/IA/add'),
-
       );
       request.headers['Authorization'] = 'Bearer $token';
 
@@ -119,15 +114,13 @@ class MessageDataProvider {
       var streamedResponse = await request.send();
       if (streamedResponse.statusCode == 200) {
         final response = await http.Response.fromStream(streamedResponse);
-        print('response.body1');
-        print(response.body);
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         return MessageModel.fromJson(responseData);
       } else {
-        throw Exception('Error en la solicitud: ${streamedResponse.statusCode}');
+        throw Exception(
+            'Error en la solicitud: ${streamedResponse.statusCode}');
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
@@ -136,29 +129,25 @@ class MessageDataProvider {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
-      final response = await http.delete(
+      await http.delete(
         Uri.parse('${BaseUrlConfig.baseUrl}/messages/delete/$messageId'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print(response);
-
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
+
   Future<void> likedMessage(int messageId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
-      final response = await http.put(
-        Uri.parse('${BaseUrlConfig.baseUrl}/messages/like?idMessage=$messageId'),
+      await http.put(
+        Uri.parse(
+            '${BaseUrlConfig.baseUrl}/messages/like?idMessage=$messageId'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print(response.body);
-
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }

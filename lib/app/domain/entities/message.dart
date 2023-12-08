@@ -19,4 +19,3 @@ class Message {
     required this.chat,
   });
 }
-

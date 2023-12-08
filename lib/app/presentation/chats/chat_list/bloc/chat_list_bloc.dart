@@ -1,12 +1,13 @@
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../domain/entities/chat.dart';
 
 part 'chat_list_event.dart';
+
 part 'chat_list_state.dart';
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
@@ -27,15 +28,11 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     Emitter<ChatListState> emit,
   ) async {
     emit(state.copyWith(chatListStatus: ChatListStatus.loading));
-   // print(userLogged.userAria.id!);
     try {
-      int? userId = await  SharedPreferencesManager.getUserId();
+      int? userId = await SharedPreferencesManager.getUserId();
       final List<Chat> chats =
           await chatRepository.getAllChatsByUserId(userId!);
       List<Chat> chatsUpdated = [];
-      print('chats.length');
-      print(chats.length);
-
       for (final chat in chats) {
         chatsUpdated.add(chat);
       }
@@ -45,7 +42,6 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
           chats: chatsUpdated,
         ),
       );
-      print('entre');
     } catch (e) {
       emit(state.copyWith(chatListStatus: ChatListStatus.error));
     }
@@ -72,29 +68,25 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
           chats: chatsUpdated,
         ),
       );
-      print('Chat creado con éxito');
     } catch (e) {
       emit(state.copyWith(chatListStatus: ChatListStatus.error));
-      print('Error al crear el chat: $e');
     }
   }
 
   void chatsAdded(int senderId, int receiverId) {
     add(ChatsAdded(senderId, receiverId));
   }
+
   Future<void> _onDeleteChat(
-      DeleteChat event,
-      Emitter<ChatListState> emit,
-      ) async {
+    DeleteChat event,
+    Emitter<ChatListState> emit,
+  ) async {
     try {
       emit(state.copyWith(
         isLoadingDeleteChat: true,
         responseDeleteChat: '',
-
       ));
-     final response = await chatRepository.deleteChat(event.chatId);
-     print(response);
-      print(event.chatId);
+      final response = await chatRepository.deleteChat(event.chatId);
       if (response == 'Chat is deleted') {
         final List<Chat> updatedChats = List.from(state.chats);
         updatedChats.removeWhere((chat) => chat.chatId == event.chatId);
@@ -104,32 +96,31 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
           chats: updatedChats,
           isLoadingDeleteChat: false,
         ));
-      } else if(response == 'Chat does not exist'){
+      } else if (response == 'Chat does not exist') {
         emit(state.copyWith(
           responseDeleteChat: response,
           chatListStatus: ChatListStatus.success,
           isLoadingDeleteChat: false,
         ));
       }
-
     } catch (e) {
       emit(state.copyWith(chatListStatus: ChatListStatus.error));
-      print('Error al eliminar el chat: $e');
     }
   }
 
   void deleteChat(int chatId) {
     add(DeleteChat(chatId));
   }
+
   Future<void> _onSearchChat(
-      SearchChat event,
-      Emitter<ChatListState> emit,
-      ) async {
+    SearchChat event,
+    Emitter<ChatListState> emit,
+  ) async {
     emit(state.copyWith(chatListStatus: ChatListStatus.loading));
 
     try {
-
-      final List<Chat> searchResults = await chatRepository.searchChats(event.keyword,event.userId);
+      final List<Chat> searchResults =
+          await chatRepository.searchChats(event.keyword, event.userId);
       emit(
         state.copyWith(
           chatListStatus: ChatListStatus.success,
@@ -137,11 +128,11 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
         ),
       );
     } catch (e) {
-      print(e);
       emit(state.copyWith(chatListStatus: ChatListStatus.error));
     }
   }
-  void searchChats(String keyword, int userId){
-    add(SearchChat(keyword,userId));
+
+  void searchChats(String keyword, int userId) {
+    add(SearchChat(keyword, userId));
   }
 }

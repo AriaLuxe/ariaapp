@@ -19,13 +19,11 @@ class CustomButtonVoiceClone extends StatelessWidget {
 
     return GestureDetector(
       onTap: isButtonEnabled ? onPressed : null,
-      child:
-      Container(
-
+      child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.white,
               blurRadius: 100,
@@ -38,15 +36,16 @@ class CustomButtonVoiceClone extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style:  TextStyle(
-              color: isButtonEnabled ? Colors.white : Colors.white.withOpacity(0.36),
+            style: TextStyle(
+              color: isButtonEnabled
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.36),
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
           ),
         ),
       ),
-
     );
   }
 }

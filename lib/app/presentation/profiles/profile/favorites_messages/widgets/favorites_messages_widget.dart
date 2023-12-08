@@ -1,8 +1,7 @@
 import 'package:ariapp/app/presentation/chats/chat/widgets/audio_message_content.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
-
 
 class FavoritesMessageWidget extends StatelessWidget {
   final DateTime dateTime;
@@ -11,6 +10,7 @@ class FavoritesMessageWidget extends StatelessWidget {
   final bool? read;
   final bool? isMe;
   final Color color;
+
   const FavoritesMessageWidget({
     super.key,
     required this.dateTime,
@@ -29,14 +29,13 @@ class FavoritesMessageWidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              child: _favoritesMessages(textTheme,dateTime),
+            child: _favoritesMessages(textTheme, dateTime),
           ),
         ],
       ),
     );
   }
 
-  // Widget para mensajes del emisor actual (advisor)
   Widget _favoritesMessages(TextTheme textTheme, DateTime date) {
     String formattedDate = DateFormat('dd/MM/yyyy').format(date);
 
@@ -44,17 +43,16 @@ class FavoritesMessageWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: Text(
-              formattedDate,
-              style: const TextStyle(color: Colors.white),
+                formattedDate,
+                style: const TextStyle(color: Colors.white),
               ),
             ),
-          ),          //Contenedor del mensaje
+          ), //Contenedor del mensaje
           Container(
             padding: const EdgeInsets.all(9),
             decoration: BoxDecoration(
@@ -68,7 +66,6 @@ class FavoritesMessageWidget extends StatelessWidget {
             ),
             child: _getMessageContent(),
           ),
-          // Contenedor de la hora del mensaje
           Container(
             margin: const EdgeInsets.only(bottom: 8, left: 75, right: 15),
             child: Row(
@@ -79,19 +76,14 @@ class FavoritesMessageWidget extends StatelessWidget {
                   style: textTheme.bodySmall?.copyWith(color: Colors.white),
                 ),
                 const SizedBox(width: 3),
-
               ],
             ),
           ),
-          const Divider(
-              color: Color(0xFF354271),
-              thickness: 2
-          ),
+          const Divider(color: Color(0xFF354271), thickness: 2),
         ],
       ),
     );
   }
-
 
   Widget _getMessageContent() {
     return AudioMessageContent(

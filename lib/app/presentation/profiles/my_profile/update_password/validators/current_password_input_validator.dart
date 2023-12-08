@@ -5,7 +5,8 @@ enum CurrentPasswordInputError {
   empty,
 }
 
-class CurrentPasswordInputValidator extends FormzInput<String, CurrentPasswordInputError> {
+class CurrentPasswordInputValidator
+    extends FormzInput<String, CurrentPasswordInputError> {
   const CurrentPasswordInputValidator.pure() : super.pure('');
 
   const CurrentPasswordInputValidator.dirty(String value) : super.dirty(value);

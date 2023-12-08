@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AnimatedText extends StatefulWidget {
   final String text;
   final TextStyle style;
+
   const AnimatedText({
     required this.text,
     Key? key,
@@ -27,7 +28,8 @@ class _AnimatedTextState extends State<AnimatedText>
       vsync: this,
     );
 
-    _textAnimation = IntTween(begin: 0, end: widget.text.length).animate(_controller);
+    _textAnimation =
+        IntTween(begin: 0, end: widget.text.length).animate(_controller);
 
     _controller.forward();
   }
@@ -57,7 +59,8 @@ class _AnimatedTextState extends State<AnimatedText>
 
     if (oldWidget.text != widget.text) {
       _controller.reset();
-      _textAnimation = IntTween(begin: 0, end: widget.text.length).animate(_controller);
+      _textAnimation =
+          IntTween(begin: 0, end: widget.text.length).animate(_controller);
       _controller.forward();
     }
   }

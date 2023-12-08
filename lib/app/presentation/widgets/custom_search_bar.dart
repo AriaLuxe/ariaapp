@@ -4,8 +4,10 @@ import '../../config/styles.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({super.key, this.onChanged, required this.title});
+
   final Function(String)? onChanged;
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,8 +19,7 @@ class CustomSearchBar extends StatelessWidget {
         decoration: InputDecoration(
           fillColor: Styles.inputColor,
           filled: true,
-
-          enabledBorder:  OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(18.0)),
             borderSide: BorderSide(
               color: Styles.inputColor,

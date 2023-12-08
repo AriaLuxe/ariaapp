@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +25,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             },
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
-              child:  const SafeArea(child: SingleChildScrollView(child: SignUpForm())),
+              child: const SafeArea(
+                  child: SingleChildScrollView(child: SignUpForm())),
             ),
           ),
         ),

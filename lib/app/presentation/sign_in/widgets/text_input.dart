@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../../config/styles.dart';
 
 class TextInput extends StatelessWidget {
-   const TextInput({
+  const TextInput({
     super.key,
     required this.label,
     required this.verticalPadding,
@@ -34,11 +35,11 @@ class TextInput extends StatelessWidget {
   final Widget? suffixIcon;
   final bool obscureText;
   final double verticalPadding;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       cursorColor: Colors.white,
-
       onTap: onTap,
       enabled: enabled,
       obscureText: obscureText,
@@ -47,9 +48,8 @@ class TextInput extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       validator: validator,
-style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
-
         fillColor: Styles.inputColor,
         floatingLabelBehavior: isAnimated,
         prefixIcon: Icon(
@@ -64,7 +64,8 @@ style: const TextStyle(color: Colors.white),
         labelText: label,
         labelStyle: const TextStyle(color: Color(0xFFc0c0c0)),
         filled: true,
-        contentPadding:  EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 15),
+        contentPadding:
+            EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 15),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Styles.inputColor,
@@ -85,7 +86,8 @@ style: const TextStyle(color: Colors.white),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: Colors.red, // Cambiar el color del borde de error enfocado a rojo
+            color: Colors
+                .red,
           ),
           borderRadius: BorderRadius.circular(15),
         ),

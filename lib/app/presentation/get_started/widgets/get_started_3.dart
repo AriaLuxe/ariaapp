@@ -12,7 +12,8 @@ class GetStarted3 extends StatefulWidget {
   State<GetStarted3> createState() => _GetStarted3State();
 }
 
-class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStateMixin {
+class _GetStarted3State extends State<GetStarted3>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -21,12 +22,8 @@ class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStat
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
-
-
-
-    // Inicia la animación cuando se carga el widget
     _controller.forward();
   }
 
@@ -56,86 +53,83 @@ class _GetStarted3State extends State<GetStarted3> with SingleTickerProviderStat
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.77),
-                        borderRadius: BorderRadius.circular(20.0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.77),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Imagina Controla y Transforma el mundo!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Column(
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        'El futuro es ahora',
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Imagina Controla y Transforma el mundo!',
-                            //  textAlign: TextAlign.center,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
+                            GestureDetector(
+                              onTap: widget.onBack,
+                              child: Container(
+                                padding: const EdgeInsets.all(15.0),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      const Color(0xFFFFFFFF).withOpacity(0.52),
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_back_outlined,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Text(
-                              'El futuro es ahora',
-                              style: TextStyle(
-                                fontSize: 24,
-                              ),
-                              textAlign: TextAlign.center,
-
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(0.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: widget.onBack,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(15.0),
-                                      decoration:  BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: const Color(0xFFFFFFFF).withOpacity(0.52),                                      ),
-                                      child: const Icon(
-                                        Icons.arrow_back_outlined,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: size.width * 0.4,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.white,
-                                            width: 4
+                            SizedBox(
+                              width: size.width * 0.4,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.white, width: 4
                                           // Color del borde blanco
-                                        ),
-                                        borderRadius: BorderRadius.circular(30.0), // Bordes circulares
-                                      ),
-                                      child: CustomButton(text: 'Siguiente', onPressed: widget.onPress, width: 0.4),
-                                    ),
-                                  ),
-                                ],
+                                          ),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: CustomButton(
+                                    text: 'Siguiente',
+                                    onPressed: widget.onPress,
+                                    width: 0.4),
                               ),
                             ),
-                            // Resto de tu contenido
                           ],
                         ),
                       ),
-                    ),
-
-
+                      // Resto de tu contenido
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
-
-
-
     );
   }
 }

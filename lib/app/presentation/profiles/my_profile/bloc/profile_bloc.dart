@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -53,7 +54,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       urlProfile: user.imgProfile,
       numberOfFollowers: numberOfFollowers,
       numberOfFollowings: numberOfFollowings,
-      //profileStatus: ProfileStatus.success,
     ));
   }
 
@@ -111,14 +111,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(state.copyWith(
             numberOfFollowers: numberOfFollowers,
           ));
-          print('se dejo de seguir');
+          log('se dejo de seguir');
         } else {
-          print('error');
+          log('error');
         }
-        print(response);
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -135,10 +134,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           currentUserId!, event.userLooking);
 
       if (response == false) {
-        print('no esta bloqueado');
         emit(state.copyWith(isBlock: false));
       } else {
-        print('esta bloqueado');
         emit(state.copyWith(isBlock: true));
       }
     } catch (e) {
@@ -158,21 +155,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(isBlock: true));
 
         await userAriaRepository.block(userId!, event.idBlocked);
-
-        print('se bloqueo');
       } else {
         emit(state.copyWith(isBlock: false));
         final response =
             await userAriaRepository.unBlock(userId!, event.idBlocked);
         if (response == 'User unblock successfully') {
-          print('se dejo de bloquear');
+          log('se dejo de bloquear');
         } else {
-          print('error');
+          log('error');
         }
         print(response);
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -184,9 +179,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileDefaultPhoto event,
     Emitter<ProfileState> emit,
   ) async {
-    //final userId = await SharedPreferencesManager.getUserId();
-
-    print(event.url);
     emit(state.copyWith(
       urlProfile: event.url,
     ));

@@ -1,8 +1,6 @@
 part of 'follow_bloc.dart';
 
-enum FollowStatus {
-  initial, loading, error, success
-}
+enum FollowStatus { initial, loading, error, success }
 
 class FollowState extends Equatable {
   const FollowState({
@@ -21,7 +19,6 @@ class FollowState extends Equatable {
   final List<Follower> following;
   final List<Follower> subscribers;
 
-
   FollowState copyWith({
     FollowStatus? followersStatus,
     FollowStatus? followingStatus,
@@ -39,7 +36,14 @@ class FollowState extends Equatable {
       subscribers: subscribers ?? this.subscribers,
     );
   }
-  @override
-  List<Object?> get props => [followersStatus, followingStatus, subscribersStatus, followers, following, subscribers];
 
+  @override
+  List<Object?> get props => [
+        followersStatus,
+        followingStatus,
+        subscribersStatus,
+        followers,
+        following,
+        subscribers
+      ];
 }

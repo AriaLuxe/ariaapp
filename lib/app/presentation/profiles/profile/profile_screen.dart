@@ -575,7 +575,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     .getFavoritesMessages(
                                                         userLoggedId!,
                                                         widget.user!.id!);
-                                            print(response);
                                             if (response ==
                                                 'Chat does not exists') {
                                               showDialog(
@@ -694,9 +693,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         Icons.delete,
                                                         color: Colors.red),
                                                     onTap: () async {
-                                                      final chatRepository =
-                                                          GetIt.instance<
-                                                              ChatRepository>();
+                                                   
                                                       final chatsDataProvider =
                                                           ChatsDataProvider();
                                                       final response =
@@ -705,7 +702,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                   userLoggedId!,
                                                                   widget.user!
                                                                       .id!);
-                                                      print(response);
                                                       if (response ==
                                                           'Chat does not exist') {
                                                         showDialog(

@@ -20,45 +20,43 @@ class UserAriaModel extends UserAria {
     required String role,
     required String state,
   }) : super(
-          id: id,
-          nameUser: nameUser,
-          lastName: lastName,
-          email: email,
-          password: password,
-          imgProfile: imgProfile,
-          dateBirth: dateBirth,
-          gender: gender,
-          country: country,
-          city: city,
-          registerDate: registerDate,
-      isCreator: isCreator,
-          nickname: nickname,
-          role: role,
-      state:state
-        );
+            id: id,
+            nameUser: nameUser,
+            lastName: lastName,
+            email: email,
+            password: password,
+            imgProfile: imgProfile,
+            dateBirth: dateBirth,
+            gender: gender,
+            country: country,
+            city: city,
+            registerDate: registerDate,
+            isCreator: isCreator,
+            nickname: nickname,
+            role: role,
+            state: state);
 
   factory UserAriaModel.fromJson(Map<String, dynamic> json) {
     return UserAriaModel(
-        id: json['idUser'] ?? 0,
-        nameUser: json['nameUser'] ?? '',
-        lastName: json['lastName'] ?? '',
-        email: json['email'] ?? '',
-        password: json['password'] ?? '',
-        imgProfile: json['imgProfile'] ?? '',
-        dateBirth: json['dateBirth'] != null
-            ? DateTime.parse(json['dateBirth'])
-            : DateTime.now(),
-        gender: json['gender'] ?? '',
-        country: json['country'] ?? '',
-        city: json['city'] ?? '',
-        registerDate: json['registerDate'] ?? '',
+      id: json['idUser'] ?? 0,
+      nameUser: json['nameUser'] ?? '',
+      lastName: json['lastName'] ?? '',
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
+      imgProfile: json['imgProfile'] ?? '',
+      dateBirth: json['dateBirth'] != null
+          ? DateTime.parse(json['dateBirth'])
+          : DateTime.now(),
+      gender: json['gender'] ?? '',
+      country: json['country'] ?? '',
+      city: json['city'] ?? '',
+      registerDate: json['registerDate'] ?? '',
       isCreator: json['isCreator'] ?? false,
-        nickname: json['nickName'] ?? '',
-        role: json['role'] ?? '',
-        state: json['state'] ?? '',
+      nickname: json['nickName'] ?? '',
+      role: json['role'] ?? '',
+      state: json['state'] ?? '',
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {

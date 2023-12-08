@@ -1,7 +1,3 @@
-import 'dart:async';
-
-import 'package:ariapp/app/domain/entities/user_aria.dart';
-import 'package:ariapp/app/security/user_logged.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -18,13 +14,14 @@ import '../validators/name_input_validator.dart';
 import '../validators/nickname_input_validator.dart';
 
 part 'my_profile_event.dart';
+
 part 'my_profile_state.dart';
 
 class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
-
   final UserAriaRepository userAriaRepository;
-  MyProfileBloc() :
-        userAriaRepository = GetIt.instance<UserAriaRepository>(),
+
+  MyProfileBloc()
+      : userAriaRepository = GetIt.instance<UserAriaRepository>(),
         super(const MyProfileState()) {
     on<MyProfileEvent>((event, emit) {
       // TODO: implement event handler
@@ -38,6 +35,7 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
     on<GenderChanged>(_onGenderChanged);
     on<CurrentProfile>(_onCurrentProfile);
   }
+
   void _onGenderChanged(GenderChanged event, Emitter<MyProfileState> emit) {
     final gender = GenderInputValidator.dirty(event.gender);
     emit(
@@ -158,7 +156,8 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
     );
   }
 
-  void _onBirthDateChanged(BirthDateChanged event, Emitter<MyProfileState> emit) {
+  void _onBirthDateChanged(
+      BirthDateChanged event, Emitter<MyProfileState> emit) {
     final birthDate = BirthDateInputValidator.dirty(event.birthDate);
     emit(
       state.copyWith(
@@ -176,30 +175,26 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
         ),
       ),
     );
-
   }
+
   void _onCurrentProfile(
-      CurrentProfile event,
-      Emitter<MyProfileState> emit,
-      ) async {
+    CurrentProfile event,
+    Emitter<MyProfileState> emit,
+  ) async {
     final userUd = await SharedPreferencesManager.getUserId();
     final user = await userAriaRepository.getUserById(userUd!);
-    print(user);
     emit(state.copyWith(
-      nameInputValidator:NameInputValidator.dirty(user.nameUser),
+      nameInputValidator: NameInputValidator.dirty(user.nameUser),
       lastNameInputValidator: LastNameInputValidator.dirty(user.lastName),
       nicknameInputValidator: NicknameInputValidator.dirty(user.nickname),
       genderInputValidator: GenderInputValidator.dirty(user.gender),
-      birthDateInputValidator:BirthDateInputValidator.dirty(user.gender),
+      birthDateInputValidator: BirthDateInputValidator.dirty(user.gender),
       countryInputValidator: CountryInputValidator.dirty(user.gender),
       cityInputValidator: CityInputValidator.dirty(user.gender),
     ));
   }
 
-  void currentProfile(){
+  void currentProfile() {
     add(const CurrentProfile());
   }
-
-
-
 }

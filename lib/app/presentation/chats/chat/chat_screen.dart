@@ -1,16 +1,17 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
+
 import '../../widgets/header_chat.dart';
 import 'bloc/chat_bloc.dart';
 import 'widgets/audio_recorder_voice.dart';
@@ -204,12 +205,10 @@ class _ChatState extends State<Chat> {
                       : const SizedBox(),
                   AudioRecorderView(
                     onSaved: (path) async {
-                      print('Audio grabado');
                       if (kDebugMode) print('Ruta del archivo grabado: $path');
                       audioPath = path;
                       chatBloc.isRecording(true);
                       if (audioPath != null) {
-                        print('Audio enviado');
                         chatBloc.messageSent(
                           widget.chatId,
                           widget.userReceivedId,
@@ -223,7 +222,7 @@ class _ChatState extends State<Chat> {
                             const Duration(milliseconds: 5000));
                         chatListBloc.chatsFetched();
                       } else {
-                        print('No hay audio para enviar');
+                        log('No hay audio para enviar');
                       }
                       // showPlayer = true;
                     },

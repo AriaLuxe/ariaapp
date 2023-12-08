@@ -10,6 +10,7 @@ class Chat {
   final bool iaChat;
   final int? counterNewMessage;
   final int? durationSeconds;
+
   Chat({
     this.durationSeconds,
     this.counterNewMessage,

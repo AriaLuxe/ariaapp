@@ -5,6 +5,7 @@ final class SignInState extends Equatable {
   final PasswordInputValidator passwordInputValidator;
   final FormzSubmissionStatus formStatus;
   final bool isValid;
+
   const SignInState({
     this.formStatus = FormzSubmissionStatus.initial,
     this.emailInputValidator = const EmailInputValidator.pure(),

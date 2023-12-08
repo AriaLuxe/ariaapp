@@ -1,4 +1,3 @@
-
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
@@ -12,8 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app/presentation/layouts/widgets/app_navigation.dart';
 
-void main() async{
-
+void main() async {
   usersDependencies();
   chatsDependencies();
   messagesDependencies();
@@ -28,7 +26,6 @@ void main() async{
   );*/
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,11 +34,11 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) => ChatListBloc(),
-          ),
+          create: (context) => ChatListBloc(),
+        ),
         BlocProvider(
-            create: (context) => ChatBloc(),
-          ),
+          create: (context) => ChatBloc(),
+        ),
         BlocProvider(
           create: (context) => FavoritesMessagesBloc(),
         ),

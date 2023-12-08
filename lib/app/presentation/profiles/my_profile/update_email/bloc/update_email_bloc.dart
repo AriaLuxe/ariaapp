@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -8,6 +6,7 @@ import '../validators/email_input_validator.dart';
 import '../validators/password_input_validator.dart';
 
 part 'update_email_event.dart';
+
 part 'update_email_state.dart';
 
 class UpdateEmailBloc extends Bloc<UpdateEmailEvent, UpdateEmailState> {
@@ -21,9 +20,9 @@ class UpdateEmailBloc extends Bloc<UpdateEmailEvent, UpdateEmailState> {
   }
 
   void _onEmailChanged(
-      EmailChanged event,
-      Emitter<UpdateEmailState> emit,
-      ) {
+    EmailChanged event,
+    Emitter<UpdateEmailState> emit,
+  ) {
     final email = EmailInputValidator.dirty(event.email);
     emit(
       state.copyWith(
@@ -39,9 +38,9 @@ class UpdateEmailBloc extends Bloc<UpdateEmailEvent, UpdateEmailState> {
   }
 
   void _onPasswordChanged(
-      PasswordChanged event,
-      Emitter<UpdateEmailState> emit,
-      ) {
+    PasswordChanged event,
+    Emitter<UpdateEmailState> emit,
+  ) {
     final password = PasswordInputValidator.dirty(event.password);
     emit(
       state.copyWith(
@@ -54,15 +53,5 @@ class UpdateEmailBloc extends Bloc<UpdateEmailEvent, UpdateEmailState> {
         ),
       ),
     );
-  }
-
-  Future<void> _onSubmitted(
-      SignInSubmitted event,
-      Emitter<UpdateEmailState> emit,
-      ) async {
-    if (state.isValid) {
-      emit(state.copyWith(formStatus: FormzSubmissionStatus.success));
-      //login repository validacion
-    }
   }
 }

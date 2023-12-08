@@ -15,7 +15,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/user_aria.dart';
 import '../../security/user_logged.dart';
-
 import '../profiles/my_profile/update_information/bloc/my_profile_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,14 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadUserData() async {
     int? userId = await SharedPreferencesManager.getUserId();
     user = await userRepository.getUserById(userId!);
-    //final userId = GetIt.instance<UserLogged>().user.id;
   }
 
   int backButtonCounter = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     _loadUserData();
     super.initState();
   }
@@ -70,12 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: MultiBlocProvider(
         providers: [
-          /* BlocProvider(
-            create: (context) => ChatListBloc(),
-          ),
-          BlocProvider(
-            create: (context) => ChatBloc(),
-          ),*/
           BlocProvider(
             create: (context) => FollowBloc(),
           ),
@@ -91,9 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
           BlocProvider(
             create: (context) => VoiceBloc(),
           ),
-          /*BlocProvider(
-            create: (context) => FollowerCounterBloc(),
-          ),*/
           BlocProvider(
             create: (context) => VoiceCloneBloc(),
           ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
@@ -38,8 +39,6 @@ class FollowerCounterBloc
         await userRepository.getFollowingCounter(event.userId);
     final numberOfSubscribers =
         await userRepository.getSubscribersCounter(event.userId);
-    print('numberOfFollowers');
-    print(numberOfFollowers);
     emit(state.copyWith(
         numberOfFollowers: numberOfFollowers,
         numberOfFollowings: numberOfFollowings,
@@ -79,14 +78,13 @@ class FollowerCounterBloc
           emit(state.copyWith(
             numberOfFollowers: numberOfFollowers,
           ));
-          print('se dejo de seguir');
+          log('se dejo de seguir');
         } else {
-          print('error');
+          log('error');
         }
-        print(response);
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 

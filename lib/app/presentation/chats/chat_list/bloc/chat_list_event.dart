@@ -15,10 +15,13 @@ class ChatsAdded extends ChatListEvent {
 
   const ChatsAdded(this.senderId, this.receiverId);
 }
+
 class DeleteChat extends ChatListEvent {
   final int chatId;
+
   const DeleteChat(this.chatId);
 }
+
 class SearchChat extends ChatListEvent {
   final String keyword;
   final int userId;
@@ -26,5 +29,5 @@ class SearchChat extends ChatListEvent {
   const SearchChat(this.keyword, this.userId);
 
   @override
-  List<Object> get props => [keyword,userId];
+  List<Object> get props => [keyword, userId];
 }

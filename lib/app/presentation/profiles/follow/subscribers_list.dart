@@ -16,10 +16,11 @@ class SubscribersList extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.9,
             child: Column(
               children: [
-                Header(title: 'Subscriptores', onTap: () {
-                  Navigator.pop(context);
-
-                }),
+                Header(
+                    title: 'Subscriptores',
+                    onTap: () {
+                      Navigator.pop(context);
+                    }),
                 BlocBuilder<FollowBloc, FollowState>(
                   builder: (context, state) {
                     switch (state.subscribersStatus) {
@@ -43,9 +44,11 @@ class SubscribersList extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(vertical: 50.0),
                                   child: Text(
                                     'No se encontraron resultados',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white),
-
-                    ),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.white),
+                                  ),
                                 ),
                               ],
                             ),
@@ -56,13 +59,16 @@ class SubscribersList extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final subscriber = state.subscribers[index];
                               return ListTile(
-                                title: Text('${subscriber.nameUser} ${subscriber.lastName}',maxLines: 1),
-                                subtitle: Text(subscriber.nickName,maxLines: 1),
-                                trailing: TextButton(onPressed: () {
-                                }, child: const Text('Seguir'),),
-                                onTap: () {
-
-                                },
+                                title: Text(
+                                    '${subscriber.nameUser} ${subscriber.lastName}',
+                                    maxLines: 1),
+                                subtitle:
+                                    Text(subscriber.nickName, maxLines: 1),
+                                trailing: TextButton(
+                                  onPressed: () {},
+                                  child: const Text('Seguir'),
+                                ),
+                                onTap: () {},
                               );
                             },
                           );

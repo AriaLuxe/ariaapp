@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:ariapp/app/presentation/profiles/my_profile/update_password/validators/confirm_password_input_validator.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_password/validators/current_password_input_validator.dart';
 import 'package:bloc/bloc.dart';
@@ -9,9 +7,11 @@ import 'package:formz/formz.dart';
 import '../validators/password_input_validator.dart';
 
 part 'update_password_event.dart';
+
 part 'update_password_state.dart';
 
-class UpdatePasswordBloc extends Bloc<UpdatePasswordEvent, UpdatePasswordState> {
+class UpdatePasswordBloc
+    extends Bloc<UpdatePasswordEvent, UpdatePasswordState> {
   UpdatePasswordBloc() : super(const UpdatePasswordState()) {
     on<UpdatePasswordEvent>((event, emit) {
       // TODO: implement event handler
@@ -23,9 +23,9 @@ class UpdatePasswordBloc extends Bloc<UpdatePasswordEvent, UpdatePasswordState> 
   }
 
   void _onCurrentPasswordChanged(
-      CurrentPasswordChanged event,
-      Emitter<UpdatePasswordState> emit,
-      ) {
+    CurrentPasswordChanged event,
+    Emitter<UpdatePasswordState> emit,
+  ) {
     final currentPassword = CurrentPasswordInputValidator.dirty(event.password);
     emit(
       state.copyWith(
@@ -42,9 +42,9 @@ class UpdatePasswordBloc extends Bloc<UpdatePasswordEvent, UpdatePasswordState> 
   }
 
   void _onPasswordChanged(
-      PasswordChanged event,
-      Emitter<UpdatePasswordState> emit,
-      ) {
+    PasswordChanged event,
+    Emitter<UpdatePasswordState> emit,
+  ) {
     final password = PasswordInputValidator.dirty(event.password);
     emit(
       state.copyWith(
@@ -61,9 +61,9 @@ class UpdatePasswordBloc extends Bloc<UpdatePasswordEvent, UpdatePasswordState> 
   }
 
   void _onConfirmPasswordChanged(
-      ConfirmPasswordChanged event,
-      Emitter<UpdatePasswordState> emit,
-      ) {
+    ConfirmPasswordChanged event,
+    Emitter<UpdatePasswordState> emit,
+  ) {
     final confirmPassword = PasswordInputValidator.dirty(event.password);
     emit(
       state.copyWith(
@@ -77,14 +77,5 @@ class UpdatePasswordBloc extends Bloc<UpdatePasswordEvent, UpdatePasswordState> 
         ),
       ),
     );
-  }
-  Future<void> _onSubmitted(
-      PasswordSubmitted event,
-      Emitter<UpdatePasswordState> emit,
-      ) async {
-    if (state.isValid) {
-      emit(state.copyWith(formStatus: FormzSubmissionStatus.success));
-      //login repository validacion
-    }
   }
 }

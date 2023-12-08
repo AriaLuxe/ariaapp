@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../config/styles.dart';
 
 class CodeInput extends StatelessWidget {
-  CodeInput({
-    Key? key,
+  const CodeInput({
+    super.key,
     required this.label,
     this.errorMessage,
     this.onChanged,
@@ -33,7 +34,7 @@ class CodeInput extends StatelessWidget {
     return TextFormField(
       cursorColor: Colors.white,
       inputFormatters: [
-        LengthLimitingTextInputFormatter (6),
+        LengthLimitingTextInputFormatter(6),
       ],
       enabled: enabled,
       obscureText: obscureText,
@@ -45,13 +46,15 @@ class CodeInput extends StatelessWidget {
       style: const TextStyle(color: Colors.white),
       textAlign: TextAlign.center,
       decoration: InputDecoration(
-
         fillColor: Styles.inputColor,
         floatingLabelBehavior: isAnimated,
-        label: Center(child: Text(label),),
+        label: Center(
+          child: Text(label),
+        ),
         labelStyle: const TextStyle(color: Colors.white),
         filled: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Styles.inputColor,
@@ -59,9 +62,7 @@ class CodeInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
-
           borderSide: BorderSide(
-
             color: Styles.inputColor,
           ),
           borderRadius: BorderRadius.circular(15),
@@ -80,7 +81,6 @@ class CodeInput extends StatelessWidget {
         ),
         errorText: errorMessage,
         alignLabelWithHint: true,
-
       ),
     );
   }
