@@ -693,7 +693,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         Icons.delete,
                                                         color: Colors.red),
                                                     onTap: () async {
-                                                   
+
                                                       final chatsDataProvider =
                                                           ChatsDataProvider();
                                                       final response =
