@@ -76,6 +76,9 @@ class _ChatState extends State<Chat> {
   void initState() {
     showPlayer = false;
     final chatBloc = BlocProvider.of<ChatBloc>(context);
+    chatBloc.checkBlock(widget.userReceivedId);
+    chatBloc.checkCreator(widget.userReceivedId);
+
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -203,30 +206,37 @@ class _ChatState extends State<Chat> {
                   state.recordingResponse
                       ? const LinearProgressIndicator()
                       : const SizedBox(),
-                  AudioRecorderView(
-                    onSaved: (path) async {
-                      if (kDebugMode) print('Ruta del archivo grabado: $path');
-                      audioPath = path;
-                      chatBloc.isRecording(true);
-                      if (audioPath != null) {
-                        chatBloc.messageSent(
-                          widget.chatId,
-                          widget.userReceivedId,
-                          audioPath!,
-                        );
-                        chatBloc.isRecording(false);
-                        final AudioPlayer _audioPlayerNotify = AudioPlayer();
-                        _audioPlayerNotify.setAsset('assets/audio/Eureka.mp3');
-                        _audioPlayerNotify.play();
-                        await Future.delayed(
-                            const Duration(milliseconds: 5000));
-                        chatListBloc.chatsFetched();
-                      } else {
-                        log('No hay audio para enviar');
-                      }
-                      // showPlayer = true;
-                    },
-                  ),
+                  state.isCreator ? state.isBlock
+                      ? showStatusUserWidget('El usuario\nte ha bloqueado')
+                      : AudioRecorderView(
+                          onSaved: (path) async {
+                            if (kDebugMode) {
+                              log('path of archive record: $path');
+                            }
+                            audioPath = path;
+                            chatBloc.isRecording(true);
+                            if (audioPath != null) {
+                              chatBloc.messageSent(
+                                widget.chatId,
+                                widget.userReceivedId,
+                                audioPath!,
+                              );
+                              chatBloc.isRecording(false);
+                              final AudioPlayer _audioPlayerNotify =
+                                  AudioPlayer();
+                              _audioPlayerNotify
+                                  .setAsset('assets/audio/Eureka.mp3');
+                              _audioPlayerNotify.play();
+                              await Future.delayed(
+                                  const Duration(milliseconds: 5000));
+                              chatListBloc.chatsFetched();
+                            } else {
+                              log('No hay audio para enviar');
+                            }
+                            // showPlayer = true;
+                          },
+                        ): showStatusUserWidget('El usuario ya no\nes creador')
+          ,
                 ],
               ),
             );
@@ -306,6 +316,37 @@ class _ChatState extends State<Chat> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget showStatusUserWidget(String message) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const IconButton(
+            icon: Icon(Icons.backspace, color: Colors.grey),
+            onPressed: null,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: const Color(0xFFaaaaaa),
+                borderRadius: BorderRadius.circular(20)),
+            child:  Padding(
+              padding:const  EdgeInsets.all(8.0),
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          const IconButton(
+            icon: Icon(Icons.send, color: Colors.grey),
+            onPressed: null,
+          )
+        ],
+      ),
     );
   }
 }

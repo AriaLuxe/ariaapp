@@ -38,6 +38,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<LoadMoreMessages>(_onLoadMoreMessages);
     on<SelectedMessage>(_onSelectedMessage);
     on<DeleteMessage>(_onDeleteMessage);
+    on<CheckBlock>(_onCheckBlock);
+    on<CheckIsCreator>(_onCheckIsCreator);
   }
 
   Future<void> _onMessageFetched(
@@ -367,5 +369,46 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void deleteMessage(int messageId, int index) {
     add(DeleteMessage(messageId, index));
+  }
+
+  void _onCheckBlock(CheckBlock event, Emitter<ChatState> emit) async {
+    try {
+      final currentUserId = await SharedPreferencesManager.getUserId();
+
+      final response = await userAriaRepository.checkBlock(
+          currentUserId!, event.userLooking);
+
+      if (response == false) {
+        emit(state.copyWith(isBlock: false));
+      } else {
+        emit(state.copyWith(isBlock: true));
+      }
+    } catch (e) {
+      emit(state.copyWith(isBlock: false));
+    }
+  }
+
+  void checkBlock(int userLooking) {
+    add(CheckBlock(userLooking));
+  }
+
+  void _onCheckIsCreator(CheckIsCreator event, Emitter<ChatState> emit) async {
+    try {
+      final currentUserId = await SharedPreferencesManager.getUserId();
+
+      final response = await userAriaRepository.checkCreator(event.userId);
+
+      if (response == false) {
+        emit(state.copyWith(isCreator: false));
+      } else {
+        emit(state.copyWith(isCreator: true));
+      }
+    } catch (e) {
+      emit(state.copyWith(isCreator: false));
+    }
+  }
+
+  void checkCreator(int userId) {
+    add(CheckIsCreator(userId));
   }
 }

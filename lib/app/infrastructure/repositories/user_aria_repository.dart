@@ -130,4 +130,9 @@ class UserAriaRepository extends UserAriaInterface {
   Future<List<UserAria>> searchUserByName() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool> checkCreator(int userId) async {
+    return await usersDataProvider.checkCreator(userId);
+  }
 }

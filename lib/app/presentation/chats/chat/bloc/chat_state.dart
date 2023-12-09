@@ -14,9 +14,11 @@ class ChatState extends Equatable {
   final String urlPhoto;
   final int userId;
   final bool isFirstMessage;
-
   final int currentPage;
   final bool hasMoreMessages;
+  final bool isBlock;
+  final bool isCreator;
+
 
   const ChatState({
     this.userId = 0,
@@ -32,6 +34,9 @@ class ChatState extends Equatable {
     this.path = '',
     this.currentPage = 0,
     this.hasMoreMessages = false,
+    this.isBlock = false,
+    this.isCreator = false,
+
   });
 
   ChatState copyWith({
@@ -49,6 +54,9 @@ class ChatState extends Equatable {
     bool? hasMoreMessages,
     int? userId,
     int? selectedMessageIndex,
+    bool? isBlock,
+    bool? isCreator,
+
   }) {
     return ChatState(
       isFirstMessage: isFirstMessage ?? this.isFirstMessage,
@@ -64,6 +72,9 @@ class ChatState extends Equatable {
       hasMoreMessages: hasMoreMessages ?? this.hasMoreMessages,
       userId: userId ?? this.userId,
       messagesData: messagesData ?? this.messagesData,
+      isBlock: isBlock ?? this.isBlock,
+      isCreator: isCreator ?? this.isCreator,
+
     );
   }
 
@@ -82,5 +93,7 @@ class ChatState extends Equatable {
         hasMoreMessages,
         userId,
         messagesData,
+        isBlock,
+    isCreator
       ];
 }

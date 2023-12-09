@@ -475,4 +475,25 @@ class UsersDataProvider {
       throw Exception(error);
     }
   }
+  Future<bool> checkCreator(int userId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.get(
+        Uri.parse(
+            "${BaseUrlConfig.baseUrl}/users/isCreator?idUser=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return bool.parse(response.body);
+      } else {
+        return bool.parse(response.body);
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 }

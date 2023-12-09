@@ -83,3 +83,15 @@ class DeleteMessage extends ChatEvent {
 
   const DeleteMessage(this.messageId, this.index);
 }
+
+class CheckBlock extends ChatEvent {
+  final int userLooking;
+
+  const CheckBlock(this.userLooking);
+}
+
+class CheckIsCreator extends ChatEvent {
+  final int userId;
+
+  const CheckIsCreator(this.userId);
+}

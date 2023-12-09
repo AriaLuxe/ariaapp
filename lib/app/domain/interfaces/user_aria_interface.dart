@@ -54,4 +54,7 @@ abstract class UserAriaInterface {
   Future<String> unBlock(int idBlockingUser, int idBlocked);
 
   Future<String> block(int idBlockingUser, int idBlocked);
+
+  Future<bool> checkCreator(int userId);
+
 }
