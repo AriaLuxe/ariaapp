@@ -11,7 +11,7 @@
 		<key>NSCameraUsageDescription</key>
 		<string>Necesitamos acceso a tu camara</string>
 		<key>CFBundleDisplayName</key>
-		<string>Ariapp</string>
+		<string>Aia</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
