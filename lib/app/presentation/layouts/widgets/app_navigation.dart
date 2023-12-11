@@ -16,6 +16,7 @@ import 'package:ariapp/app/presentation/sign_up/sign_up_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/reset_password.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/voice/voice_screen.dart';
+import 'package:ariapp/app/presentation/voice/widgets/terminos_condiciones_clone_voice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -270,7 +271,14 @@ class AppNavigation {
           key: state.pageKey,
         ),
       ),
-
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/terminos_condiciones_vc',
+        name: "TerminosCondicionesVc",
+        builder: (context, state) => TerminosCondicionesCloneVoiceScreen(
+          key: state.pageKey,
+        ),
+      ),
       GoRoute(
         path: '/verify_code',
         name: "VerifyCode",

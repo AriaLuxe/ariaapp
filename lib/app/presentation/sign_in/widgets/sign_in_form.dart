@@ -27,7 +27,7 @@ class SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<SignInForm> {
   final usersRepository = GetIt.instance<UserAriaRepository>();
-
+  bool isAcceptedTerminos = false;
   bool isLoadingSignIn = false;
   bool _obscureText = true;
   TextEditingController email = TextEditingController();
@@ -197,6 +197,7 @@ class _SignInFormState extends State<SignInForm> {
               SizedBox(
                 height: size.height * 0.05,
               ),
+
               SizedBox(
                 width: size.width * 0.8,
                 child: isLoadingSignIn
@@ -281,3 +282,5 @@ class _SignInFormState extends State<SignInForm> {
     );
   }
 }
+
+

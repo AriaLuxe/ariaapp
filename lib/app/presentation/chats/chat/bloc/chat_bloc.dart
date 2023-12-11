@@ -374,9 +374,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   void _onCheckBlock(CheckBlock event, Emitter<ChatState> emit) async {
     try {
       final currentUserId = await SharedPreferencesManager.getUserId();
-
       final response = await userAriaRepository.checkBlock(
-          currentUserId!, event.userLooking);
+         event.userLooking, currentUserId!);
 
       if (response == false) {
         emit(state.copyWith(isBlock: false));
@@ -394,10 +393,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onCheckIsCreator(CheckIsCreator event, Emitter<ChatState> emit) async {
     try {
-      final currentUserId = await SharedPreferencesManager.getUserId();
 
       final response = await userAriaRepository.checkCreator(event.userId);
-
+      print('isCreator');
+      print(response);
       if (response == false) {
         emit(state.copyWith(isCreator: false));
       } else {

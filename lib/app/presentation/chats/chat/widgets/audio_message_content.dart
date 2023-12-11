@@ -21,8 +21,13 @@ class AudioMessageContent extends StatefulWidget {
 
 class AudioMessageContentState extends State<AudioMessageContent> {
 
-  late bool isReadyToPlay; // Add this variable
+  late bool isReadyToPlay;
 
+  @override
+  void dispose() {
+    widget.audioPlayer.dispose();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();
