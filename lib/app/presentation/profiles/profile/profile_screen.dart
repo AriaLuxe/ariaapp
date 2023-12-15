@@ -414,6 +414,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   );
                                                 },
                                               );
+                                            }else if (response ==
+                                                'Same user') {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return CustomDialogAccept(
+                                                    text:
+                                                    '¡Oops!\nNo puedes chatear contigo mismo :c',
+                                                    onAccept: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  );
+                                                },
+                                              );
                                             }
                                           }
                                         },

@@ -496,4 +496,24 @@ class UsersDataProvider {
       throw Exception(error);
     }
   }
+  Future<String> deleteAccount(int userId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.delete(
+        Uri.parse(
+            "${BaseUrlConfig.baseUrl}/users?idUser=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
 }

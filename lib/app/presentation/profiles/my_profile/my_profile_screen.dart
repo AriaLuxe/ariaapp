@@ -1,4 +1,5 @@
 import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
 import 'package:ariapp/app/presentation/profiles/follow/bloc/follow_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followers_list.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followings_list.dart';
@@ -6,6 +7,8 @@ import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.da
 import 'package:ariapp/app/presentation/profiles/my_profile/update_state/update_state.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/widgets/my_profile_option.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_blue.dart';
+import 'package:ariapp/app/presentation/widgets/custom_button_delete_account.dart';
+import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +46,7 @@ class _MyProfileState extends State<MyProfile> {
 
   final TextEditingController _emailController = TextEditingController();
   int? userLoggedId = GetIt.instance<UserLogged>().user.id;
+  bool isLoadingDeletedAccount = false;
 
   @override
   void initState() {
@@ -301,14 +305,71 @@ class _MyProfileState extends State<MyProfile> {
                               await SharedPreferencesManager.clearEmail();
                               GetIt.I.unregister<UserLogged>();
                               context.pushReplacement('/sign_in');
-                              /*Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignInScreen(),
-                          ),
-                              (route) => false);*/
                             },
                             width: 0.5)),
+                    SizedBox(height: screenHeight * 0.03),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * .8,
+                        child: isLoadingDeletedAccount
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : CustomButtonDeleteAccount(
+                                text: 'Eliminar Cuenta ',
+                                onPressed: () async {
+                                  final userId = await SharedPreferencesManager
+                                      .getUserId();
+                                  final userDataProvider = UsersDataProvider();
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CustomDialog(
+                                        text:
+                                            '¿Estás seguro de eliminar tu cuenta?',
+                                        onOk: () async {
+                                          setState(() {
+                                            isLoadingDeletedAccount = true;
+                                          });
+                                          final response =
+                                              await userDataProvider
+                                                  .deleteAccount(userId!);
+                                          print(response);
+                                          if (response == 'done') {
+                                            await SharedPreferencesManager
+                                                .clearToken();
+                                            await SharedPreferencesManager
+                                                .clearUserId();
+                                            await SharedPreferencesManager
+                                                .clearEmail();
+                                            GetIt.I.unregister<UserLogged>();
+                                            context.pushReplacement('/sign_in');
+                                            setState(() {
+                                              isLoadingDeletedAccount = false;
+                                            });
+                                          } else if (response ==
+                                              'No exists user') {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return CustomDialogAccept(
+                                                  text:
+                                                      'Por favor, vuelve a iniciar sesión',
+                                                  onAccept: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          }
+                                        },
+                                        onCancel: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                                width: 0.5)),
                     SizedBox(height: screenHeight * 0.03),
                   ],
                 ),

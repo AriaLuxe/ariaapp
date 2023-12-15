@@ -27,7 +27,7 @@ class _EditImageState extends State<EditImage> {
   late CustomImageCropController controller;
   final CustomCropShape _currentShape = CustomCropShape.Square;
   final CustomImageFit _imageFit = CustomImageFit.fitVisibleSpace;
-
+  bool isLoading = false;
   final double _width = 16;
   final double _height = 9;
   final double _radius = 4;
@@ -94,7 +94,7 @@ class _EditImageState extends State<EditImage> {
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.4,
-                    child: CustomButtonBlue(
+                    child: isLoading ?const Center(child: CircularProgressIndicator()):CustomButtonBlue(
                       text: 'Guardar',
                       onPressed: _saveCroppedImage,
                       width: 0.8,
@@ -111,6 +111,9 @@ class _EditImageState extends State<EditImage> {
   }
 
   Future<void> _saveCroppedImage() async {
+setState(() {
+  isLoading = true;
+});
     final croppedImage = await controller.onCropImage();
     if (croppedImage != null) {
       final bytes = croppedImage.bytes;
@@ -127,8 +130,14 @@ class _EditImageState extends State<EditImage> {
       if (response == 'imgProfile is updated') {
         context.read<ProfileBloc>().fetchDataProfile(userId);
         context.go('/my_profile');
+        setState(() {
+          isLoading = false;
+        });
       } else {
         log('error');
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
