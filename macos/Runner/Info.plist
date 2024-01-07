@@ -29,18 +29,15 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Se necesita acceso al micrófono para grabar audio.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>Permisos para audio</string>
-	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Se necesita acceso a la galería para seleccionar imágenes.</string>
+	
 	<key>NSCameraUsageDescription</key>
-	<string>Se necesita acceso a la cámara para tomar fotos.</string>
+	<string>Necesitamos acceder a tu cámara para tomar fotos</string>
 
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos acceder a tu micrófono para grabar audio</string>
 
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceder a tus fotos para seleccionar imágenes</string>
 
 </dict>
 </plist>
