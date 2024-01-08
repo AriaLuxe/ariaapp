@@ -2,14 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Necesitamos acceso a tu microfono para clonar tu voz</string>
+		<string>Necesitamos acceder a tu micrófono para disfrutar al 100% la experiencia</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Necesitamos acceso a tu galeria</string>
+		<string>Necesitamos acceder a tus fotos para que elijas tu foto de perfil</string>
 		<key>NSCameraUsageDescription</key>
-		<string>Necesitamos acceso a tu camara</string>
+		<string>Necesitamos acceder a tu cámara para que puedas tomar la foto que quieras usar como perfil.</string>
 		<key>CFBundleDisplayName</key>
 		<string>Aia</string>
 		<key>CFBundleExecutable</key>
