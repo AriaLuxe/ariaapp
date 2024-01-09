@@ -106,7 +106,7 @@ class _AudioRecorderViewState extends State<AudioRecorderView> {
   @override
   void initState() {
     super.initState();
-    initRecorder();
+    //initRecorder();
     _checkMicPermission();
   }
 
