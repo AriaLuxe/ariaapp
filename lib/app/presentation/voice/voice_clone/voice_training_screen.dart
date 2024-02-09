@@ -33,7 +33,6 @@ class _VoiceTrainingState extends State<VoiceTraining> {
 
       if (result != null) {
         List<File> files = result.paths.map((path) => File(path!)).toList();
-        print(files);
         voiceBloc.collectAudio(files[0].path);
         ScaffoldMessenger.of(context)
             .showSnackBar(successSnackBar)
