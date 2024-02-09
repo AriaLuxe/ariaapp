@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_training_finish.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +20,56 @@ class VoiceTraining extends StatefulWidget {
 }
 
 class _VoiceTrainingState extends State<VoiceTraining> {
+
+
+
+  String? _filePath;
+
+  Future<void> _pickAudioFile() async {
+    final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
+
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.audio);
+
+      if (result != null) {
+        List<File> files = result.paths.map((path) => File(path!)).toList();
+        print(files);
+        voiceBloc.collectAudio(files[0].path);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(successSnackBar)
+            .closed;
+      }
+
+    } catch (e) {
+      print('Error picking audio file: $e');
+    }
+  }
+  final successSnackBar = const SnackBar(
+      backgroundColor: Colors.green,
+      content: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error,
+              size: 30,
+            ),
+            Column(
+              children: [
+                Text(
+                  'Audio agregado' ,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ));
+
+
   @override
   Widget build(BuildContext context) {
     final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
@@ -75,6 +129,52 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                             ],
                           ),
                         ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.67),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          child: Column(children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Text(
+                                'Subir audios o responder preguntas',
+                                style: TextStyle(
+                                  color: Styles.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.65,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: Column(
+
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text('Seleccionar Archivo', style: TextStyle(
+                                      color: Styles.primaryColor, fontWeight: FontWeight.bold
+                                    ),),
+                                  ),
+                                  IconButton(
+                                      color: Styles.primaryColor,
+                                      onPressed:
+                                        _pickAudioFile
+                                      , icon: const Icon(Icons.upload)),
+
+                                ],
+                              ),
+                            )
+                          ],),
+                        ),
+                        const SizedBox(height: 10),
                         const QuestionResponse(
                           question:
                               '¿Cúal es tu nombre y como te gusta que te llamen?',

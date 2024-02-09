@@ -68,7 +68,7 @@ class VoiceClone extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height*0.01,
                     ),
-                    if(userLogged.user.canCreate!)
+                    //if(userLogged.user.canCreate!)
                     Align(
                       alignment: Alignment.centerRight,
                       child: SizedBox(

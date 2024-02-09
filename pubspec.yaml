@@ -59,6 +59,7 @@ dependencies:
   intl: ^0.18.1
   flutter_native_splash: ^2.3.7
   open_settings: ^2.0.2
+  file_picker: ^6.1.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
