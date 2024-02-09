@@ -19,6 +19,8 @@ class UserAriaModel extends UserAria {
     required String nickname,
     required String role,
     required String state,
+    required bool canCreate,
+
   }) : super(
             id: id,
             nameUser: nameUser,
@@ -34,7 +36,8 @@ class UserAriaModel extends UserAria {
             isCreator: isCreator,
             nickname: nickname,
             role: role,
-            state: state);
+            state: state,
+  canCreate: canCreate);
 
   factory UserAriaModel.fromJson(Map<String, dynamic> json) {
     return UserAriaModel(
@@ -55,6 +58,7 @@ class UserAriaModel extends UserAria {
       nickname: json['nickName'] ?? '',
       role: json['role'] ?? '',
       state: json['state'] ?? '',
+      canCreate: json['canCreate'] ?? false,
     );
   }
 

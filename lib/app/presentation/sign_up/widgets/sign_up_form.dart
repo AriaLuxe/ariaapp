@@ -349,6 +349,7 @@ class _SignUpFormState extends State<SignUpForm> {
                                       EmailValidationDataProvider();
                                   final response = await emailValidation
                                       .sendEmailToRegisterUser(email.value);
+                                  print(response);
                                   if (response == 'Email sent successfully') {
                                     final user = UserAria(
                                         nameUser: nameUser.value.trim(),
@@ -451,7 +452,7 @@ class _SignUpFormState extends State<SignUpForm> {
                                           text: 'Verifique sus datos',
                                           onAccept: () {
                                             setState(() {
-                                              isLoadingSignUp = true;
+                                              isLoadingSignUp = false;
                                             });
                                             Navigator.pop(context);
                                           },

@@ -1,6 +1,9 @@
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_training_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
+import 'package:ariapp/app/security/shared_preferences_manager.dart';
+import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../widgets/custom_button.dart';
 
@@ -9,6 +12,8 @@ class VoiceClone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userLogged = GetIt.instance<UserLogged>();
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -63,6 +68,7 @@ class VoiceClone extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height*0.01,
                     ),
+                    if(userLogged.user.canCreate!)
                     Align(
                       alignment: Alignment.centerRight,
                       child: SizedBox(
@@ -86,6 +92,47 @@ class VoiceClone extends StatelessWidget {
                             }, width: 0.8)),
                           )),
                     ),
+                    if(!userLogged.user.canCreate!)
+                      Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width*0.7,
+                        child: const Padding(
+                          padding:  EdgeInsets.all(10.0),
+                          child:  Text('Por el momento, esta funcionalidad no está disponible para todos los usuarios, pero se priorizará aquellos que lo soliciten',
+
+                            style: TextStyle(
+
+                                color: Colors.white,
+                                fontSize: 18
+                            ),
+                            textAlign: TextAlign.center,
+
+                          ),
+                        ),
+                      ),
+                    ),
+                    if(!userLogged.user.canCreate!)
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.9,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 30.0,horizontal: 20),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0, 0),
+                                    blurRadius: 4,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),child: CustomButton(text: 'Solicitar acceso prioritarios',
+                              onPressed: (){
+                            //TODO: SOLICITAR ACCESO PRIORITARIO
+                            }, width: 0.8)),
+                        )),
                     ],
                 ),
               ),

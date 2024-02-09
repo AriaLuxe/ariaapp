@@ -135,4 +135,7 @@ class UserAriaRepository extends UserAriaInterface {
   Future<bool> checkCreator(int userId) async {
     return await usersDataProvider.checkCreator(userId);
   }
-}
+
+  Future<void> sendSuggestion(int userId, String title, String content) async {
+    return await usersDataProvider.sendSuggestion(userId, title, content);}
+  }

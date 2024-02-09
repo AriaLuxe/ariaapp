@@ -14,6 +14,7 @@ class UserAria {
   final String nickname;
   final String? role;
   final String? state;
+  final bool? canCreate;
 
   UserAria(
       {this.id,
@@ -30,5 +31,6 @@ class UserAria {
       this.registerDate,
       required this.nickname,
       this.role,
-      this.state});
+      this.state,
+      this.canCreate});
 }

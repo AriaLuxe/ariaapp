@@ -294,6 +294,16 @@ class _MyProfileState extends State<MyProfile> {
                             context.go("/my_profile/update_email");
                           },
                         )),
+                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * .8,
+                        child: MyProfileOption(
+                          icon: Icons.lightbulb_outline,
+                          title: 'Eviar sugerencias',
+                          onTap: () {
+                            context.go("/my_profile/sugerir");
+                          },
+                        )),
                     SizedBox(height: screenHeight * 0.04),
                     SizedBox(
                         width: MediaQuery.of(context).size.width * .8,

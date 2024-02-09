@@ -6,6 +6,7 @@ import 'package:ariapp/app/presentation/profiles/my_profile/my_information/my_in
 import 'package:ariapp/app/presentation/profiles/my_profile/my_profile_screen.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/profile_image.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/update_image.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/sugerir/sugerir.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_email/update_email.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_information/update_information.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/update_password/update_password.dart';
@@ -117,6 +118,23 @@ class AppNavigation {
                   return const MyProfileScreen();
                 },
                 routes: [
+                  GoRoute(
+                    path: "sugerir",
+                    name: "Sugerir",
+                    pageBuilder: (context, state) {
+                      return CustomTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const Sugerir  (),
+                        transitionsBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                            child,
+                            ) =>
+                            FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                  ),
                   GoRoute(
                     path: "my_information",
                     name: "MyInformation",

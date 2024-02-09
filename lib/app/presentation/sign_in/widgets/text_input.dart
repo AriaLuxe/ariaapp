@@ -92,6 +92,7 @@ class TextInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         errorText: errorMessage,
+
       ),
     );
   }

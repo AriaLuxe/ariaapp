@@ -1,3 +1,4 @@
+import 'package:ariapp/app/presentation/sign_up/validators/name_input_validator.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -10,7 +11,7 @@ import '../validators/city_input_validator.dart';
 import '../validators/country_input_validator.dart';
 import '../validators/gender_input_validator.dart';
 import '../validators/last_name_input_validator.dart';
-import '../validators/name_input_validator.dart';
+import '../../sugerir/validators/title_input_validator.dart';
 import '../validators/nickname_input_validator.dart';
 
 part 'my_profile_event.dart';

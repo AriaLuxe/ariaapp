@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:intl/intl.dart';
 
@@ -509,6 +510,27 @@ class UsersDataProvider {
       );
       if (response.statusCode == 200) {
         return response.body;
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+  Future<void> sendSuggestion(int userId, String title, String content) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.post(
+        Uri.parse(
+            "${BaseUrlConfig.baseUrl}/suggestion/send?idSender=$userId&title=$title&content=$content"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200)
+      {
+        log(response.body);
       } else {
         throw Exception(response.body);
       }

@@ -27,7 +27,7 @@ class NameInputValidator extends FormzInput<String, NameInputError> {
       return 'Este campo es requerido';
     }
     if (displayError == NameInputError.tooShort) {
-      return 'El apellido debe tener al menos 3 caracteres';
+      return 'El nombre debe tener al menos 3 caracteres';
     }
     return null;
   }
