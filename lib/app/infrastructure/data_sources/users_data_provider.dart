@@ -476,13 +476,13 @@ class UsersDataProvider {
       throw Exception(error);
     }
   }
+
   Future<bool> checkCreator(int userId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
       final response = await http.get(
-        Uri.parse(
-            "${BaseUrlConfig.baseUrl}/users/isCreator?idUser=$userId"),
+        Uri.parse("${BaseUrlConfig.baseUrl}/users/isCreator?idUser=$userId"),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -497,13 +497,13 @@ class UsersDataProvider {
       throw Exception(error);
     }
   }
+
   Future<String> deleteAccount(int userId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
       final response = await http.delete(
-        Uri.parse(
-            "${BaseUrlConfig.baseUrl}/users?idUser=$userId"),
+        Uri.parse("${BaseUrlConfig.baseUrl}/users?idUser=$userId"),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -517,6 +517,7 @@ class UsersDataProvider {
       throw Exception(error);
     }
   }
+
   Future<void> sendSuggestion(int userId, String title, String content) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
@@ -528,8 +529,27 @@ class UsersDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
-      if (response.statusCode == 200)
-      {
+      if (response.statusCode == 200) {
+        log(response.body);
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  Future<void> sendApplicant(int userId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.post(
+        Uri.parse("${BaseUrlConfig.baseUrl}/applicant/send?idSender=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
         log(response.body);
       } else {
         throw Exception(response.body);
