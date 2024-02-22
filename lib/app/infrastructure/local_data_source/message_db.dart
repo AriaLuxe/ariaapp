@@ -13,8 +13,8 @@ class MessageDB {
         content BLOB NOT NULL,
         duration_seconds INTEGER NOT NULL,
         date INTEGER NOT NULL,
-        read INTEGER NOT NULL,
-        is_liked INTEGER NOT NULL,
+        read BOOLEAN NOT NULL,
+        is_liked BOOLEAN NOT NULL,
         chat_id INTEGER NOT NULL,
         FOREIGN KEY (chat_id) REFERENCES chats (id)
       )
@@ -23,7 +23,20 @@ class MessageDB {
 
   Future<int> insertMessage(MessageModel message) async {
     final database = await DatabaseService().database;
-    return await database.insert(tableName, message.toJson());
+    return await database.rawInsert('''
+    INSERT INTO $tableName (
+      sender, content, duration_seconds, date,
+      read, is_liked, chat_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+  ''', [
+      message.sender,
+      message.content,
+      message.durationSeconds,
+      message.date?.millisecondsSinceEpoch,
+      message.read,
+      message.isLiked,
+      message.id,
+    ]);
   }
 
   Future<List<MessageModel>> getMessagesByChatId(int chatId) async {
@@ -39,5 +52,10 @@ class MessageDB {
     final database = await DatabaseService().database;
     return await database
         .delete(tableName, where: 'id = ?', whereArgs: [messageId]);
+  }
+
+  Future<void> clearMessages() async {
+    final database = await DatabaseService().database;
+    await database.delete(tableName);
   }
 }

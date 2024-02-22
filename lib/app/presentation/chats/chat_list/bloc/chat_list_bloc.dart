@@ -1,4 +1,6 @@
+import 'package:ariapp/app/infrastructure/local_data_source/chat_db.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/services/chats_async_service.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,9 +14,11 @@ part 'chat_list_state.dart';
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final ChatRepository chatRepository;
+  final ChatSyncService chatSyncService;
 
   ChatListBloc()
       : chatRepository = GetIt.instance<ChatRepository>(),
+        chatSyncService = GetIt.instance<ChatSyncService>(),
         super(const ChatListState()) {
     on<ChatListEvent>((event, emit) {});
     on<ChatsFetched>(_onChatsFetched);
@@ -30,8 +34,18 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     emit(state.copyWith(chatListStatus: ChatListStatus.loading));
     try {
       int? userId = await SharedPreferencesManager.getUserId();
-      final List<Chat> chats =
+      chatSyncService.syncChats(userId!);
+
+/*      final List<Chat> chats =
           await chatRepository.getAllChatsByUserId(userId!);
+*/
+      final chatDB = ChatDB();
+      final List<Chat> chats1 = await chatDB.getChatsByUserId(userId);
+      print('chats1');
+      print(chats1);
+      final List<Chat> chats =
+          await chatSyncService.getAllChatsByUserId(userId);
+
       List<Chat> chatsUpdated = [];
       for (final chat in chats) {
         chatsUpdated.add(chat);
@@ -43,6 +57,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
         ),
       );
     } catch (e) {
+      print(e);
       emit(state.copyWith(chatListStatus: ChatListStatus.error));
     }
   }

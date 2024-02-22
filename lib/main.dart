@@ -13,14 +13,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app/presentation/layouts/widgets/app_navigation.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final databaseService = DatabaseService();
   final database = await databaseService.database;
-  await databaseService.create(database, 1);
-
+  await databaseService.create(database, 3);
   usersDependencies();
   chatsDependencies();
   messagesDependencies();
   voiceDependencies();
+  syncChatsAndMessages();
   runApp(const MyApp());
 
   /*runApp(
