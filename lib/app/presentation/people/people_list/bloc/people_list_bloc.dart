@@ -36,7 +36,9 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
       List<UserAria> usersUpdated = [];
 
       for (final user in users) {
-        usersUpdated.add(user);
+        if (!user.enabled!) {
+          usersUpdated.add(user);
+        }
       }
       emit(
         state.copyWith(

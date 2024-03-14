@@ -20,24 +20,26 @@ class UserAriaModel extends UserAria {
     required String role,
     required String state,
     required bool canCreate,
-
+    required bool enabled,
   }) : super(
-            id: id,
-            nameUser: nameUser,
-            lastName: lastName,
-            email: email,
-            password: password,
-            imgProfile: imgProfile,
-            dateBirth: dateBirth,
-            gender: gender,
-            country: country,
-            city: city,
-            registerDate: registerDate,
-            isCreator: isCreator,
-            nickname: nickname,
-            role: role,
-            state: state,
-  canCreate: canCreate);
+          id: id,
+          nameUser: nameUser,
+          lastName: lastName,
+          email: email,
+          password: password,
+          imgProfile: imgProfile,
+          dateBirth: dateBirth,
+          gender: gender,
+          country: country,
+          city: city,
+          registerDate: registerDate,
+          isCreator: isCreator,
+          nickname: nickname,
+          role: role,
+          state: state,
+          canCreate: canCreate,
+          enabled: enabled,
+        );
 
   factory UserAriaModel.fromJson(Map<String, dynamic> json) {
     return UserAriaModel(
@@ -59,6 +61,7 @@ class UserAriaModel extends UserAria {
       role: json['role'] ?? '',
       state: json['state'] ?? '',
       canCreate: json['canCreate'] ?? false,
+      enabled: json['enabled'] ?? false,
     );
   }
 
@@ -77,7 +80,8 @@ class UserAriaModel extends UserAria {
       'registerDate': registerDate,
       'isCreator': isCreator,
       'nickname': nickname,
-      'role': role
+      'role': role,
+      'enabled': enabled,
     };
   }
 
