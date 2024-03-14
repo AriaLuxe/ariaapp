@@ -143,4 +143,8 @@ class UserAriaRepository extends UserAriaInterface {
   Future<bool> validateNickname(String nickname) async {
     return await usersDataProvider.validateNickname(nickname);
   }
+
+  Future<void> sendApplicant(int userId) async {
+    return await usersDataProvider.sendApplicant(userId);
+  }
 }

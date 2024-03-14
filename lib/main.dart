@@ -1,4 +1,5 @@
 import 'package:ariapp/app/config/styles.dart';
+import 'package:ariapp/app/infrastructure/services/data_base_service.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
@@ -12,6 +13,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app/presentation/layouts/widgets/app_navigation.dart';
 
 void main() async {
+  final databaseService = DatabaseService();
+  final database = await databaseService.database;
+  await databaseService.create(database, 1);
+
   usersDependencies();
   chatsDependencies();
   messagesDependencies();

@@ -539,6 +539,26 @@ class UsersDataProvider {
     }
   }
 
+  Future<void> sendApplicant(int userId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.post(
+        Uri.parse("${BaseUrlConfig.baseUrl}/applicant/send?idSender=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        log(response.body);
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
   Future<bool> validateNickname(String nickname) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
