@@ -137,5 +137,10 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   Future<void> sendSuggestion(int userId, String title, String content) async {
-    return await usersDataProvider.sendSuggestion(userId, title, content);}
+    return await usersDataProvider.sendSuggestion(userId, title, content);
   }
+
+  Future<bool> validateNickname(String nickname) async {
+    return await usersDataProvider.validateNickname(nickname);
+  }
+}

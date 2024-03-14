@@ -1,9 +1,6 @@
 import 'package:formz/formz.dart';
 
-enum NicknameInputError {
-  empty,
-  tooShort,
-}
+enum NicknameInputError { empty, tooShort, existed }
 
 class NicknameInputValidator extends FormzInput<String, NicknameInputError> {
   const NicknameInputValidator.pure() : super.pure('');
@@ -18,6 +15,10 @@ class NicknameInputValidator extends FormzInput<String, NicknameInputError> {
     if (value != null && value.length < 3) {
       return NicknameInputError.tooShort;
     }
+    if (value == 'true') {
+      return NicknameInputError.existed;
+    }
+
     return null;
   }
 
@@ -28,6 +29,9 @@ class NicknameInputValidator extends FormzInput<String, NicknameInputError> {
     }
     if (displayError == NicknameInputError.tooShort) {
       return 'El nickname debe tener al menos 3 caracteres';
+    }
+    if (displayError == NicknameInputError.existed) {
+      return 'El nickname ya existe';
     }
     return null;
   }

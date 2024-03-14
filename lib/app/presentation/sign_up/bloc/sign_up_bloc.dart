@@ -1,6 +1,8 @@
+import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:get_it/get_it.dart';
 
 import '../validators/birthdate_input_validator.dart';
 import '../validators/city_input_validator.dart';
@@ -17,7 +19,11 @@ part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(const SignUpState()) {
+  final UserAriaRepository usersRepository;
+
+  SignUpBloc()
+      : usersRepository = GetIt.instance<UserAriaRepository>(),
+        super(const SignUpState()) {
     on<SignUpEvent>((event, emit) {});
     on<NameChanged>(_onNameChanged);
     on<EmailChanged>(_onEmailChanged);
@@ -96,8 +102,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     );
   }
 
-  void _onNicknameChanged(NicknameChanged event, Emitter<SignUpState> emit) {
-    final nickname = NicknameInputValidator.dirty(event.nickname);
+  void _onNicknameChanged(
+      NicknameChanged event, Emitter<SignUpState> emit) async {
+    final bool isNicknameAvailable =
+        await usersRepository.validateNickname(event.nickname);
+
+    final nickname = NicknameInputValidator.dirty(
+        isNicknameAvailable ? 'true' : event.nickname);
+
     emit(
       state.copyWith(
         nicknameInputValidator: nickname,
