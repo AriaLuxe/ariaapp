@@ -20,29 +20,25 @@ class VoiceTraining extends StatefulWidget {
 }
 
 class _VoiceTrainingState extends State<VoiceTraining> {
-
-
-
   String? _filePath;
 
   Future<void> _pickAudioFile() async {
     final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
 
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.audio);
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(allowMultiple: true, type: FileType.audio);
 
       if (result != null) {
         List<File> files = result.paths.map((path) => File(path!)).toList();
         voiceBloc.collectAudio(files[0].path);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(successSnackBar)
-            .closed;
+        ScaffoldMessenger.of(context).showSnackBar(successSnackBar).closed;
       }
-
     } catch (e) {
       print('Error picking audio file: $e');
     }
   }
+
   final successSnackBar = const SnackBar(
       backgroundColor: Colors.green,
       content: Center(
@@ -56,7 +52,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
             Column(
               children: [
                 Text(
-                  'Audio agregado' ,
+                  'Audio agregado',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 26,
@@ -67,7 +63,6 @@ class _VoiceTrainingState extends State<VoiceTraining> {
           ],
         ),
       ));
-
 
   @override
   Widget build(BuildContext context) {
@@ -135,43 +130,45 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                             color: Colors.white.withOpacity(0.67),
                             borderRadius: BorderRadius.circular(30.0),
                           ),
-                          child: Column(children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: Text(
-                                'Subir audios o responder preguntas',
-                                style: TextStyle(
-                                  color: Styles.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.65,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Column(
-
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text('Seleccionar Archivo', style: TextStyle(
-                                      color: Styles.primaryColor, fontWeight: FontWeight.bold
-                                    ),),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: Text(
+                                  'Subir audios o responder preguntas',
+                                  style: TextStyle(
+                                    color: Styles.primaryColor,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  IconButton(
-                                      color: Styles.primaryColor,
-                                      onPressed:
-                                        _pickAudioFile
-                                      , icon: const Icon(Icons.upload)),
-
-                                ],
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            )
-                          ],),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.65,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        'Seleccionar Archivo',
+                                        style: TextStyle(
+                                            color: Styles.primaryColor,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    IconButton(
+                                        color: Styles.primaryColor,
+                                        onPressed: _pickAudioFile,
+                                        icon: const Icon(Icons.upload)),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 10),
                         const QuestionResponse(
@@ -231,7 +228,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                                           builder: (BuildContext context) {
                                             return CustomDialogAccept(
                                               text:
-                                                  'Por favor responda todas las preguntas',
+                                                  'Por favor responda todas las preguntas\no suba por lo menos 5 audios',
                                               onAccept: () {
                                                 Navigator.pop(context);
                                               },

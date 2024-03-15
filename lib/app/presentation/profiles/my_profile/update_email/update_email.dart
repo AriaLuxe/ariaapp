@@ -168,7 +168,7 @@ class UpdateEmailForm extends StatelessWidget {
                                         userId!,
                                         _emailController.text.trim(),
                                         _passwordController.text.trim());
-
+                                print(response);
                                 _emailController.clear();
                                 _passwordController.clear();
 

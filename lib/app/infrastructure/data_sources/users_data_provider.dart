@@ -100,6 +100,7 @@ class UsersDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
+
       final UserAriaModel user =
           UserAriaModel.fromJson(jsonDecode(response.body));
       return user;
@@ -138,7 +139,7 @@ class UsersDataProvider {
       int userId, String email, String password) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
-
+      print(userId);
       final Uri uri = Uri.parse(
           "${BaseUrlConfig.baseUrl}/$endPoint/email?idUser=$userId&email=$email&password=$password");
 
@@ -152,6 +153,7 @@ class UsersDataProvider {
       if (response.statusCode == 200) {
         return response.body;
       } else {
+        print(response.body);
         throw Exception('Error en la solicitud: ${response.statusCode}');
       }
     } catch (error) {
@@ -455,6 +457,7 @@ class UsersDataProvider {
     }
   }
 
+//TODO CHATS BLOCK
   Future<bool> checkBlock(int userId, int userLooking) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
@@ -539,6 +542,7 @@ class UsersDataProvider {
     }
   }
 
+//TODO: get applicant
   Future<void> sendApplicant(int userId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();

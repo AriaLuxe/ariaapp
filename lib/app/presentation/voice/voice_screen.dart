@@ -231,29 +231,30 @@ class _VoiceScreenState extends State<VoiceScreen> {
                           style: TextStyle(color: Colors.white, fontSize: 19),
                         ),
                         const SizedBox(height: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: const Color(0xFFebebeb).withOpacity(0.26),
-                          ),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: TextFormField(
-                              enabled: !testAudio,
-                              controller: _testVoice,
-                              cursorColor: Colors.white,
-                              decoration: const InputDecoration(
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                labelText: 'Ingrese texto aquí',
-                                border: InputBorder.none,
-                                labelStyle: TextStyle(color: Colors.white),
+                        if (!testAudio)
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: const Color(0xFFebebeb).withOpacity(0.26),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: TextFormField(
+                                enabled: !testAudio,
+                                controller: _testVoice,
+                                cursorColor: Colors.white,
+                                decoration: const InputDecoration(
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  labelText: 'Ingrese texto aquí',
+                                  border: InputBorder.none,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                ),
+                                style: const TextStyle(color: Colors.white),
                               ),
-                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
-                        ),
                         const SizedBox(height: 20),
                         if (loadingVoiceTest)
                           const Center(child: CircularProgressIndicator()),
@@ -269,38 +270,39 @@ class _VoiceScreenState extends State<VoiceScreen> {
                               )
                             : const SizedBox(),
                         const SizedBox(height: 10),
-                        CustomButtonBlue(
-                          text: testAudio ? 'Nueva prueba' : 'Generar audio',
-                          onPressed: testAudio
-                              ? () {
-                                  _testVoice.clear();
-                                  setState(() {
-                                    loadingVoiceTest = false;
-                                    testAudio = !testAudio;
-                                  });
-                                }
-                              : () async {
-                                  if (_testVoice.text.isEmpty) {
-                                    return;
+                        if (!loadingVoiceTest)
+                          CustomButtonBlue(
+                            text: testAudio ? 'Nueva prueba' : 'Generar audio',
+                            onPressed: testAudio
+                                ? () {
+                                    _testVoice.clear();
+                                    setState(() {
+                                      loadingVoiceTest = false;
+                                      testAudio = !testAudio;
+                                    });
                                   }
-                                  setState(() {
-                                    loadingVoiceTest = true;
-                                  });
-                                  int? userId = await SharedPreferencesManager
-                                      .getUserId();
-                                  final voiceCloneDataProvider =
-                                      VoiceCloneDataProvider();
-                                  final path = await voiceCloneDataProvider
-                                      .testAudio(userId!, _testVoice.text);
-                                  _audioPlayer.setUrl(
-                                      'https://uploadsaria.blob.core.windows.net/files/$path');
-                                  setState(() {
-                                    loadingVoiceTest = false;
-                                    testAudio = !testAudio;
-                                  });
-                                },
-                          width: 0.5,
-                        ),
+                                : () async {
+                                    if (_testVoice.text.isEmpty) {
+                                      return;
+                                    }
+                                    setState(() {
+                                      loadingVoiceTest = true;
+                                    });
+                                    int? userId = await SharedPreferencesManager
+                                        .getUserId();
+                                    final voiceCloneDataProvider =
+                                        VoiceCloneDataProvider();
+                                    final path = await voiceCloneDataProvider
+                                        .testAudio(userId!, _testVoice.text);
+                                    _audioPlayer.setUrl(
+                                        'https://uploadsaria.blob.core.windows.net/files/$path');
+                                    setState(() {
+                                      loadingVoiceTest = false;
+                                      testAudio = !testAudio;
+                                    });
+                                  },
+                            width: 0.5,
+                          ),
                         const SizedBox(height: 10),
                         buildOptionsContainer(voiceBloc, state.title,
                             state.description, state.voiceId),

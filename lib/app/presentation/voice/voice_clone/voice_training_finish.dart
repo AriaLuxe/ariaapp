@@ -126,62 +126,74 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                         child: CircularProgressIndicator(),
                                       )
                                     : CustomButtonVoiceClone(
-                                  text: 'Crear voz',
-                                  onPressed: () async {
-                                    final voiceCloneBloc = BlocProvider.of<VoiceCloneBloc>(context);
-                                    final voiceBloc = BlocProvider.of<VoiceBloc>(context);
+                                        text: 'Crear voz',
+                                        onPressed: () async {
+                                          final voiceCloneBloc =
+                                              BlocProvider.of<VoiceCloneBloc>(
+                                                  context);
+                                          final voiceBloc =
+                                              BlocProvider.of<VoiceBloc>(
+                                                  context);
 
-                                    if (voiceCloneBloc.state.audioPaths.length == 10) {
-                                      if (isAcceptedTerminos) {
-                                        setState(() {
-                                          isLoadingClone = true;
-                                        });
+                                          if (voiceCloneBloc
+                                                  .state.audioPaths.length >=
+                                              5) {
+                                            if (isAcceptedTerminos) {
+                                              setState(() {
+                                                isLoadingClone = true;
+                                              });
 
-                                        // Procede con la creación de la voz y otras operaciones
-                                        final voiceCloneDataProvider = VoiceCloneDataProvider();
-                                        await voiceCloneDataProvider.cloneVoice(state.audioPaths);
-                                        voiceBloc.showView(true);
-                                        voiceCloneBloc.clearPaths();
-                                        setState(() {
-                                          isLoadingClone = false;
-                                        });
+                                              // Procede con la creación de la voz y otras operaciones
+                                              final voiceCloneDataProvider =
+                                                  VoiceCloneDataProvider();
+                                              await voiceCloneDataProvider
+                                                  .cloneVoice(state.audioPaths);
+                                              voiceBloc.showView(true);
+                                              voiceCloneBloc.clearPaths();
+                                              setState(() {
+                                                isLoadingClone = false;
+                                              });
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const VoiceScreen()),
-                                        );
-                                      } else {
-                                        // Mostrar un showDialog indicando que los términos no han sido aceptados
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return CustomDialogAccept(
-                                              text:
-                                              'Por favor, acepta los términos y condiciones antes de continuar.',
-                                              onAccept: () {
-                                                Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const VoiceScreen()),
+                                              );
+                                            } else {
+                                              // Mostrar un showDialog indicando que los términos no han sido aceptados
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return CustomDialogAccept(
+                                                    text:
+                                                        'Por favor, acepta los términos y condiciones antes de continuar.',
+                                                    onAccept: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          } else {
+                                            // Mostrar un showDialog indicando que no se grabaron los 10 audios
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return CustomDialogAccept(
+                                                  text:
+                                                      'Por favor, asegurate de subir por lo menos 5 audios\no responder las preguntas',
+                                                  onAccept: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                );
                                               },
                                             );
-                                          },
-                                        );
-                                      }
-                                    } else {
-                                      // Mostrar un showDialog indicando que no se grabaron los 10 audios
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return CustomDialogAccept(
-                                            text: 'Por favor, responde todas las preguntas antes de continuar.',
-                                            onAccept: () {
-                                              Navigator.pop(context);
-                                            },
-                                          );
+                                          }
                                         },
-                                      );
-                                    }
-                                  },
-                                  width: 0.8,
-                                ),
+                                        width: 0.8,
+                                      ),
                               )),
                         ),
                       ],
@@ -196,6 +208,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
     );
   }
 }
+
 class _TerminosCondiciones extends StatelessWidget {
   const _TerminosCondiciones(this.onChanged, this.value);
 
@@ -215,7 +228,8 @@ class _TerminosCondiciones extends StatelessWidget {
             }
             // Color cuando el Checkbox está desactivado
             return Colors.white;
-          }),          visualDensity: const VisualDensity(vertical: 0, horizontal: 0),
+          }),
+          visualDensity: const VisualDensity(vertical: 0, horizontal: 0),
           activeColor: const Color(0xFF5368d6),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           value: value,
@@ -227,7 +241,7 @@ class _TerminosCondiciones extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-           context.push('/terminos_condiciones_vc');
+            context.push('/terminos_condiciones_vc');
           },
           child: const Text(
             "Términos y condiciones",

@@ -15,7 +15,7 @@ class PasswordInputValidator extends FormzInput<String, PasswordInputError> {
     if (value.isEmpty || value.trim().isEmpty) {
       return PasswordInputError.empty;
     }
-    if (value.length < 4) {
+    if (value.length < 6) {
       return PasswordInputError.length;
     }
     return null;

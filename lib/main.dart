@@ -61,6 +61,9 @@ class MyApp extends StatelessWidget {
         routerConfig: AppNavigation.router,
         builder: DevicePreview.appBuilder,
         locale: DevicePreview.locale(context),
+
+        supportedLocales: const [Locale('en'), Locale('es')],
+
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: false,

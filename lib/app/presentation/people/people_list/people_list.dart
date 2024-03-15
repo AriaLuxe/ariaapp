@@ -144,6 +144,9 @@ class _PeopleListState extends State<PeopleList> {
                                               backgroundImage: NetworkImage(
                                                   '${BaseUrlConfig.baseUrlImage}${user.imgProfile}'),
                                             ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
                                             Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
@@ -175,7 +178,10 @@ class _PeopleListState extends State<PeopleList> {
                                           borderRadius:
                                               BorderRadius.circular(20),
                                           child: Image.network(
+                                            width: double.infinity,
+                                            height: 380,
                                             '${BaseUrlConfig.baseUrlImage}${user.nickname}',
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
@@ -203,7 +209,10 @@ class _PeopleListState extends State<PeopleList> {
                                             ],
                                           )
                                         ],
-                                      )
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
                                     ],
                                   ),
                                 ),

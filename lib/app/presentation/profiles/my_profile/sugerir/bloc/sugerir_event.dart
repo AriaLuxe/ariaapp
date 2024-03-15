@@ -22,6 +22,13 @@ final class PasswordChanged extends SugerirBlocEvent {
   List<Object?> get props => [password];
 }
 
+final class ClearData extends SugerirBlocEvent {
+  const ClearData();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class SignInSubmitted extends SugerirBlocEvent {
   const SignInSubmitted();
 

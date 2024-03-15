@@ -31,8 +31,6 @@ class SugerirForm extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
 
-
-
   final successSnackBar = const SnackBar(
       backgroundColor: Colors.green,
       content: Center(
@@ -114,8 +112,9 @@ class SugerirForm extends StatelessWidget {
                       TextInput(
                         controller: _contentController,
                         verticalPadding: 50,
-                        prefixIcon: Icons.lock,
-                        label: 'Ingrese comentario, sugerencia,\nreclamo o algún mensaje que\nquieras decirnos',
+                        prefixIcon: Icons.comment,
+                        label:
+                            'Ingrese comentario, sugerencia,\nreclamo o algún mensaje que\nquieras decirnos',
                         onChanged: (password) => context
                             .read<SugerirBloc>()
                             .add(PasswordChanged(password)),
@@ -131,22 +130,28 @@ class SugerirForm extends StatelessWidget {
                       child: CustomButton(
                         onPressed: updateEmailBloc.state.isValid
                             ? () async {
-                          final userRepository =
-                          GetIt.instance<UserAriaRepository>();
-                          final userId =
-                          await SharedPreferencesManager.getUserId();
-                          final response =
-                          await userRepository.sendSuggestion(
-                              userId!,
-                              _titleController.text.trim(),
-                              _contentController.text.trim());
+                                final userRepository =
+                                    GetIt.instance<UserAriaRepository>();
+                                final userId =
+                                    await SharedPreferencesManager.getUserId();
+                                final response =
+                                    await userRepository.sendSuggestion(
+                                        userId!,
+                                        _titleController.text.trim(),
+                                        _contentController.text.trim());
+//TODO:VACIOS
+                                _titleController.clear();
+                                _contentController.clear();
+                                context
+                                    .read<SugerirBloc>()
+                                    .add(const ClearData());
+                                print('state.passwordInputValidator.isPure');
+                                print(state.passwordInputValidator.isPure);
 
-                          _titleController.clear();
-                          _contentController.clear();
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(successSnackBar)
-                              .closed;
-                        }
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(successSnackBar)
+                                    .closed;
+                              }
                             : null,
                         text: 'Enviar',
                         width: 0.1,

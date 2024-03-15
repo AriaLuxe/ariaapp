@@ -16,7 +16,7 @@ class CurrentPasswordInputValidator
     if (value.isEmpty || value.trim().isEmpty) {
       return CurrentPasswordInputError.empty;
     }
-    if (value.length < 4) {
+    if (value.length < 6) {
       return CurrentPasswordInputError.length;
     }
     return null;

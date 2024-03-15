@@ -64,10 +64,10 @@ class UpdatePasswordBloc
     ConfirmPasswordChanged event,
     Emitter<UpdatePasswordState> emit,
   ) {
-    final confirmPassword = PasswordInputValidator.dirty(event.password);
+    final confirmPassword = ConfirmPasswordInputValidator.dirty(event.password);
     emit(
       state.copyWith(
-        passwordInputValidator: confirmPassword,
+        confirmPasswordInputValidator: confirmPassword,
         isValid: Formz.validate(
           [
             confirmPassword,

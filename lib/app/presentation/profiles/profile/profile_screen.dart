@@ -414,7 +414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   );
                                                 },
                                               );
-                                            }else if (response ==
+                                            } else if (response ==
                                                 'Same user') {
                                               showDialog(
                                                 context: context,
@@ -422,7 +422,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     (BuildContext context) {
                                                   return CustomDialogAccept(
                                                     text:
-                                                    '¡Oops!\nNo puedes chatear contigo mismo :c',
+                                                        '¡Oops!\nNo puedes chatear contigo mismo :c',
                                                     onAccept: () {
                                                       Navigator.pop(context);
                                                     },
@@ -708,7 +708,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         Icons.delete,
                                                         color: Colors.red),
                                                     onTap: () async {
-
                                                       final chatsDataProvider =
                                                           ChatsDataProvider();
                                                       final response =

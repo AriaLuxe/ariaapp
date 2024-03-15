@@ -299,7 +299,7 @@ class _MyProfileState extends State<MyProfile> {
                         width: MediaQuery.of(context).size.width * .8,
                         child: MyProfileOption(
                           icon: Icons.lightbulb_outline,
-                          title: 'Eviar sugerencias',
+                          title: 'Enviar sugerencias',
                           onTap: () {
                             context.go("/my_profile/sugerir");
                           },

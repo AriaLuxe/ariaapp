@@ -59,6 +59,30 @@ class UpdatePasswordForm extends StatelessWidget {
           ],
         ),
       ));
+  final errorSnackBar1 = const SnackBar(
+      backgroundColor: Colors.red,
+      content: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error,
+              size: 60,
+            ),
+            Column(
+              children: [
+                Text(
+                  'Las contraseñas\nno coinciden',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ));
 
   final successSnackBar = const SnackBar(
       backgroundColor: Colors.green,
@@ -191,24 +215,25 @@ class UpdatePasswordForm extends StatelessWidget {
                                         userId!,
                                         _passwordController.text.trim(),
                                         _currentPasswordController.text.trim());
-                                _currentPasswordController.clear();
-                                _passwordController.clear();
-                                _confirmPasswordController.clear();
-
-                                if (response == 'Password is updated') {
+                                if (_passwordController.text.trim() !=
+                                    _confirmPasswordController.text.trim()) {
                                   ScaffoldMessenger.of(context)
-                                      .showSnackBar(successSnackBar)
-                                      .closed;
-                                  context.go("/my_profile");
-                                }
-                                if (response == 'Incorrect password') {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(errorSnackBar)
+                                      .showSnackBar(errorSnackBar1)
                                       .closed;
                                 } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(errorSnackBar)
-                                      .closed;
+                                  if (response == 'Password is updated') {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(successSnackBar)
+                                        .closed;
+                                    context.go("/my_profile");
+                                  } else if (response == 'Incorrect password') {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(errorSnackBar)
+                                        .closed;
+                                  }
+                                  _currentPasswordController.clear();
+                                  _passwordController.clear();
+                                  _confirmPasswordController.clear();
                                 }
                               }
                             : null,

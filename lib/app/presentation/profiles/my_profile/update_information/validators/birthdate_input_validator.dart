@@ -50,8 +50,8 @@ class BirthDateInputValidator extends FormzInput<String, BirthDateInputError> {
         return 'La fecha de nacimiento es obligatoria';
       case BirthDateInputError.invalidFormat:
         return 'Formato de fecha no válido (aaaa-mm-dd)';
-      case BirthDateInputError.notAdult:
-        return 'Debes ser mayor de 18 años';
+      /*case BirthDateInputError.notAdult:
+        return 'Debes ser mayor de 18 años';*/
       default:
         return null;
     }

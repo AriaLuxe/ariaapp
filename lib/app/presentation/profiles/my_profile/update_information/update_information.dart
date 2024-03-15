@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ariapp/app/presentation/widgets/header.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:country_picker/country_picker.dart';
@@ -60,7 +62,7 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
     _birthDateController.text =
         DateFormat('yyyy-MM-dd').format(userLog.user.dateBirth!);
     _genderController.text = userLog.user.gender;
-    _countryController.text = userLog.user.country;
+    _countryController.text = utf8.decode(userLog.user.country.codeUnits);
     _nameController.text = userLog.user.nameUser;
     _lastNameController.text = userLog.user.lastName;
     _nicknameController.text = userLog.user.nickname;
@@ -227,7 +229,7 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                   SizedBox(
                     height: size.height * 0.015,
                   ),
-                  Column(
+                  /*Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
@@ -245,7 +247,7 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                         errorMessage: state.nicknameInputValidator.errorMessage,
                       ),
                     ],
-                  ),
+                  ),*/
                   SizedBox(
                     height: size.height * 0.015,
                   ),
@@ -448,39 +450,37 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                   SizedBox(
                       width: double.infinity,
                       child: CustomButton(
-                        onPressed: hasChanged() && myProfileBloc.state.isValid
-                            ? () async {
-                                final userRepository =
-                                    GetIt.instance<UserAriaRepository>();
-                                final response =
-                                    await userRepository.updateUserData(
-                                        userLog.user.id.toString(),
-                                        _nameController.text,
-                                        _lastNameController.text,
-                                        _nicknameController.text,
-                                        _genderController.text,
-                                        DateTime.parse(
-                                            _birthDateController.text),
-                                        _countryController.text,
-                                        _cityController.text);
-                                final userUpdated = await usersRepository
-                                    .getUserById(userLog.user.id!);
-                                userLog.user = userUpdated;
-                                if (response == 'UserInfo is updated') {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(successSnackBar)
-                                      .closed;
-                                  context
-                                      .read<ProfileBloc>()
-                                      .fetchDataProfile(userLog.user.id!);
-                                  context.go("/my_profile");
-                                } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(errorSnackBar)
-                                      .closed;
-                                }
-                              }
-                            : null,
+                        onPressed: /* hasChanged() && myProfileBloc.state.isValid
+                            ?*/
+                            () async {
+                          final userRepository =
+                              GetIt.instance<UserAriaRepository>();
+                          final response = await userRepository.updateUserData(
+                              userLog.user.id.toString(),
+                              _nameController.text,
+                              _lastNameController.text,
+                              _nicknameController.text,
+                              _genderController.text,
+                              DateTime.parse(_birthDateController.text),
+                              _countryController.text,
+                              _cityController.text);
+                          final userUpdated = await usersRepository
+                              .getUserById(userLog.user.id!);
+                          userLog.user = userUpdated;
+                          if (response == 'UserInfo is updated') {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(successSnackBar)
+                                .closed;
+                            context
+                                .read<ProfileBloc>()
+                                .fetchDataProfile(userLog.user.id!);
+                            context.go("/my_profile");
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(errorSnackBar)
+                                .closed;
+                          }
+                        } /* : null,*/,
                         text: 'Guardar Cambios ',
                         width: 0.8,
                       ))

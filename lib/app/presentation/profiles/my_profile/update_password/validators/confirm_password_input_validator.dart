@@ -16,7 +16,7 @@ class ConfirmPasswordInputValidator
     if (value.isEmpty || value.trim().isEmpty) {
       return ConfirmPasswordPasswordInputError.empty;
     }
-    if (value.length < 4) {
+    if (value.length < 6) {
       return ConfirmPasswordPasswordInputError.length;
     }
     return null;

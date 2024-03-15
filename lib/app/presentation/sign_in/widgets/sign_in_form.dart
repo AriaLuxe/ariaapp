@@ -197,7 +197,6 @@ class _SignInFormState extends State<SignInForm> {
               SizedBox(
                 height: size.height * 0.05,
               ),
-
               SizedBox(
                 width: size.width * 0.8,
                 child: isLoadingSignIn
@@ -282,5 +281,3 @@ class _SignInFormState extends State<SignInForm> {
     );
   }
 }
-
-

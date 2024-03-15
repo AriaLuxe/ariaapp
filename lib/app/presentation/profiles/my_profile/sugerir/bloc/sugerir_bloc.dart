@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:ariapp/app/presentation/profiles/my_profile/sugerir/validators/content_input_validator.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/sugerir/validators/title_input_validator.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-
 
 part 'sugerir_event.dart';
 
@@ -49,6 +50,27 @@ class SugerirBloc extends Bloc<SugerirBlocEvent, SugerirState> {
           [
             password,
             state.emailInputValidator,
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onClearData(
+    ClearData event,
+    Emitter<SugerirState> emit,
+  ) {
+    const email = TitleInputValidator.pure();
+    const password = ContentInputValidator.pure();
+
+    emit(
+      state.copyWith(
+        passwordInputValidator: password,
+        emailInputValidator: email,
+        isValid: Formz.validate(
+          [
+            password,
+            email,
           ],
         ),
       ),
