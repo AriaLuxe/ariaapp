@@ -147,4 +147,8 @@ class UserAriaRepository extends UserAriaInterface {
   Future<void> sendApplicant(int userId) async {
     return await usersDataProvider.sendApplicant(userId);
   }
+
+  Future<bool> getApplicant(int userId) async {
+    return await usersDataProvider.getApplicant(userId);
+  }
 }

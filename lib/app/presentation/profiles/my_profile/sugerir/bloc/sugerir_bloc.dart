@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:ariapp/app/presentation/profiles/my_profile/sugerir/validators/content_input_validator.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/sugerir/validators/title_input_validator.dart';
 import 'package:bloc/bloc.dart';
@@ -12,12 +10,11 @@ part 'sugerir_state.dart';
 
 class SugerirBloc extends Bloc<SugerirBlocEvent, SugerirState> {
   SugerirBloc() : super(const SugerirState()) {
-    on<SugerirBlocEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<SugerirBlocEvent>((event, emit) {});
 
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
+    on<ClearData>(_onClearData);
   }
 
   void _onEmailChanged(
@@ -60,19 +57,11 @@ class SugerirBloc extends Bloc<SugerirBlocEvent, SugerirState> {
     ClearData event,
     Emitter<SugerirState> emit,
   ) {
-    const email = TitleInputValidator.pure();
-    const password = ContentInputValidator.pure();
-
     emit(
       state.copyWith(
-        passwordInputValidator: password,
-        emailInputValidator: email,
-        isValid: Formz.validate(
-          [
-            password,
-            email,
-          ],
-        ),
+        emailInputValidator: const TitleInputValidator.pure(),
+        passwordInputValidator: const ContentInputValidator.pure(),
+        isValid: false,
       ),
     );
   }

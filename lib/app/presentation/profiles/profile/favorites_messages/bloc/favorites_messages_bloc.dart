@@ -21,9 +21,7 @@ class FavoritesMessagesBloc
   FavoritesMessagesBloc()
       : messageRepository = GetIt.instance<MessageRepository>(),
         super(const FavoritesMessagesState()) {
-    on<FavoritesMessagesEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<FavoritesMessagesEvent>((event, emit) {});
     on<FavoriteMessageFetched>(_onFavoriteMessageFetched);
   }
 

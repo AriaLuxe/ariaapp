@@ -11,7 +11,6 @@ import '../validators/city_input_validator.dart';
 import '../validators/country_input_validator.dart';
 import '../validators/gender_input_validator.dart';
 import '../validators/last_name_input_validator.dart';
-import '../../sugerir/validators/title_input_validator.dart';
 import '../validators/nickname_input_validator.dart';
 
 part 'my_profile_event.dart';
@@ -24,9 +23,7 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
   MyProfileBloc()
       : userAriaRepository = GetIt.instance<UserAriaRepository>(),
         super(const MyProfileState()) {
-    on<MyProfileEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<MyProfileEvent>((event, emit) {});
     on<NameChanged>(_onNameChanged);
     on<LastNameChanged>(_onLastNameChanged);
     on<BirthDateChanged>(_onBirthDateChanged);

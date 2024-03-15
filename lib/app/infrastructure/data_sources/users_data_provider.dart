@@ -139,7 +139,6 @@ class UsersDataProvider {
       int userId, String email, String password) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
-      print(userId);
       final Uri uri = Uri.parse(
           "${BaseUrlConfig.baseUrl}/$endPoint/email?idUser=$userId&email=$email&password=$password");
 
@@ -153,7 +152,7 @@ class UsersDataProvider {
       if (response.statusCode == 200) {
         return response.body;
       } else {
-        print(response.body);
+        log(response.body);
         throw Exception('Error en la solicitud: ${response.statusCode}');
       }
     } catch (error) {
@@ -542,7 +541,6 @@ class UsersDataProvider {
     }
   }
 
-//TODO: get applicant
   Future<void> sendApplicant(int userId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
@@ -555,6 +553,26 @@ class UsersDataProvider {
       );
       if (response.statusCode == 200) {
         log(response.body);
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  Future<bool> getApplicant(int userId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.post(
+        Uri.parse("${BaseUrlConfig.baseUrl}/applicant/idUser=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return bool.parse(response.body);
       } else {
         throw Exception(response.body);
       }

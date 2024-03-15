@@ -1,7 +1,6 @@
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_training_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
-import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -24,6 +23,30 @@ class VoiceClone extends StatelessWidget {
               children: [
                 Text(
                   'Solicitud enviada',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ));
+  final errorSnackBar = const SnackBar(
+      backgroundColor: Colors.green,
+      content: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error,
+              size: 30,
+            ),
+            Column(
+              children: [
+                Text(
+                  'Usted  ya envio\nuna solicitud',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 26,
@@ -154,7 +177,6 @@ class VoiceClone extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                //TODO SOLICIDTUD ENVIADA
                                 child: CustomButton(
                                     text: 'Solicitar acceso prioritarios',
                                     onPressed: () async {
@@ -162,11 +184,20 @@ class VoiceClone extends StatelessWidget {
                                       final userAriaRepository =
                                           GetIt.instance<UserAriaRepository>();
 
-                                      await userAriaRepository
-                                          .sendApplicant(userLogged.user.id!);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(successSnackBar)
-                                          .closed;
+                                      final isSend = await userAriaRepository
+                                          .getApplicant(userLogged.user.id!);
+
+                                      if (isSend) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(errorSnackBar)
+                                            .closed;
+                                      } else {
+                                        await userAriaRepository
+                                            .sendApplicant(userLogged.user.id!);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(successSnackBar)
+                                            .closed;
+                                      }
                                     },
                                     width: 0.8)),
                           )),

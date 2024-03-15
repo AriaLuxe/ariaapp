@@ -134,19 +134,16 @@ class SugerirForm extends StatelessWidget {
                                     GetIt.instance<UserAriaRepository>();
                                 final userId =
                                     await SharedPreferencesManager.getUserId();
-                                final response =
-                                    await userRepository.sendSuggestion(
-                                        userId!,
-                                        _titleController.text.trim(),
-                                        _contentController.text.trim());
-//TODO:VACIOS
+
+                                await userRepository.sendSuggestion(
+                                    userId!,
+                                    _titleController.text.trim(),
+                                    _contentController.text.trim());
                                 _titleController.clear();
                                 _contentController.clear();
                                 context
                                     .read<SugerirBloc>()
                                     .add(const ClearData());
-                                print('state.passwordInputValidator.isPure');
-                                print(state.passwordInputValidator.isPure);
 
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(successSnackBar)

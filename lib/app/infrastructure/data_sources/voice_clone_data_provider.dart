@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
@@ -26,12 +27,12 @@ class VoiceCloneDataProvider {
       final responseString = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        print('Solicitud exitosa: $responseString');
+        log('Solicitud exitosa: $responseString');
       } else {
-        print('Error en la solicitud: $responseString');
+        log('Error en la solicitud: $responseString');
       }
     } catch (e) {
-      print('Error al enviar la solicitud: $e');
+      log('Error al enviar la solicitud: $e');
     }
   }
 

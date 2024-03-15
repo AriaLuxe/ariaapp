@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ariapp/app/config/styles.dart';
@@ -35,7 +36,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
         ScaffoldMessenger.of(context).showSnackBar(successSnackBar).closed;
       }
     } catch (e) {
-      print('Error picking audio file: $e');
+      log('Error picking audio file: $e');
     }
   }
 

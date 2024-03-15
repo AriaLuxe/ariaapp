@@ -26,9 +26,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         userAriaRepository = GetIt.instance<UserAriaRepository>(),
         chatRepository = GetIt.instance<ChatRepository>(),
         super(const ChatState()) {
-    on<ChatEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<ChatEvent>((event, emit) {});
     on<MessageFetched>(_onMessageFetched);
     on<MessageSent>(_onMessageSent);
     on<ShowPlayer>(_onShowPlayer);
@@ -268,7 +266,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     AudioPlayer? audioPlayer;
 
     audioUrl = message.content;
-    print(message.date);
     if (audioUrl != null) {
       audioPlayer = AudioPlayer();
       audioPlayer
@@ -375,7 +372,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       final currentUserId = await SharedPreferencesManager.getUserId();
       final response = await userAriaRepository.checkBlock(
-         event.userLooking, currentUserId!);
+          event.userLooking, currentUserId!);
 
       if (response == false) {
         emit(state.copyWith(isBlock: false));
@@ -393,10 +390,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onCheckIsCreator(CheckIsCreator event, Emitter<ChatState> emit) async {
     try {
-
       final response = await userAriaRepository.checkCreator(event.userId);
-      print('isCreator');
-      print(response);
+
       if (response == false) {
         emit(state.copyWith(isCreator: false));
       } else {
