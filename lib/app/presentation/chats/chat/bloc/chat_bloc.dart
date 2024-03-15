@@ -38,6 +38,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<DeleteMessage>(_onDeleteMessage);
     on<CheckBlock>(_onCheckBlock);
     on<CheckIsCreator>(_onCheckIsCreator);
+    on<CheckBlockMeYou>(_onCheckBlockMeYou);
   }
 
   Future<void> _onMessageFetched(
@@ -386,6 +387,27 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void checkBlock(int userLooking) {
     add(CheckBlock(userLooking));
+  }
+
+  void _onCheckBlockMeYou(
+      CheckBlockMeYou event, Emitter<ChatState> emit) async {
+    try {
+      final currentUserId = await SharedPreferencesManager.getUserId();
+      final response = await userAriaRepository.checkBlock(
+          currentUserId!, event.userLooking);
+      print(response);
+      if (response == false) {
+        emit(state.copyWith(meBlockYou: false));
+      } else {
+        emit(state.copyWith(meBlockYou: true));
+      }
+    } catch (e) {
+      emit(state.copyWith(meBlockYou: false));
+    }
+  }
+
+  void checkBlockMeYou(int userLooking) {
+    add(CheckBlockMeYou(userLooking));
   }
 
   void _onCheckIsCreator(CheckIsCreator event, Emitter<ChatState> emit) async {

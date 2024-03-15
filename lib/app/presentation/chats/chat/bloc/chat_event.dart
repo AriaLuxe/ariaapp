@@ -90,6 +90,12 @@ class CheckBlock extends ChatEvent {
   const CheckBlock(this.userLooking);
 }
 
+class CheckBlockMeYou extends ChatEvent {
+  final int userLooking;
+
+  const CheckBlockMeYou(this.userLooking);
+}
+
 class CheckIsCreator extends ChatEvent {
   final int userId;
 

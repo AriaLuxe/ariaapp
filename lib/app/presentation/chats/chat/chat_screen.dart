@@ -6,6 +6,7 @@ import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
+import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,9 +75,13 @@ class _ChatState extends State<Chat> {
 
   @override
   void initState() {
+    final userLoggedId = GetIt.instance<UserLogged>().user.id;
+
     showPlayer = false;
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     chatBloc.checkBlock(widget.userReceivedId);
+    chatBloc.checkBlockMeYou(widget.userReceivedId);
+
     chatBloc.checkCreator(widget.userReceivedId);
 
     _scrollController.addListener(() {
@@ -210,36 +215,39 @@ class _ChatState extends State<Chat> {
                       : const SizedBox(),
                   //TODO: SI YO LO BLOQUEO
                   state.isCreator
-                      ? state.isBlock
-                          ? showStatusUserWidget('El usuario\nte ha bloqueado')
-                          : AudioRecorderView(
-                              onSaved: (path) async {
-                                if (kDebugMode) {
-                                  log('path of archive record: $path');
-                                }
-                                audioPath = path;
-                                chatBloc.isRecording(true);
-                                if (audioPath != null) {
-                                  chatBloc.messageSent(
-                                    widget.chatId,
-                                    widget.userReceivedId,
-                                    audioPath!,
-                                  );
-                                  chatBloc.isRecording(false);
-                                  final AudioPlayer _audioPlayerNotify =
-                                      AudioPlayer();
-                                  _audioPlayerNotify
-                                      .setAsset('assets/audio/Eureka.mp3');
-                                  _audioPlayerNotify.play();
-                                  await Future.delayed(
-                                      const Duration(milliseconds: 5000));
-                                  chatListBloc.chatsFetched();
-                                } else {
-                                  log('No hay audio para enviar');
-                                }
-                                // showPlayer = true;
-                              },
-                            )
+                      ? !state.meBlockYou
+                          ? state.isBlock
+                              ? showStatusUserWidget(
+                                  'El usuario\nte ha bloqueado')
+                              : AudioRecorderView(
+                                  onSaved: (path) async {
+                                    if (kDebugMode) {
+                                      log('path of archive record: $path');
+                                    }
+                                    audioPath = path;
+                                    chatBloc.isRecording(true);
+                                    if (audioPath != null) {
+                                      chatBloc.messageSent(
+                                        widget.chatId,
+                                        widget.userReceivedId,
+                                        audioPath!,
+                                      );
+                                      chatBloc.isRecording(false);
+                                      final AudioPlayer _audioPlayerNotify =
+                                          AudioPlayer();
+                                      _audioPlayerNotify
+                                          .setAsset('assets/audio/Eureka.mp3');
+                                      _audioPlayerNotify.play();
+                                      await Future.delayed(
+                                          const Duration(milliseconds: 5000));
+                                      chatListBloc.chatsFetched();
+                                    } else {
+                                      log('No hay audio para enviar');
+                                    }
+                                    // showPlayer = true;
+                                  },
+                                )
+                          : showStatusUserWidget('Desbloquea usuario')
                       : showStatusUserWidget('El usuario ya no\nes creador'),
                 ],
               ),

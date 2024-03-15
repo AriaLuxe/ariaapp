@@ -18,7 +18,7 @@ class ChatState extends Equatable {
   final bool hasMoreMessages;
   final bool isBlock;
   final bool isCreator;
-
+  final bool meBlockYou;
 
   const ChatState({
     this.userId = 0,
@@ -36,7 +36,7 @@ class ChatState extends Equatable {
     this.hasMoreMessages = false,
     this.isBlock = false,
     this.isCreator = false,
-
+    this.meBlockYou = false,
   });
 
   ChatState copyWith({
@@ -56,7 +56,7 @@ class ChatState extends Equatable {
     int? selectedMessageIndex,
     bool? isBlock,
     bool? isCreator,
-
+    bool? meBlockYou,
   }) {
     return ChatState(
       isFirstMessage: isFirstMessage ?? this.isFirstMessage,
@@ -74,7 +74,7 @@ class ChatState extends Equatable {
       messagesData: messagesData ?? this.messagesData,
       isBlock: isBlock ?? this.isBlock,
       isCreator: isCreator ?? this.isCreator,
-
+      meBlockYou: meBlockYou ?? this.meBlockYou,
     );
   }
 
@@ -94,6 +94,7 @@ class ChatState extends Equatable {
         userId,
         messagesData,
         isBlock,
-    isCreator
+        isCreator,
+        meBlockYou
       ];
 }

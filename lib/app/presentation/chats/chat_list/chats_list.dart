@@ -156,16 +156,23 @@ class _ChatsListState extends State<ChatsList> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      '${chat.nameUser} ${chat.lastName}',
-                                                      maxLines: 1,
-                                                      style: const TextStyle(
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        color: Colors.white,
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.5,
+                                                      child: Text(
+                                                        '${chat.nameUser} ${chat.lastName}',
+                                                        maxLines: 1,
+                                                        style: const TextStyle(
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          color: Colors.white,
+                                                          fontSize: 15.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                     const SizedBox(height: 5.0),
