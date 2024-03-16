@@ -147,13 +147,13 @@ class _RecordControlState extends State<RecordControl> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                IconButton(
+                /*IconButton(
                   icon: Icon(Icons.backspace,
                       color: widget.isRecording
                           ? Styles.primaryColor
                           : Colors.grey),
                   onPressed: widget.isRecording ? widget.onCancel : null,
-                ),
+                ),*/
                 widget.isRecording
                     ? Container(
                         decoration: BoxDecoration(
@@ -161,7 +161,7 @@ class _RecordControlState extends State<RecordControl> {
                           color: Styles.primaryColor,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(6.0),
+                          padding: const EdgeInsets.all(0.0),
                           child: IconButton(
                             icon: Flash(
                               duration: const Duration(seconds: 2),
@@ -191,7 +191,7 @@ class _RecordControlState extends State<RecordControl> {
                           onPressed: widget.onStart,
                         ),
                       ),
-                IconButton(
+                /*IconButton(
                   icon: Icon(Icons.send,
                       color: widget.isRecording
                           ? Styles.primaryColor
@@ -199,7 +199,7 @@ class _RecordControlState extends State<RecordControl> {
                   onPressed: widget.isRecording
                       ? null
                       : () {}, // You can handle send action here
-                ),
+                ),*/
               ],
             ),
           ],

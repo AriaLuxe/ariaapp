@@ -81,7 +81,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       final UserAria user = await userAriaRepository.getUserById(event.userId);
       emit(state.copyWith(
-        name: user.nickname,
+        name: "${user.nameUser} ${user.lastName}",
         urlPhoto: user.imgProfile,
         userId: user.id,
         chatStatus: ChatStatus.success,
@@ -396,10 +396,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final currentUserId = await SharedPreferencesManager.getUserId();
       final response = await userAriaRepository.checkBlock(
           currentUserId!, event.userLooking);
-      print('response');
-      print('response');
 
-      print(response);
       if (response == false) {
         emit(state.copyWith(meBlockYou: false));
       } else {
