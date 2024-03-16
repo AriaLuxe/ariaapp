@@ -1,5 +1,4 @@
 import 'package:ariapp/app/config/styles.dart';
-import 'package:ariapp/app/infrastructure/services/data_base_service.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
@@ -15,9 +14,9 @@ import 'app/presentation/layouts/widgets/app_navigation.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final databaseService = DatabaseService();
+  /*final databaseService = DatabaseService();
   final database = await databaseService.database;
-  await databaseService.create(database, 1);
+  await databaseService.create(database, 1);*/
 
   usersDependencies();
   chatsDependencies();
@@ -61,8 +60,6 @@ class MyApp extends StatelessWidget {
         routerConfig: AppNavigation.router,
         builder: DevicePreview.appBuilder,
         locale: DevicePreview.locale(context),
-
-        supportedLocales: const [Locale('en'), Locale('es')],
 
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
