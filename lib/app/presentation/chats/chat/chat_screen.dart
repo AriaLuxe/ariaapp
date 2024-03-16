@@ -213,7 +213,7 @@ class _ChatState extends State<Chat> {
                   state.recordingResponse
                       ? const LinearProgressIndicator()
                       : const SizedBox(),
-                  //TODO: SI YO LO BLOQUEO
+                  //TODO: SI YO LO BLOQUEO ok
                   state.isCreator
                       ? !state.meBlockYou
                           ? state.isBlock
