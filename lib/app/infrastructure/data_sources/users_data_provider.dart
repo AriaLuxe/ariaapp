@@ -565,12 +565,13 @@ class UsersDataProvider {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
-      final response = await http.post(
-        Uri.parse("${BaseUrlConfig.baseUrl}/applicant/idUser=$userId"),
+      final response = await http.get(
+        Uri.parse("${BaseUrlConfig.baseUrl}/applicant?idUser=$userId"),
         headers: {
           'Authorization': 'Bearer $token',
         },
       );
+      print(response.body);
       if (response.statusCode == 200) {
         return bool.parse(response.body);
       } else {

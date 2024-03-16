@@ -64,10 +64,11 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
     try {
       final List<UserAria> searchResults =
           await usersRepository.searchUser(event.keyword);
-
       List<UserAria> usersUpdated = [];
       if (event.keyword.isEmpty) {
-        for (final user in searchResults) {
+        final List<UserAria> users = await usersRepository.getAllFriends(0, 50);
+
+        for (final user in users) {
           if (!user.enabled!) {
             usersUpdated.add(user);
           }

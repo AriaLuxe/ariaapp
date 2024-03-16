@@ -96,6 +96,12 @@ class CheckBlockMeYou extends ChatEvent {
   const CheckBlockMeYou(this.userLooking);
 }
 
+class ToggleBlockMe extends ChatEvent {
+  final bool block;
+
+  const ToggleBlockMe(this.block);
+}
+
 class CheckIsCreator extends ChatEvent {
   final int userId;
 

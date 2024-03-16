@@ -34,7 +34,7 @@ class VoiceClone extends StatelessWidget {
         ),
       ));
   final errorSnackBar = const SnackBar(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.red,
       content: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

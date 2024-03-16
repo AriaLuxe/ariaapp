@@ -677,6 +677,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   Icons.remove_circle_outline,
                                                   color: Colors.red),
                                           onTap: () {
+                                            chatBloc
+                                                .onToggleBlockMe(state.isBlock);
+
                                             profileBloc.toggleBlockProfile(
                                                 widget.user?.id ?? 0,
                                                 state.isBlock);
