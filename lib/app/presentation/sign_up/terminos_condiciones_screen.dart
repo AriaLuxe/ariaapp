@@ -137,7 +137,7 @@ class TerminosCondicionesScreen extends StatelessWidget {
                           _buildSubtitle(
                             'La aplicación no comparte ni vende datos de usuarios a terceros. La información se utiliza exclusivamente dentro de la aplicación y con el fin de mejorar la calidad del servicio.',
                           ),
-                          _buildTitle('3. Cambios en los Términos:'),
+                          _buildTitle('4. Cambios en los Términos:'),
                           _buildSubtitle(
                             'Nos reservamos el derecho de modificar estos términos en cualquier momento y te notificaremos sobre cambios significativos. La continua utilización de la aplicación después de dichas modificaciones se considerará como aceptación de los nuevos términos',
                           ),
