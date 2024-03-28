@@ -19,6 +19,8 @@ class TextInput extends StatelessWidget {
     this.enabled = true,
     this.isAnimated = FloatingLabelBehavior.never,
     this.onTap,
+    this.maxLines,
+    this.minLines,
   });
 
   final String label;
@@ -35,10 +37,14 @@ class TextInput extends StatelessWidget {
   final Widget? suffixIcon;
   final bool obscureText;
   final double verticalPadding;
+  final int? maxLines;
+  final int? minLines;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: maxLines,
+      minLines: minLines,
       cursorColor: Colors.white,
       onTap: onTap,
       enabled: enabled,
@@ -86,13 +92,11 @@ class TextInput extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: Colors
-                .red,
+            color: Colors.red,
           ),
           borderRadius: BorderRadius.circular(15),
         ),
         errorText: errorMessage,
-
       ),
     );
   }

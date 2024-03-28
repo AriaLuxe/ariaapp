@@ -20,6 +20,9 @@ class ChatState extends Equatable {
   final bool isCreator;
   final bool meBlockYou;
 
+  final TextMessageInputValidator textMessageInputValidator;
+  final bool isValid;
+
   const ChatState({
     this.userId = 0,
     this.isFirstMessage = false,
@@ -37,6 +40,8 @@ class ChatState extends Equatable {
     this.isBlock = false,
     this.isCreator = false,
     this.meBlockYou = false,
+    this.textMessageInputValidator = const TextMessageInputValidator.pure(),
+    this.isValid = false,
   });
 
   ChatState copyWith({
@@ -57,6 +62,8 @@ class ChatState extends Equatable {
     bool? isBlock,
     bool? isCreator,
     bool? meBlockYou,
+    TextMessageInputValidator? textMessageInputValidator,
+    bool? isValid,
   }) {
     return ChatState(
       isFirstMessage: isFirstMessage ?? this.isFirstMessage,
@@ -75,6 +82,8 @@ class ChatState extends Equatable {
       isBlock: isBlock ?? this.isBlock,
       isCreator: isCreator ?? this.isCreator,
       meBlockYou: meBlockYou ?? this.meBlockYou,
+      textMessageInputValidator:
+          textMessageInputValidator ?? this.textMessageInputValidator,
     );
   }
 
@@ -95,6 +104,8 @@ class ChatState extends Equatable {
         messagesData,
         isBlock,
         isCreator,
-        meBlockYou
+        meBlockYou,
+        textMessageInputValidator,
+        isValid,
       ];
 }

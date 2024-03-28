@@ -40,7 +40,7 @@ class _VerifyCodeState extends State<VerifyCode> {
   @override
   void initState() {
     super.initState();
-    countdown = 180;
+    countdown = 300;
     startCountdown();
   }
 

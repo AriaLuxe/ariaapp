@@ -7,6 +7,12 @@ sealed class ChatEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class TextMessage extends ChatEvent {
+  const TextMessage(this.textMessage);
+
+  final String textMessage;
+}
+
 class MessageFetched extends ChatEvent {
   final int chatId;
   final int page;

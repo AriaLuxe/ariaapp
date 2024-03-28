@@ -2,11 +2,13 @@ import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
+import 'package:ariapp/app/presentation/chats/chat/validator/text_message_input_validator.dart';
 import 'package:ariapp/app/presentation/chats/chat/widgets/chat_message_widget.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -40,6 +42,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<CheckIsCreator>(_onCheckIsCreator);
     on<CheckBlockMeYou>(_onCheckBlockMeYou);
     on<ToggleBlockMe>(_onToggleBlockMe);
+    on<TextMessage>(_onTextMessageChanged);
+  }
+
+  void _onTextMessageChanged(
+    TextMessage event,
+    Emitter<ChatState> emit,
+  ) {
+    final textMessage = TextMessageInputValidator.dirty(event.textMessage);
+    emit(
+      state.copyWith(
+        textMessageInputValidator: textMessage,
+        isValid: Formz.validate(
+          [textMessage],
+        ),
+      ),
+    );
   }
 
   Future<void> _onMessageFetched(

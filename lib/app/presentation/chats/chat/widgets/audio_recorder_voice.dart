@@ -1,6 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/styles.dart';
+import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
+import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
@@ -113,98 +116,113 @@ class RecordControl extends StatefulWidget {
 }
 
 class _RecordControlState extends State<RecordControl> {
+  bool _isTyping = false;
+  final TextEditingController textMessageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPressStart: (_) {
-        widget.onStart();
-      },
-      onLongPressEnd: (_) {
-        widget.onStop();
-      },
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.13,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(23), topRight: Radius.circular(23)),
-          color: Styles.primaryColor,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            widget.isRecording
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 6.0),
-                    child: Text(
-                      'Grabando audio',
-                      style: TextStyle(color: Styles.primaryColor),
-                    ),
-                  )
-                : const SizedBox(),
-            widget.isRecording
-                ? const SizedBox()
-                : const Divider(color: Color(0xFF354271), thickness: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                /*IconButton(
-                  icon: Icon(Icons.backspace,
-                      color: widget.isRecording
-                          ? Styles.primaryColor
-                          : Colors.grey),
-                  onPressed: widget.isRecording ? widget.onCancel : null,
-                ),*/
-                widget.isRecording
-                    ? Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Styles.primaryColor,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: IconButton(
-                            icon: Flash(
-                              duration: const Duration(seconds: 2),
-                              infinite: true,
-                              child:
-                                  const Icon(Icons.pause, color: Colors.white),
-                            ),
-                            onPressed: widget.onStop,
+    final chatBloc = context.watch<ChatBloc>();
+
+    return BlocBuilder<ChatBloc, ChatState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: TextInput(
+                      errorMessage:
+                          state.textMessageInputValidator.errorMessage,
+                      maxLines: 3,
+                      minLines: 1,
+                      onChanged: (message) {
+                        context.read<ChatBloc>().add(TextMessage(message));
+                        if (message.isNotEmpty) {
+                          setState(() {
+                            _isTyping = true;
+                          });
+                        } else {
+                          setState(() {
+                            _isTyping = false;
+                          });
+                        }
+                      },
+                      controller: textMessageController,
+                      label: 'Escribe un mensaje...',
+                      verticalPadding: 0)),
+              const SizedBox(
+                width: 20,
+              ),
+              _isTyping
+                  ? Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 0,
+                            blurRadius: 15,
+                            offset: Offset(0, 0),
                           ),
-                        ),
-                      )
-                    : Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              spreadRadius: 0,
-                              blurRadius: 15,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.mic, color: Styles.primaryColor),
-                          onPressed: widget.onStart,
-                        ),
+                        ],
                       ),
-                /*IconButton(
-                  icon: Icon(Icons.send,
-                      color: widget.isRecording
-                          ? Styles.primaryColor
-                          : Colors.grey),
-                  onPressed: widget.isRecording
-                      ? null
-                      : () {}, // You can handle send action here
-                ),*/
-              ],
-            ),
-          ],
-        ),
-      ),
+                      child: IconButton(
+                        icon: Icon(Icons.send, color: Styles.primaryColor),
+                        onPressed: () {}, //TODO: implementar enviar texto
+                      ),
+                    )
+                  : GestureDetector(
+                      onLongPressStart: (_) {
+                        widget.onStart();
+                      },
+                      onLongPressEnd: (_) {
+                        widget.onStop();
+                      },
+                      child: widget.isRecording
+                          ? Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Styles.primaryColor,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: IconButton(
+                                  icon: Flash(
+                                    duration: const Duration(seconds: 2),
+                                    infinite: true,
+                                    child: const Icon(Icons.pause,
+                                        color: Colors.white),
+                                  ),
+                                  onPressed: widget.onStop,
+                                ),
+                              ),
+                            )
+                          : Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    spreadRadius: 0,
+                                    blurRadius: 15,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                              ),
+                              child: IconButton(
+                                icon:
+                                    Icon(Icons.mic, color: Styles.primaryColor),
+                                onPressed: widget.onStart,
+                              ),
+                            ),
+                    ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
