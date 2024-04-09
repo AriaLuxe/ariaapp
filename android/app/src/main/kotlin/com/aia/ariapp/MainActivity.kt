@@ -1,4 +1,4 @@
-package com.aia.ariapp
+package com.aia.aiapp
 
 import io.flutter.embedding.android.FlutterActivity
 
