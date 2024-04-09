@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -8,9 +11,11 @@ class ChatMessageWidget extends StatelessWidget {
   final DateTime dateTime;
   final AudioPlayer audioPlayer;
   final String audioUrl;
+  final String text;
   final bool? read;
   final bool? isMe;
   final Color color;
+  final TypeMsg typeMsg;
   const ChatMessageWidget({
     super.key,
     required this.dateTime,
@@ -19,6 +24,8 @@ class ChatMessageWidget extends StatelessWidget {
     required this.audioPlayer,
     required this.audioUrl,
     required this.color,
+    required this.typeMsg,
+    required this.text,
   });
 
   @override
@@ -30,7 +37,7 @@ class ChatMessageWidget extends StatelessWidget {
         children: [
           Container(
               child: isMe == true
-                  ? _myMessage(textTheme)
+                  ? _myMessage(textTheme, typeMsg)
                   : _notMyMessage(textTheme)),
         ],
       ),
@@ -38,7 +45,7 @@ class ChatMessageWidget extends StatelessWidget {
   }
 
   // Widget para mensajes del emisor actual (advisor)
-  Widget _myMessage(TextTheme textTheme) {
+  Widget _myMessage(TextTheme textTheme, TypeMsg typeMsg) {
     final MessageStatusInfo statusInfo = getStatusInfo(read!);
     return Align(
       alignment: Alignment.centerRight,
@@ -58,7 +65,7 @@ class ChatMessageWidget extends StatelessWidget {
                 bottomRight: Radius.circular(30),
               ),
             ),
-            child: _getMessageContent(),
+            child: _getMessageContent(typeMsg),
           ),
           // Contenedor de la hora del mensaje
           Container(
@@ -105,7 +112,7 @@ class ChatMessageWidget extends StatelessWidget {
                 bottomRight: Radius.circular(30),
               ),
             ),
-            child: _getMessageContent(),
+            child: _getMessageContent(typeMsg),
           ),
           // Contenedor de la hora del mensaje
           Container(
@@ -121,11 +128,18 @@ class ChatMessageWidget extends StatelessWidget {
     );
   }
 
-  Widget _getMessageContent() {
-    return AudioMessageContent(
-      audioPlayer: audioPlayer,
-      audioUrl: audioUrl,
-    );
+  Widget _getMessageContent(TypeMsg typeMsg) {
+    if (typeMsg == TypeMsg.audio) {
+      return AudioMessageContent(
+        audioPlayer: audioPlayer,
+        audioUrl: audioUrl,
+      );
+    } else {
+      return Text(
+        text,
+        style: const TextStyle(color: Colors.white),
+      );
+    }
   }
 }
 

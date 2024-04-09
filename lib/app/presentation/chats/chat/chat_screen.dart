@@ -93,7 +93,7 @@ class _ChatState extends State<Chat> {
         chatBloc.loadMoreMessages(
           widget.chatId,
           page,
-          8,
+          12,
         );
       }
     });
@@ -232,6 +232,8 @@ class _ChatState extends State<Chat> {
                                         widget.chatId,
                                         widget.userReceivedId,
                                         audioPath!,
+                                        '',
+                                        TypeMsg.audio,
                                       );
                                       chatBloc.isRecording(false);
                                       final AudioPlayer _audioPlayerNotify =
@@ -247,6 +249,8 @@ class _ChatState extends State<Chat> {
                                     }
                                     // showPlayer = true;
                                   },
+                                  chatId: widget.chatId,
+                                  userReceivedId: widget.userReceivedId,
                                 )
                           : showStatusUserWidget('Desbloquea usuario')
                       : showStatusUserWidget('El usuario ya no\nes creador'),

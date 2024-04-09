@@ -103,7 +103,7 @@ class _ChatsListState extends State<ChatsList> {
                           child: GestureDetector(
                             onTap: () {
                               chatBloc.dataChatFetched(chat.userId);
-                              chatBloc.messageFetched(chat.chatId!, 0, 8);
+                              chatBloc.messageFetched(chat.chatId!, 0, 12);
                               context.push(
                                   '/chat/${chat.chatId}/${chat.chatId!}/${chat.userId}');
                             },

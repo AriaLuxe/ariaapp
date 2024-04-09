@@ -43,8 +43,8 @@ class TextInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      maxLines: maxLines,
-      minLines: minLines,
+      maxLines: maxLines ?? 1,
+      minLines: minLines ?? 1,
       cursorColor: Colors.white,
       onTap: onTap,
       enabled: enabled,

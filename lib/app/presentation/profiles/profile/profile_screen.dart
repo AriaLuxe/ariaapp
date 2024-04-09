@@ -395,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         widget.user!.id!);
                                             if (response is ChatModel) {
                                               chatBloc.messageFetched(
-                                                  response.chatId!, 0, 8);
+                                                  response.chatId!, 0, 12);
 
                                               context.push(
                                                   '/chat/${response.chatId!}/${response.chatId!}/${widget.user!.id!}');

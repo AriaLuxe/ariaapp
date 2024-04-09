@@ -19,30 +19,31 @@ class ChatState extends Equatable {
   final bool isBlock;
   final bool isCreator;
   final bool meBlockYou;
+  final bool isReadyToTraining;
 
   final TextMessageInputValidator textMessageInputValidator;
   final bool isValid;
 
-  const ChatState({
-    this.userId = 0,
-    this.isFirstMessage = false,
-    this.name = '',
-    this.urlPhoto = '',
-    this.messages = const <ChatMessageWidget>[],
-    this.messagesData = const <Message>[],
-    this.audioControllers = const [],
-    this.chatStatus = ChatStatus.initial,
-    this.isRecording = false,
-    this.recordingResponse = false,
-    this.path = '',
-    this.currentPage = 0,
-    this.hasMoreMessages = false,
-    this.isBlock = false,
-    this.isCreator = false,
-    this.meBlockYou = false,
-    this.textMessageInputValidator = const TextMessageInputValidator.pure(),
-    this.isValid = false,
-  });
+  const ChatState(
+      {this.userId = 0,
+      this.isFirstMessage = false,
+      this.name = '',
+      this.urlPhoto = '',
+      this.messages = const <ChatMessageWidget>[],
+      this.messagesData = const <Message>[],
+      this.audioControllers = const [],
+      this.chatStatus = ChatStatus.initial,
+      this.isRecording = false,
+      this.recordingResponse = false,
+      this.path = '',
+      this.currentPage = 0,
+      this.hasMoreMessages = false,
+      this.isBlock = false,
+      this.isCreator = false,
+      this.meBlockYou = false,
+      this.textMessageInputValidator = const TextMessageInputValidator.pure(),
+      this.isValid = false,
+      this.isReadyToTraining = false});
 
   ChatState copyWith({
     List<ChatMessageWidget>? messages,
@@ -64,6 +65,7 @@ class ChatState extends Equatable {
     bool? meBlockYou,
     TextMessageInputValidator? textMessageInputValidator,
     bool? isValid,
+    bool? isReadyToTraining,
   }) {
     return ChatState(
       isFirstMessage: isFirstMessage ?? this.isFirstMessage,
@@ -84,6 +86,7 @@ class ChatState extends Equatable {
       meBlockYou: meBlockYou ?? this.meBlockYou,
       textMessageInputValidator:
           textMessageInputValidator ?? this.textMessageInputValidator,
+      isReadyToTraining: isReadyToTraining ?? this.isReadyToTraining,
     );
   }
 
@@ -107,5 +110,6 @@ class ChatState extends Equatable {
         meBlockYou,
         textMessageInputValidator,
         isValid,
+        isReadyToTraining,
       ];
 }

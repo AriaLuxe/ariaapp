@@ -10,9 +10,10 @@ class MessageRepository extends MessageInterface {
   });
 
   @override
-  Future<Message> createMessage(int chatId, int userId, String audioPath) {
+  Future<Message> createMessage(
+      int chatId, int userId, String audioPath, String text) {
     final response =
-        messageDataProvider.createMessage(chatId, userId, audioPath);
+        messageDataProvider.createMessage(chatId, userId, audioPath, text);
     return response;
   }
 
@@ -26,9 +27,9 @@ class MessageRepository extends MessageInterface {
 
   @override
   Future<Message> responseMessage(
-      int chatId, int userReceivedId, String audioPath) {
-    final response =
-        messageDataProvider.responseMessage(chatId, userReceivedId, audioPath);
+      int chatId, int userReceivedId, String audioPath, String text) {
+    final response = messageDataProvider.responseMessage(
+        chatId, userReceivedId, audioPath, text);
     return response;
   }
 
@@ -48,6 +49,11 @@ class MessageRepository extends MessageInterface {
   Future<dynamic> getFavoritesMessages(int userLogged, int idUserLooking) {
     final response =
         messageDataProvider.getFavoritesMessages(userLogged, idUserLooking);
+    return response;
+  }
+
+  Future<bool> isReadyToTraining(int userLogged, int chatId) async {
+    final response = messageDataProvider.isReadyToTraining(userLogged, chatId);
     return response;
   }
 }

@@ -20,6 +20,7 @@ class ChatsDataProvider {
       );
 
       List<ChatModel> chats = ChatModel.toChatsList(response.body);
+
       return chats;
     } catch (error) {
       throw Exception(error);

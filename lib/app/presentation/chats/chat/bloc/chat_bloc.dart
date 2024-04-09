@@ -1,4 +1,5 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
+import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
@@ -43,6 +44,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<CheckBlockMeYou>(_onCheckBlockMeYou);
     on<ToggleBlockMe>(_onToggleBlockMe);
     on<TextMessage>(_onTextMessageChanged);
+    on<IsReadyTraining>(_isReadyToTraining);
   }
 
   void _onTextMessageChanged(
@@ -148,7 +150,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       List<Message> updatedMessageData = List.from(state.messagesData);
 
       // 1. Agregar mensaje del usuario actual
-      final userMessage = _createUserMessage(event.audioPath);
+      final userMessage = _createUserMessage(
+        event.audioPath,
+        event.text,
+        event.typeMsg,
+      );
+      print(userMessage.text);
       updatedMessage.insert(0, userMessage);
       emit(state.copyWith(messages: updatedMessage, recordingResponse: true));
       // 2. Enviar mensaje a la api
@@ -156,19 +163,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         event.chatId,
         userId!,
         event.audioPath,
+        event.text,
       );
       updatedMessageData.insert(0, messageCreated);
       emit(state.copyWith(messagesData: updatedMessageData));
 
       final messageResponse = await messageRepository.responseMessage(
-        event.chatId,
-        event.userReceivedId,
-        event.audioPath,
-      );
+          event.chatId, event.userReceivedId, event.audioPath, event.text);
       // 3. Agregar mensaje de respuesta
       updatedMessageData.insert(0, messageResponse);
 
-      final responseMessage = _createResponseMessage(messageResponse);
+      final responseMessage =
+          _createResponseMessage(messageResponse, messageResponse.msgText);
       List<ChatMessageWidget> finalMessages = List.from(state.messages);
 
       finalMessages.insert(0, responseMessage);
@@ -182,44 +188,80 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         recordingResponse: false,
       ));
     } catch (e) {
+      print(e);
       emit(state.copyWith(chatStatus: ChatStatus.error));
     }
   }
 
 // Función para crear el mensaje del usuario actual
-  ChatMessageWidget _createUserMessage(String audioPath) {
+  ChatMessageWidget _createUserMessage(
+      String audioPath, String text, TypeMsg typeMsg) {
     final audioPlayer = AudioPlayer();
-    if (audioPath != null && audioPath.isNotEmpty) {
-      audioPlayer.setFilePath(audioPath);
+
+    if (audioPath == '') {
+      return ChatMessageWidget(
+        color: const Color(0xFF354271),
+        dateTime: DateTime.now(),
+        read: false,
+        isMe: true,
+        audioPlayer: audioPlayer,
+        audioUrl: audioPath,
+        typeMsg: TypeMsg.text,
+        text: text,
+      );
+    } else {
+      if (audioPath != null && audioPath.isNotEmpty) {
+        audioPlayer.setFilePath(audioPath);
+      }
+      return ChatMessageWidget(
+        color: const Color(0xFF354271),
+        dateTime: DateTime.now(),
+        read: false,
+        isMe: true,
+        audioPlayer: audioPlayer,
+        audioUrl: audioPath,
+        typeMsg: TypeMsg.audio,
+        text: text,
+      );
     }
-    return ChatMessageWidget(
-      color: const Color(0xFF354271),
-      dateTime: DateTime.now(),
-      read: false,
-      isMe: true,
-      audioPlayer: audioPlayer,
-      audioUrl: audioPath,
-    );
   }
 
 // Función para crear el mensaje de respuesta
-  ChatMessageWidget _createResponseMessage(Message messageResponse) {
+  ChatMessageWidget _createResponseMessage(
+      Message messageResponse, String text) {
     final audioPlayerResponse = AudioPlayer();
-    audioPlayerResponse.setUrl(
-        'https://uploadsaria.blob.core.windows.net/files/${messageResponse.content}');
 
-    return ChatMessageWidget(
-      color: const Color(0xFF354271),
-      dateTime: DateTime.now(),
-      read: messageResponse.read,
-      isMe: false,
-      audioPlayer: audioPlayerResponse,
-      audioUrl: messageResponse.content,
-    );
+    if (messageResponse.content == '') {
+      return ChatMessageWidget(
+        color: const Color(0xFF354271),
+        dateTime: DateTime.now(),
+        read: false,
+        isMe: false,
+        audioPlayer: audioPlayerResponse,
+        audioUrl: '',
+        typeMsg: TypeMsg.text,
+        text: text,
+      );
+    } else {
+      audioPlayerResponse.setUrl(
+          'https://uploadsaria.blob.core.windows.net/files/${messageResponse.content}');
+
+      return ChatMessageWidget(
+        color: const Color(0xFF354271),
+        dateTime: DateTime.now(),
+        read: messageResponse.read,
+        isMe: false,
+        audioPlayer: audioPlayerResponse,
+        audioUrl: messageResponse.content,
+        typeMsg: TypeMsg.audio,
+        text: '',
+      );
+    }
   }
 
-  void messageSent(int chatId, int userReceivedId, String audioPath) {
-    add(MessageSent(chatId, audioPath, userReceivedId));
+  void messageSent(int chatId, int userReceivedId, String audioPath,
+      String text, TypeMsg typeMsg) {
+    add(MessageSent(chatId, audioPath, userReceivedId, text, typeMsg));
   }
 
   // Función para procesar los mensajes
@@ -230,25 +272,42 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     for (final message in messages) {
       String? audioUrl;
       AudioPlayer? audioPlayer;
+      String? text;
+      audioPlayer = AudioPlayer();
+      if (message.msgText.isEmpty) {
+        audioUrl = message.content;
+        if (audioUrl != null) {
+          audioPlayer.setUrl(
+              'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+          audioControllers.add(audioPlayer);
+        }
 
-      audioUrl = message.content;
-      if (audioUrl != null) {
-        audioPlayer = AudioPlayer();
-        audioPlayer.setUrl(
-            'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
-        audioControllers.add(audioPlayer);
+        chatMessages.add(
+            //  0,
+            ChatMessageWidget(
+          color: const Color(0xFF354271),
+          audioPlayer: audioPlayer!,
+          audioUrl: audioUrl,
+          dateTime: message.date,
+          read: message.read,
+          isMe: message.sender == userId,
+          typeMsg: TypeMsg.audio,
+          text: '',
+        ));
+      } else {
+        print(message.msgText);
+        text = message.msgText;
+        chatMessages.add(ChatMessageWidget(
+          color: const Color(0xFF354271),
+          audioPlayer: audioPlayer,
+          audioUrl: '',
+          dateTime: message.date,
+          read: message.read,
+          isMe: message.sender == userId,
+          typeMsg: TypeMsg.text,
+          text: text,
+        ));
       }
-
-      chatMessages.add(
-          //  0,
-          ChatMessageWidget(
-        color: const Color(0xFF354271),
-        audioPlayer: audioPlayer!,
-        audioUrl: audioUrl,
-        dateTime: message.date,
-        read: message.read,
-        isMe: message.sender == userId,
-      ));
     }
     return chatMessages;
   }
@@ -262,7 +321,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       if (event.index < updatedMessages.length) {
         final ChatMessageWidget processedMessage = _processMessageSelected(
-            state.messagesData[event.index], event.userId);
+            state.messagesData[event.index],
+            event.userId,
+            state.messages[event.index].text.isEmpty
+                ? TypeMsg.audio
+                : TypeMsg.text);
 
         state.messages[event.index] = processedMessage;
       }
@@ -279,28 +342,46 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     add(SelectedMessage(id, userId));
   }
 
-  ChatMessageWidget _processMessageSelected(Message message, int userId) {
+  ChatMessageWidget _processMessageSelected(
+      Message message, int userId, TypeMsg typeMsg) {
     final List<AudioPlayer> audioControllers = [];
 
     String? audioUrl;
     AudioPlayer? audioPlayer;
+    String? text;
+    if (typeMsg == TypeMsg.audio) {
+      audioUrl = message.content;
+      if (audioUrl != null) {
+        audioPlayer = AudioPlayer();
+        audioPlayer.setUrl(
+            'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+        audioControllers.add(audioPlayer);
+      }
 
-    audioUrl = message.content;
-    if (audioUrl != null) {
-      audioPlayer = AudioPlayer();
-      audioPlayer
-          .setUrl('https://uploadsaria.blob.core.windows.net/files/$audioUrl');
-      audioControllers.add(audioPlayer);
+      return ChatMessageWidget(
+        color: const Color(0xFF5368d6),
+        audioPlayer: audioPlayer!,
+        audioUrl: audioUrl,
+        dateTime: message.date,
+        read: message.read,
+        isMe: message.sender == userId,
+        typeMsg: typeMsg,
+        text: '',
+      );
+    } else {
+      text = message.msgText;
+
+      return ChatMessageWidget(
+        color: const Color(0xFF5368d6),
+        audioPlayer: audioPlayer!,
+        audioUrl: '',
+        dateTime: message.date,
+        read: message.read,
+        isMe: message.sender == userId,
+        typeMsg: typeMsg,
+        text: text,
+      );
     }
-
-    return ChatMessageWidget(
-      color: const Color(0xFF5368d6),
-      audioPlayer: audioPlayer!,
-      audioUrl: audioUrl,
-      dateTime: message.date,
-      read: message.read,
-      isMe: message.sender == userId,
-    );
   }
 
   Future<void> _onShowPlayer(ShowPlayer event, Emitter<ChatState> emit) async {
@@ -458,4 +539,26 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   void checkCreator(int userId) {
     add(CheckIsCreator(userId));
   }
+
+  Future<void> _isReadyToTraining(
+      IsReadyTraining event, Emitter<ChatState> emit) async {
+    try {
+      print('entre');
+      int? userLogged = await SharedPreferencesManager.getUserId();
+      final response =
+          await messageRepository.isReadyToTraining(userLogged!, event.chatId);
+      emit(state.copyWith(isCreator: response));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  void isReadyToTraining(int chatId) {
+    add(IsReadyTraining(chatId));
+  }
+}
+
+enum TypeMsg {
+  text,
+  audio,
 }

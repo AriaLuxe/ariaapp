@@ -223,7 +223,7 @@ class _PeopleListState extends State<PeopleList> {
                                                           user.id!);
                                               if (response is ChatModel) {
                                                 chatBloc.messageFetched(
-                                                    response.chatId!, 0, 8);
+                                                    response.chatId!, 0, 12);
 
                                                 context.push(
                                                     '/chat/${response.chatId!}/${response.chatId!}/${user.id!}');
