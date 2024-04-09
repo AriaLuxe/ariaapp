@@ -547,7 +547,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       int? userLogged = await SharedPreferencesManager.getUserId();
       final response =
           await messageRepository.isReadyToTraining(userLogged!, event.chatId);
-      emit(state.copyWith(isCreator: response));
+      emit(state.copyWith(isReadyToTraining: response));
     } catch (e) {
       throw Exception(e);
     }

@@ -141,7 +141,6 @@ class _RecordControlState extends State<RecordControl> {
     final chatBloc = context.watch<ChatBloc>();
     final chatListBloc = context.watch<ChatListBloc>();
     final userLoggedId = GetIt.instance<UserLogged>().user.id;
-
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return Padding(
@@ -251,11 +250,14 @@ class _RecordControlState extends State<RecordControl> {
                               ),
                             ),
                     ),
+              const SizedBox(
+                width: 10,
+              ),
               state.isReadyToTraining
                   ? Container(
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white,
+                        color: Color(0xFF5368d6),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey,
@@ -267,28 +269,29 @@ class _RecordControlState extends State<RecordControl> {
                       ),
                       child: IconButton(
                         icon: Icon(Icons.send, color: Styles.primaryColor),
-                        onPressed: textMessageController.text.isEmpty
-                            ? null
-                            : () async {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomDialog(
-                                      text:
-                                          '¿Estás seguro de enviar chat para entrenar?',
-                                      onOk: () async {
-                                        final messageDataProvider =
-                                            MessageDataProvider();
-                                        await messageDataProvider.sendTraining(
-                                            userLoggedId!, widget.chatId);
-                                      },
-                                      onCancel: () {
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  },
-                                );
-                              }, //TODO: implementar enviar texto
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomDialog(
+                                text:
+                                    '¿Estás seguro de enviar chat para entrenar?',
+                                onOk: () async {
+                                  final messageDataProvider =
+                                      MessageDataProvider();
+                                  await messageDataProvider.sendTraining(
+                                      userLoggedId!, widget.chatId);
+                                  chatBloc.isReadyToTraining(widget.chatId);
+
+                                  Navigator.pop(context);
+                                },
+                                onCancel: () {
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        }, //TODO: implementar enviar texto
                       ),
                     )
                   : const SizedBox(),
