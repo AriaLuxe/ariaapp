@@ -1,8 +1,10 @@
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/get_started/widgets/get_started_4.dart';
+import 'package:ariapp/app/presentation/notifications/notifications_bloc.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/injections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,12 +42,14 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
     bool? hasSeenGetStarted =
         await SharedPreferencesManager.getHasSeenGetStarted();
     await Future.delayed(const Duration(seconds: 3));
+    context.read<NotificationsBloc>().requestPermission();
 
     if (hasSeenGetStarted == null || hasSeenGetStarted == false) {
       setState(() {
         isLoadingPage = false;
       });
       SharedPreferencesManager.saveHasSeenGetStarted(true);
+
       return;
     } else {
       if (token != null) {

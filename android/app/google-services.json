@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "142730292188",
+    "project_id": "aiaapp-e617c",
+    "storage_bucket": "aiaapp-e617c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142730292188:android:7974c9369e3861f08c3d19",
+        "android_client_info": {
+          "package_name": "com.aia.aiapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsXgIgB9ZlDxUy0xJNzIWdA57PmgB9s94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
