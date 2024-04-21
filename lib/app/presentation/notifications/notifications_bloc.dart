@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:ariapp/app/domain/entities/push_message.dart';
 import 'package:ariapp/firebase_options.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +16,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationsBloc() : super(const NotificationsState()) {
     on<NotificationStatusChanged>(_notificationStatusChanged);
+    on<NotificationRecived>(_onPushMessageRecived);
+
     // Verificar estado de las notificaciones
     _intialStatusCheck();
     // Listener para notificaciones en foreground
@@ -31,7 +36,16 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       status: event.status,
     ));
     //
-    _getFCMToken();
+    getFCMToken();
+  }
+
+  void _onPushMessageRecived(
+      NotificationRecived event, Emitter<NotificationsState> emit) {
+    emit(state.copyWith(
+      notifications: [event.notification, ...state.notifications],
+    ));
+    //
+    getFCMToken();
   }
 
   void _intialStatusCheck() async {
@@ -40,10 +54,10 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     add(NotificationStatusChanged(status: settings.authorizationStatus));
   }
 
-  void _getFCMToken() async {
-    if (state.status != AuthorizationStatus.authorized) return;
+  Future<String> getFCMToken() async {
+    if (state.status != AuthorizationStatus.authorized) return '';
     final token = await messaging.getToken();
-    print(token);
+    return token!;
   }
 
   void _handlerRemoteMessage(RemoteMessage message) {
@@ -52,6 +66,18 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     if (message.notification == null) return;
     print('Message also contained a notification: ${message.notification}');
+    final notification = PushMessage(
+      messageId:
+          message.messageId?.replaceAll(':', '').replaceAll('%', '') ?? '',
+      title: message.notification!.title ?? '',
+      body: message.notification!.body ?? '',
+      sentDate: message.sentTime ?? DateTime.now(),
+      data: message.data,
+      imageUrl: Platform.isAndroid
+          ? message.notification!.android?.imageUrl
+          : message.notification!.apple?.imageUrl,
+    );
+    add(NotificationRecived(notification: notification));
   }
 
   void _onForegroundMessage() {

@@ -1,5 +1,6 @@
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
+import 'package:ariapp/app/presentation/notifications/notifications_bloc.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
@@ -211,8 +212,12 @@ class _SignInFormState extends State<SignInForm> {
                                 });
 
                                 final signInService = SignInService();
+                                final tokenFCM = await context
+                                    .read<NotificationsBloc>()
+                                    .getFCMToken();
+
                                 final response = await signInService.signIn(
-                                    email.text, password.text);
+                                    email.text, password.text, tokenFCM);
 
                                 if (response.containsKey('token')) {
                                   final token = response['token'];
