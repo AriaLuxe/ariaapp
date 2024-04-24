@@ -5,7 +5,6 @@ import 'package:ariapp/app/presentation/notifications/notifications_bloc.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/sign_in_service.dart';
 import 'package:ariapp/injections.dart';
@@ -146,36 +145,46 @@ class _SignInFormState extends State<SignInForm> {
                               },
                             );
                           } else {
-                            if (response == 'Email sent sucessfully') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VerifyCode(
-                                        email: email.text.trim(),
-                                        verify: 'Verificar código',
-                                        isResetPassword: true)),
-                              );
-                            } else if (response ==
-                                'A code has already been sent') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VerifyCode(
-                                        email: email.text.trim(),
-                                        verify: 'Verificar código',
-                                        isResetPassword: true)),
-                              );
-                            } else if (response ==
-                                'Does not exist an account with this email') {
-                              CustomDialogs().showConfirmationDialog(
-                                context: context,
-                                title: 'Alerta',
-                                content:
-                                    'No existe una cuenta con este correo, por favor, ingrese nuevamente',
-                                onAccept: () {
-                                  Navigator.pop(context);
-                                },
-                              );
+                            switch (response) {
+                              case EmailToResetPasswordResponse
+                                    .sentSuccessfully:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VerifyCode(
+                                          email: email.text.trim(),
+                                          verify: 'Verificar código',
+                                          isResetPassword: true)),
+                                );
+                              case EmailToResetPasswordResponse.codeAlreadySent:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VerifyCode(
+                                          email: email.text.trim(),
+                                          verify: 'Verificar código',
+                                          isResetPassword: true)),
+                                );
+                              case EmailToResetPasswordResponse.accountNotFound:
+                                CustomDialogs().showConfirmationDialog(
+                                  context: context,
+                                  title: 'Alerta',
+                                  content:
+                                      'No existe una cuenta con este correo, por favor, ingrese nuevamente',
+                                  onAccept: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                                break;
+                              default:
+                                CustomDialogs().showConfirmationDialog(
+                                  context: context,
+                                  title: 'Alerta',
+                                  content: 'Error desconocido',
+                                  onAccept: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
                             }
                           }
                         },

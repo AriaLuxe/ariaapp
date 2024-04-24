@@ -35,11 +35,22 @@ class EmailValidationDataProvider {
     }
   }
 
-  Future<String> sendEmailToResetPassword(String email) async {
+  Future<EmailToResetPasswordResponse> sendEmailToResetPassword(
+      String email) async {
     try {
       final response = await http.post(Uri.parse(
           '${BaseUrlConfig.baseUrl}/$endPoint/password/token?email=$email'));
-      return response.body;
+      if (email.isEmpty) {
+        return EmailToResetPasswordResponse.unknown;
+      } else if (response == 'Email sent sucessfully') {
+        return EmailToResetPasswordResponse.sentSuccessfully;
+      } else if (response == 'A code has already been sent') {
+        return EmailToResetPasswordResponse.codeAlreadySent;
+      } else if (response == 'Does not exist an account with this email') {
+        return EmailToResetPasswordResponse.accountNotFound;
+      } else {
+        return EmailToResetPasswordResponse.unknown;
+      }
     } catch (e) {
       throw Exception(e);
     }
@@ -65,4 +76,11 @@ class EmailValidationDataProvider {
       throw Exception(e);
     }
   }
+}
+
+enum EmailToResetPasswordResponse {
+  sentSuccessfully,
+  codeAlreadySent,
+  accountNotFound,
+  unknown,
 }
