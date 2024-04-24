@@ -1,6 +1,4 @@
 import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
-import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
-import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
 import 'package:ariapp/app/presentation/voice/bloc/voice_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
@@ -8,7 +6,6 @@ import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart
 import 'package:ariapp/app/presentation/voice/voice_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_voice_clone.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';

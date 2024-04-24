@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/domain/entities/message.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/widgets/favorites_messages_widget.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
@@ -66,8 +67,7 @@ class FavoritesMessagesBloc
       audioUrl = message.content;
       if (audioUrl != null) {
         audioPlayer = AudioPlayer();
-        audioPlayer.setUrl(
-            'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+        audioPlayer.setUrl('${BaseUrlConfig.baseUrlImage}$audioUrl');
         audioControllers.add(audioPlayer);
       }
 

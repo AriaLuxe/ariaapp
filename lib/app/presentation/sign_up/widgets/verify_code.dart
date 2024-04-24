@@ -1,17 +1,15 @@
 import 'dart:async';
 
 import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
+import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
+import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/reset_password.dart';
+import 'package:ariapp/app/presentation/widgets/code_input.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-
-import '../../../domain/entities/user_aria.dart';
-import '../../../infrastructure/repositories/user_aria_repository.dart';
-import '../../widgets/code_input.dart';
 
 class VerifyCode extends StatefulWidget {
   const VerifyCode(
@@ -203,72 +201,84 @@ class _VerifyCodeState extends State<VerifyCode> {
                                 final response = await emailValidation
                                     .verifyCodeToResetPassword(
                                         widget.email, _controller.text);
+                                switch (response) {
+                                  case CodeToResetPasswordResponse.codeValid:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
 
-                                if (response == 'Code valid') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ResetPassword(
-                                                email: widget.email.trim(),
-                                              )));
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                } else if (response == 'No match code') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  await Future.delayed(
-                                      const Duration(seconds: 2));
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                  CustomDialogs().showConfirmationDialog(
-                                    context: context,
-                                    title: 'Alerta',
-                                    content: 'Código incorrecto',
-                                    onAccept: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                } else if (response ==
-                                    'Does not exist a code with this email') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  CustomDialogs().showConfirmationDialog(
-                                    context: context,
-                                    title: 'Alerta',
-                                    content:
-                                        'Código vencido, por favor, reenviar nuevamente',
-                                    onAccept: () {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                } else if (response ==
-                                    'There is no code with this email') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  CustomDialogs().showConfirmationDialog(
-                                    context: context,
-                                    title: 'Alerta',
-                                    content:
-                                        'Usuario no registrado con este correo',
-                                    onAccept: () {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ResetPassword(
+                                                  email: widget.email.trim(),
+                                                )));
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  case CodeToResetPasswordResponse.noMatchCode:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content: 'Código incorrecto',
+                                      onAccept: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  case CodeToResetPasswordResponse.codeExpired:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content:
+                                          'Código vencido, por favor, reenviar nuevamente',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  case CodeToResetPasswordResponse
+                                        .userNotRegistered:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content:
+                                          'Usuario no registrado con este correo',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                    break;
+                                  default:
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content: 'Error desconocido',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
                                 }
                               } else {
                                 //registrar user
@@ -277,73 +287,116 @@ class _VerifyCodeState extends State<VerifyCode> {
                                 final response = await emailValidation
                                     .verifyCodeWithEmailToRegisterUser(
                                         widget.email, _controller.text);
-                                if (response == 'Code valid') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  CustomDialogs().showConfirmationDialog(
-                                    context: context,
-                                    title: 'Alerta',
-                                    content:
-                                        '¡Felicidades!\nSu cuenta ha sido creada con éxito. Inicie sesión para comenzar.',
-                                    onAccept: () async {
-                                      final user = UserAria(
-                                          nameUser: widget.user!.nameUser,
-                                          lastName: widget.user!.lastName,
-                                          email: widget.user!.email,
-                                          password: widget.user!.password,
-                                          gender: widget.user!.gender,
-                                          country: widget.user!.country,
-                                          city: widget.user!.city,
-                                          nickname: widget.user!.nickname,
-                                          dateBirth: widget.user!.dateBirth,
-                                          role: widget.user!.role);
-                                      await usersRepository.signUp(user);
 
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SignInScreen(),
-                                        ),
-                                      );
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                    },
-                                  );
-                                } else if (response == 'No match code') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  CustomDialogs().showConfirmationDialog(
-                                    context: context,
-                                    title: 'Alerta',
-                                    content: 'Código incorrecto',
-                                    onAccept: () {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                } else if (response ==
-                                    'There is no code with this email') {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  CustomDialogs().showConfirmationDialog(
-                                    context: context,
-                                    title: 'Alerta',
-                                    content:
-                                        'Código vencido, por favor, reenviar nuevamente',
-                                    onAccept: () {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
+                                switch (response) {
+                                  case CodeWithEmailToRegisterUserResponse
+                                        .codeValid:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content:
+                                          '¡Felicidades!\nSu cuenta ha sido creada con éxito. Inicie sesión para comenzar.',
+                                      onAccept: () async {
+                                        final user = UserAria(
+                                            nameUser: widget.user!.nameUser,
+                                            lastName: widget.user!.lastName,
+                                            email: widget.user!.email,
+                                            password: widget.user!.password,
+                                            gender: widget.user!.gender,
+                                            country: widget.user!.country,
+                                            city: widget.user!.city,
+                                            nickname: widget.user!.nickname,
+                                            dateBirth: widget.user!.dateBirth,
+                                            role: widget.user!.role);
+                                        await usersRepository.signUp(user);
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignInScreen(),
+                                          ),
+                                        );
+                                        setState(() {
+                                          isLoading = true;
+                                        });
+                                      },
+                                    );
+                                  case CodeWithEmailToRegisterUserResponse
+                                        .noMatchCode:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content: 'Código incorrecto',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                    break;
+                                  case CodeWithEmailToRegisterUserResponse
+                                        .codeExpired:
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content:
+                                          'Código vencido, por favor, reenviar nuevamente',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  case CodeWithEmailToRegisterUserResponse
+                                        .userNotRegistered:
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content: 'Usuario no registrado',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  case CodeWithEmailToRegisterUserResponse
+                                        .invalidResponse:
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content: 'Invalid Data',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  default:
+                                    CustomDialogs().showConfirmationDialog(
+                                      context: context,
+                                      title: 'Alerta',
+                                      content: 'Error desonocido',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
                                 }
                               }
                             },

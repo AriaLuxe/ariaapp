@@ -27,7 +27,14 @@ class ChatsDataProvider {
 
         return createdChat;
       } else if (response.statusCode == 400) {
-        return response.body;
+        final responseBody = response.body;
+        if (responseBody == 'This user is not a creator') {
+          return CreateChatResponse.userNotCreator;
+        } else if (responseBody == 'Same user') {
+          return CreateChatResponse.sameUser;
+        } else {
+          return CreateChatResponse.unknownError;
+        }
       } else {
         throw Exception('Error al crear el chat: ${response.statusCode}');
       }
@@ -110,3 +117,5 @@ class ChatsDataProvider {
     }
   }
 }
+
+enum CreateChatResponse { chatCreated, userNotCreator, sameUser, unknownError }

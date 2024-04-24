@@ -1,6 +1,6 @@
+import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
-import 'package:ariapp/app/infrastructure/data_sources/message_data_provider.dart';
-import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
+import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
@@ -11,7 +11,6 @@ import 'package:ariapp/app/presentation/voice/widgets/audio_player_test.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_blue.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_follow.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
@@ -270,7 +269,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                         testAudio
                             ? AudioPlayerTest(
                                 audioUrl:
-                                    'https://uploadsaria.blob.core.windows.net/files/${state.urlAudioTest}',
+                                    '${BaseUrlConfig.baseUrlImage}${state.urlAudioTest}',
                                 //time: DateTime.now(),
                                 //senderId: 1,
                                 //isMe: true,
@@ -304,7 +303,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                                     final path = await voiceRepository
                                         .testAudio(userId!, _testVoice.text);
                                     _audioPlayer.setUrl(
-                                        'https://uploadsaria.blob.core.windows.net/files/$path');
+                                        '${BaseUrlConfig.baseUrlImage}$path');
                                     setState(() {
                                       loadingVoiceTest = false;
                                       testAudio = !testAudio;
@@ -372,25 +371,47 @@ class _VoiceScreenState extends State<VoiceScreen> {
                 chatBloc.isReadyToTraining(response.chatId!);
 
                 context.push('/chat/${response.chatId!}/${response.chatId!}/1');
-              } else if (response == 'This user is not a creator') {
-                CustomDialogs().showConfirmationDialog(
-                  context: context,
-                  title: 'Alerta',
-                  content:
-                      '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
-                  onAccept: () {
-                    Navigator.pop(context);
-                  },
-                );
-              } else if (response == 'Same user') {
-                CustomDialogs().showConfirmationDialog(
-                  context: context,
-                  title: 'Alerta',
-                  content: '¡Oops!\nNo puedes chatear contigo mismo :c',
-                  onAccept: () {
-                    Navigator.pop(context);
-                  },
-                );
+              } else {
+                switch (response) {
+                  case CreateChatResponse.userNotCreator:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content:
+                          '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  case CreateChatResponse.sameUser:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content: '¡Oops!\nNo puedes chatear contigo mismo :c',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  case CreateChatResponse.unknownError:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content: 'Invalid Data',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                    break;
+                  default:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content: 'Error Desconocido',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                }
               }
             }, Colors.white),
             const SizedBox(

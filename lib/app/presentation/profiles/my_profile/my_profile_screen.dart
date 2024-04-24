@@ -1,6 +1,5 @@
 import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
-import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/profiles/follow/bloc/follow_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followers_list.dart';
@@ -10,8 +9,6 @@ import 'package:ariapp/app/presentation/profiles/my_profile/update_state/update_
 import 'package:ariapp/app/presentation/profiles/my_profile/widgets/my_profile_option.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_blue.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_delete_account.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

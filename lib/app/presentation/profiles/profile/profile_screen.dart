@@ -1,10 +1,7 @@
 import 'dart:ui';
 
 import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
-import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
-import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
-import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
@@ -12,8 +9,6 @@ import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart
 import 'package:ariapp/app/presentation/profiles/profile/bloc/follower_counter_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/bloc/favorites_messages_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/favorites_messages_screen.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
