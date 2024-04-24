@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/base_url_config.dart';
@@ -7,8 +6,6 @@ import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
-import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
-import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -113,7 +110,6 @@ class _ChatState extends State<Chat> {
           } else if (state.chatStatus == ChatStatus.error) {
             return const Center(child: Text('Error fetching messages'));
           } else if (state.chatStatus == ChatStatus.success) {
-            //var messagesOrder = messages.reversed.toList();
             return SafeArea(
               child: Column(
                 children: [
@@ -268,7 +264,7 @@ class _ChatState extends State<Chat> {
 
   void _showPopupMenu(BuildContext context, Offset tapPosition, int messageId,
       int index, bool isFavorite) async {
-    bool tempIsFavorite = isFavorite; // Utilizamos una variable temporal
+    bool tempIsFavorite = isFavorite;
 
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;

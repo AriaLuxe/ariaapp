@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
@@ -22,9 +22,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       : userAriaRepository = GetIt.instance<UserAriaRepository>(),
         chatRepository = GetIt.instance<ChatRepository>(),
         super(const ProfileState()) {
-    on<ProfileEvent>((event, emit) {
-      // TODO: implement event handler
-    });
     on<FetchDataProfile>(_onFetchDataProfile);
     on<CheckFollowStatus>(_onCheckFollowStatus);
     on<ToggleFollow>(_onToggleFollow);
@@ -164,7 +161,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         } else {
           log('error');
         }
-        print(response);
       }
     } catch (e) {
       log(e.toString());

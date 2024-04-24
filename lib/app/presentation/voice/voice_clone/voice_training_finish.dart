@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
@@ -166,32 +167,27 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                               );
                                             } else {
                                               // Mostrar un showDialog indicando que los términos no han sido aceptados
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'Por favor, acepta los términos y condiciones antes de continuar.',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'Por favor, acepta los términos y condiciones antes de continuar.',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             }
                                           } else {
                                             // Mostrar un showDialog indicando que no se grabaron los 10 audios
-                                            showDialog(
+                                            CustomDialogs()
+                                                .showConfirmationDialog(
                                               context: context,
-                                              builder: (BuildContext context) {
-                                                return CustomDialogAccept(
-                                                  text:
-                                                      'Por favor, asegurate de subir por lo menos 5 audios\no responder las preguntas',
-                                                  onAccept: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
+                                              title: 'Alerta',
+                                              content:
+                                                  'Por favor, asegurate de subir por lo menos 5 audios\no responder las preguntas',
+                                              onAccept: () {
+                                                Navigator.pop(context);
                                               },
                                             );
                                           }

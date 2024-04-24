@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/chats/chat/widgets/custom_icon_button.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-
 
 class PlayerMessage extends StatefulWidget {
   final String audioPath;
@@ -11,7 +12,8 @@ class PlayerMessage extends StatefulWidget {
 
   const PlayerMessage({
     Key? key,
-    required this.audioPath, required this.onDelete,
+    required this.audioPath,
+    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class PlayerMessageState extends State<PlayerMessage> {
     try {
       await _audioPlayer.setAudioSource(_audioSource);
     } catch (e) {
-      print("Error al cargar la fuente de audio: $e");
+      log("Error al cargar la fuente de audio: $e");
     }
   }
 
@@ -52,7 +54,7 @@ class PlayerMessageState extends State<PlayerMessage> {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      width: size.width*0.7,
+      width: size.width * 0.7,
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
         color: Styles.primaryColor,
@@ -83,12 +85,8 @@ class PlayerMessageState extends State<PlayerMessage> {
                   icon: Icons.pause,
                 );
               }
-              /*  return  CustomIconButton(
-                  background: Colors.white,
-                  onPressed: widget.audioPlayer.play,
-                   icon: Icons.play_arrow,
-                  iconColor: Styles.primaryColor,
-*/              return CustomIconButton(
+
+              return CustomIconButton(
                 background: Colors.white,
                 onPressed: () {
                   // Reiniciar la reproducción desde el principio
@@ -106,15 +104,14 @@ class PlayerMessageState extends State<PlayerMessage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width:size.width * 0.35,
+                width: size.width * 0.35,
                 child: StreamBuilder<PositionData>(
-                  stream: _audioPlayer.positionStream.map((position) =>
-                      PositionData(
-                        position,
-                        position,
-                        _audioPlayer.duration ?? Duration.zero,
-                      )
-                  ),
+                  stream: _audioPlayer.positionStream
+                      .map((position) => PositionData(
+                            position,
+                            position,
+                            _audioPlayer.duration ?? Duration.zero,
+                          )),
                   builder: (context, snapshot) {
                     final positionData = snapshot.data;
                     return ProgressBar(
@@ -138,19 +135,19 @@ class PlayerMessageState extends State<PlayerMessage> {
               ),
             ],
           ),
-
         ],
       ),
     );
   }
 }
+
 class PositionData {
   final Duration position;
   final Duration bufferedPosition;
   final Duration duration;
   const PositionData(
-      this.position,
-      this.bufferedPosition,
-      this.duration,
-      );
+    this.position,
+    this.bufferedPosition,
+    this.duration,
+  );
 }

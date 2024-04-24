@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
 import 'package:ariapp/app/presentation/notifications/notifications_bloc.dart';
@@ -135,16 +136,13 @@ class _SignInFormState extends State<SignInForm> {
                           final response = await emailValidation
                               .sendEmailToResetPassword(email.text.trim());
                           if (email.text.isEmpty) {
-                            showDialog(
+                            CustomDialogs().showConfirmationDialog(
                               context: context,
-                              builder: (BuildContext context) {
-                                return CustomDialogAccept(
-                                  text:
-                                      'Por favor, ingresa tu correo electrónico para recuperar tu contraseña.',
-                                  onAccept: () {
-                                    Navigator.pop(context);
-                                  },
-                                );
+                              title: 'Alerta',
+                              content:
+                                  'Por favor, ingresa tu correo electrónico para recuperar tu contraseña.',
+                              onAccept: () {
+                                Navigator.pop(context);
                               },
                             );
                           } else {
@@ -169,16 +167,13 @@ class _SignInFormState extends State<SignInForm> {
                               );
                             } else if (response ==
                                 'Does not exist an account with this email') {
-                              showDialog(
+                              CustomDialogs().showConfirmationDialog(
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return CustomDialogAccept(
-                                    text:
-                                        'No existe una cuenta con este correo, por favor, ingrese nuevamente',
-                                    onAccept: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
+                                title: 'Alerta',
+                                content:
+                                    'No existe una cuenta con este correo, por favor, ingrese nuevamente',
+                                onAccept: () {
+                                  Navigator.pop(context);
                                 },
                               );
                             }
@@ -238,20 +233,15 @@ class _SignInFormState extends State<SignInForm> {
                                   });
                                   context.go('/chats');
                                 } else {
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text: 'Credenciales incorrectos',
-                                        onAccept: () {
-                                          setState(() {
-                                            isLoadingSignIn = false;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content: 'Credenciales incorrectos',
+                                    onAccept: () {
+                                      Navigator.pop(context);
                                     },
                                   );
+
                                   setState(() {
                                     isLoadingSignIn = false;
                                   });

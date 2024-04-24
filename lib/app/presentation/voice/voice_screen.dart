@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/message_data_provider.dart';
 import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
@@ -372,28 +373,22 @@ class _VoiceScreenState extends State<VoiceScreen> {
 
                 context.push('/chat/${response.chatId!}/${response.chatId!}/1');
               } else if (response == 'This user is not a creator') {
-                showDialog(
+                CustomDialogs().showConfirmationDialog(
                   context: context,
-                  builder: (BuildContext context) {
-                    return CustomDialogAccept(
-                      text:
-                          '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
-                      onAccept: () {
-                        Navigator.pop(context);
-                      },
-                    );
+                  title: 'Alerta',
+                  content:
+                      '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                  onAccept: () {
+                    Navigator.pop(context);
                   },
                 );
               } else if (response == 'Same user') {
-                showDialog(
+                CustomDialogs().showConfirmationDialog(
                   context: context,
-                  builder: (BuildContext context) {
-                    return CustomDialogAccept(
-                      text: '¡Oops!\nNo puedes chatear contigo mismo :c',
-                      onAccept: () {
-                        Navigator.pop(context);
-                      },
-                    );
+                  title: 'Alerta',
+                  content: '¡Oops!\nNo puedes chatear contigo mismo :c',
+                  onAccept: () {
+                    Navigator.pop(context);
                   },
                 );
               }

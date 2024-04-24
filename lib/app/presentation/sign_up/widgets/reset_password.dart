@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
@@ -186,35 +187,23 @@ class _ResetPasswordState extends State<ResetPassword> {
                             password.text.trim(),
                             confirmPassword.text.trim());
                         if (response == 'Password is updated') {
-                          showDialog(
+                          CustomDialogs().showConfirmationDialog(
                             context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogAccept(
-                                text:
-                                    'La contraseña se ha cambiado satisfactoriamente.\nInicie sesión con su nueva contraseña.',
-                                onAccept: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignInScreen(),
-                                    ),
-                                  );
-                                },
-                              );
+                            title: 'Alerta',
+                            content:
+                                'La contraseña se ha cambiado satisfactoriamente.\nInicie sesión con su nueva contraseña.',
+                            onAccept: () {
+                              Navigator.pop(context);
                             },
                           );
                         } else {
-                          showDialog(
+                          CustomDialogs().showConfirmationDialog(
                             context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogAccept(
-                                text:
-                                    '¡Oops!\nParece que las contraseñas no coinciden. Revise e inténtelo de nuevo.',
-                                onAccept: () {
-                                  Navigator.pop(context);
-                                },
-                              );
+                            title: 'Alerta',
+                            content:
+                                '¡Oops!\nParece que las contraseñas no coinciden. Revise e inténtelo de nuevo.',
+                            onAccept: () {
+                              Navigator.pop(context);
                             },
                           );
                         }

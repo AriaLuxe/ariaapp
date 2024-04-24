@@ -1,7 +1,6 @@
 import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
-import 'package:ariapp/app/presentation/notifications/notifications_bloc.dart';
 import 'package:ariapp/app/presentation/people/people_list/bloc/people_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/follow/bloc/follow_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
@@ -143,8 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return UserProfileIcon(
                               profileImageURL:
                                   '${BaseUrlConfig.baseUrlImage}${state.urlProfile}',
-                              genericImageURL:
-                                  'https://cdn-icons-png.flaticon.com/512/660/660611.png',
+                              genericImageURL: BaseUrlConfig.defaultImage,
                             );
                           },
                         ),

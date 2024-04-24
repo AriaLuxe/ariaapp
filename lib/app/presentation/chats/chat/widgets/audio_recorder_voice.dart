@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
@@ -203,7 +204,7 @@ class _RecordControlState extends State<RecordControl> {
                                 );
                                 chatListBloc.chatsFetched();
                                 textMessageController.clear();
-                              }, //TODO: implementar enviar texto
+                              },
                       ),
                     )
                   : GestureDetector(
@@ -272,28 +273,23 @@ class _RecordControlState extends State<RecordControl> {
                       child: IconButton(
                         icon: Icon(Icons.send, color: Styles.primaryColor),
                         onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialog(
-                                text:
-                                    '¿Estás seguro de enviar chat para entrenar?',
-                                onOk: () async {
-                                  final messageRepository =
-                                      GetIt.instance<MessageRepository>();
-                                  await messageRepository.sendTraining(
-                                      userLoggedId!, widget.chatId);
-                                  chatBloc.isReadyToTraining(widget.chatId);
+                          CustomDialogs().showCustomDialog(
+                              context: context,
+                              text:
+                                  '¿Estás seguro de enviar chat para entrenar?',
+                              onOk: () async {
+                                final messageRepository =
+                                    GetIt.instance<MessageRepository>();
+                                await messageRepository.sendTraining(
+                                    userLoggedId!, widget.chatId);
+                                chatBloc.isReadyToTraining(widget.chatId);
 
-                                  Navigator.pop(context);
-                                },
-                                onCancel: () {
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        }, //TODO: implementar enviar texto
+                                Navigator.pop(context);
+                              },
+                              onCancel: () {
+                                Navigator.pop(context);
+                              });
+                        },
                       ),
                     )
                   : const SizedBox(),

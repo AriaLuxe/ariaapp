@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/reset_password.dart';
@@ -226,15 +227,12 @@ class _VerifyCodeState extends State<VerifyCode> {
                                   setState(() {
                                     isLoading = false;
                                   });
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text: 'Código incorrecto',
-                                        onAccept: () {
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content: 'Código incorrecto',
+                                    onAccept: () {
+                                      Navigator.pop(context);
                                     },
                                   );
                                 } else if (response ==
@@ -242,19 +240,16 @@ class _VerifyCodeState extends State<VerifyCode> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text:
-                                            'Código vencido, por favor, reenviar nuevamente',
-                                        onAccept: () {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content:
+                                        'Código vencido, por favor, reenviar nuevamente',
+                                    onAccept: () {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.pop(context);
                                     },
                                   );
                                 } else if (response ==
@@ -262,20 +257,16 @@ class _VerifyCodeState extends State<VerifyCode> {
                                   setState(() {
                                     isLoading = true;
                                   });
-
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text:
-                                            'Usuario no registrado con este correo',
-                                        onAccept: () {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content:
+                                        'Usuario no registrado con este correo',
+                                    onAccept: () {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.pop(context);
                                     },
                                   );
                                 }
@@ -290,56 +281,50 @@ class _VerifyCodeState extends State<VerifyCode> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text:
-                                            '¡Felicidades!\nSu cuenta ha sido creada con éxito. Inicie sesión para comenzar.',
-                                        onAccept: () async {
-                                          final user = UserAria(
-                                              nameUser: widget.user!.nameUser,
-                                              lastName: widget.user!.lastName,
-                                              email: widget.user!.email,
-                                              password: widget.user!.password,
-                                              gender: widget.user!.gender,
-                                              country: widget.user!.country,
-                                              city: widget.user!.city,
-                                              nickname: widget.user!.nickname,
-                                              dateBirth: widget.user!.dateBirth,
-                                              role: widget.user!.role);
-                                          await usersRepository.signUp(user);
+                                    title: 'Alerta',
+                                    content:
+                                        '¡Felicidades!\nSu cuenta ha sido creada con éxito. Inicie sesión para comenzar.',
+                                    onAccept: () async {
+                                      final user = UserAria(
+                                          nameUser: widget.user!.nameUser,
+                                          lastName: widget.user!.lastName,
+                                          email: widget.user!.email,
+                                          password: widget.user!.password,
+                                          gender: widget.user!.gender,
+                                          country: widget.user!.country,
+                                          city: widget.user!.city,
+                                          nickname: widget.user!.nickname,
+                                          dateBirth: widget.user!.dateBirth,
+                                          role: widget.user!.role);
+                                      await usersRepository.signUp(user);
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignInScreen(),
-                                            ),
-                                          );
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                        },
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignInScreen(),
+                                        ),
                                       );
+                                      setState(() {
+                                        isLoading = true;
+                                      });
                                     },
                                   );
                                 } else if (response == 'No match code') {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text: 'Código incorrecto',
-                                        onAccept: () {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content: 'Código incorrecto',
+                                    onAccept: () {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.pop(context);
                                     },
                                   );
                                 } else if (response ==
@@ -347,19 +332,16 @@ class _VerifyCodeState extends State<VerifyCode> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text:
-                                            'Código vencido, por favor, reenviar nuevamente',
-                                        onAccept: () {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content:
+                                        'Código vencido, por favor, reenviar nuevamente',
+                                    onAccept: () {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.pop(context);
                                     },
                                   );
                                 }

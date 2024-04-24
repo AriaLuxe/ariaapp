@@ -158,12 +158,7 @@ class _FollowersListState extends State<FollowersList> {
                                           '${BaseUrlConfig.baseUrlImage}${follower.imgProfile}'),
                                     ),
                                   ),
-                                  onTap: () async {
-                                    //TODO: CAMBIAR NAVEGACION
-                                    //final userAriaRepository = GetIt.instance<UserAriaRepository>();
-                                    // final user = await userAriaRepository.getUserById(follower.idUser);
-                                    //Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user: user)));
-                                  },
+                                  onTap: () async {},
                                 );
                               },
                             ),

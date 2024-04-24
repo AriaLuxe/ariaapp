@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
@@ -5,7 +6,7 @@ import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart
 import 'package:ariapp/app/presentation/chats/chat/validator/text_message_input_validator.dart';
 import 'package:ariapp/app/presentation/chats/chat/widgets/chat_message_widget.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
@@ -187,7 +188,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         recordingResponse: false,
       ));
     } catch (e) {
-      print(e);
       emit(state.copyWith(chatStatus: ChatStatus.error));
     }
   }
@@ -209,7 +209,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         text: text,
       );
     } else {
-      if (audioPath != null && audioPath.isNotEmpty) {
+      if (audioPath.isNotEmpty) {
         audioPlayer.setFilePath(audioPath);
       }
       return ChatMessageWidget(
@@ -242,8 +242,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         text: text,
       );
     } else {
-      audioPlayerResponse.setUrl(
-          'https://uploadsaria.blob.core.windows.net/files/${messageResponse.content}');
+      audioPlayerResponse
+          .setUrl('${BaseUrlConfig.baseUrlImage}${messageResponse.content}');
 
       return ChatMessageWidget(
         color: const Color(0xFF354271),
@@ -276,8 +276,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (message.msgText.isEmpty) {
         audioUrl = message.content;
         if (audioUrl != null) {
-          audioPlayer.setUrl(
-              'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+          audioPlayer.setUrl('${BaseUrlConfig.baseUrlImage}$audioUrl');
           audioControllers.add(audioPlayer);
         }
 
@@ -294,7 +293,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           text: '',
         ));
       } else {
-        print(message.msgText);
         text = message.msgText;
         chatMessages.add(ChatMessageWidget(
           color: const Color(0xFF354271),

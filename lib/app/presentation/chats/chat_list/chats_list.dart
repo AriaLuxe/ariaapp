@@ -250,7 +250,7 @@ class _ChatsListState extends State<ChatsList> {
             }
           default:
             return const Center(
-              child: Text('Comuníquese cal email@gmail.com'),
+              child: Text('Comuníquese al aiaofficialapp@gmail.com'),
             );
         }
       },

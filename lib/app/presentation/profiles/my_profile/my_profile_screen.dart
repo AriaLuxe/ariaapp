@@ -1,5 +1,7 @@
 import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/users_data_provider.dart';
+import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/profiles/follow/bloc/follow_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followers_list.dart';
 import 'package:ariapp/app/presentation/profiles/follow/followings_list.dart';
@@ -142,15 +144,12 @@ class _MyProfileState extends State<MyProfile> {
                         children: [
                           InkWell(
                             onTap: () {
-                              showDialog(
+                              CustomDialogs().showConfirmationDialog(
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return CustomDialogAccept(
-                                    text: 'Próximamente...',
-                                    onAccept: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
+                                title: 'Alerta',
+                                content: 'Próximamente...',
+                                onAccept: () {
+                                  Navigator.pop(context);
                                 },
                               );
                             },
@@ -328,54 +327,49 @@ class _MyProfileState extends State<MyProfile> {
                                 onPressed: () async {
                                   final userId = await SharedPreferencesManager
                                       .getUserId();
-                                  final userDataProvider = UsersDataProvider();
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialog(
-                                        text:
-                                            '¿Estás seguro de eliminar tu cuenta?',
-                                        onOk: () async {
+                                  final userAriaRepository =
+                                      GetIt.instance<UserAriaRepository>();
+
+                                  CustomDialogs().showCustomDialog(
+                                      context: context,
+                                      text:
+                                          '¿Estás seguro de eliminar tu cuenta?',
+                                      onOk: () async {
+                                        setState(() {
+                                          isLoadingDeletedAccount = true;
+                                        });
+                                        final response =
+                                            await userAriaRepository
+                                                .deleteAccount(userId!);
+                                        if (response == 'done') {
+                                          await SharedPreferencesManager
+                                              .clearToken();
+                                          await SharedPreferencesManager
+                                              .clearUserId();
+                                          await SharedPreferencesManager
+                                              .clearEmail();
+                                          GetIt.I.unregister<UserLogged>();
+                                          context.pushReplacement('/sign_in');
                                           setState(() {
-                                            isLoadingDeletedAccount = true;
+                                            isLoadingDeletedAccount = false;
                                           });
-                                          final response =
-                                              await userDataProvider
-                                                  .deleteAccount(userId!);
-                                          if (response == 'done') {
-                                            await SharedPreferencesManager
-                                                .clearToken();
-                                            await SharedPreferencesManager
-                                                .clearUserId();
-                                            await SharedPreferencesManager
-                                                .clearEmail();
-                                            GetIt.I.unregister<UserLogged>();
-                                            context.pushReplacement('/sign_in');
-                                            setState(() {
-                                              isLoadingDeletedAccount = false;
-                                            });
-                                          } else if (response ==
-                                              'No exists user') {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return CustomDialogAccept(
-                                                  text:
-                                                      'Por favor, vuelve a iniciar sesión',
-                                                  onAccept: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          }
-                                        },
-                                        onCancel: () {
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    },
-                                  );
+                                        } else if (response ==
+                                            'No exists user') {
+                                          CustomDialogs()
+                                              .showConfirmationDialog(
+                                            context: context,
+                                            title: 'Alerta',
+                                            content:
+                                                'Por favor, vuelve a iniciar sesión',
+                                            onAccept: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        }
+                                      },
+                                      onCancel: () {
+                                        Navigator.pop(context);
+                                      });
                                 },
                                 width: 0.5)),
                     SizedBox(height: size.height * 0.03),

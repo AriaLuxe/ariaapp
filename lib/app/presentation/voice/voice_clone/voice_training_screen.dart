@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart';
@@ -226,16 +227,13 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                                                 builder: (context) =>
                                                     const VoiceTrainingFinish()));
                                       } else {
-                                        showDialog(
+                                        CustomDialogs().showConfirmationDialog(
                                           context: context,
-                                          builder: (BuildContext context) {
-                                            return CustomDialogAccept(
-                                              text:
-                                                  'Por favor responda todas las preguntas\no suba por lo menos 5 audios',
-                                              onAccept: () {
-                                                Navigator.pop(context);
-                                              },
-                                            );
+                                          title: 'Alerta',
+                                          content:
+                                              'Por favor responda todas las preguntas\no suba por lo menos 5 audios',
+                                          onAccept: () {
+                                            Navigator.pop(context);
                                           },
                                         );
                                       }

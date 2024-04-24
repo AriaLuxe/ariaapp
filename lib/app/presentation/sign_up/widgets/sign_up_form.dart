@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/sign_up/terminos_condiciones_screen.dart';
@@ -381,97 +382,83 @@ class _SignUpFormState extends State<SignUpForm> {
                                     });
                                   } else if (response ==
                                       'Has already exists an account with this email') {
-                                    showDialog(
+                                    CustomDialogs().showConfirmationDialog(
                                       context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text:
-                                              'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
-                                          onAccept: () {
-                                            setState(() {
-                                              isLoadingSignUp = true;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
+                                      title: 'Alerta',
+                                      content:
+                                          'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
+                                      onAccept: () {
+                                        Navigator.pop(context);
                                       },
                                     );
                                   } else if (response ==
                                       'Code already send to this email') {
-                                    showDialog(
+                                    CustomDialogs().showConfirmationDialog(
                                       context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text:
-                                              'Ya se envio un codigo a este correo',
-                                          onAccept: () {
-                                            setState(() {
-                                              isLoadingSignUp = true;
-                                            });
-                                            final user = UserAria(
-                                                nameUser: nameUser.value.trim(),
-                                                lastName: lastName.value.trim(),
-                                                email: email.value.trim(),
-                                                password: password.value,
-                                                gender: _genderController.text
-                                                    .trim(),
-                                                country: _countryController.text
-                                                    .trim(),
-                                                city: country.value.trim(),
-                                                nickname: nickname.value.trim(),
-                                                dateBirth: DateTime.parse(
-                                                    DateFormat('yyyy-MM-dd')
-                                                        .format(DateTime.parse(
-                                                            birthDate.value))),
-                                                role: 'USER');
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        VerifyCode(
-                                                            email: email.value
-                                                                .trim(),
-                                                            verify:
-                                                                'Crear cuenta',
-                                                            isResetPassword:
-                                                                false,
-                                                            user: user)));
+                                      title: 'Alerta',
+                                      content:
+                                          'Ya se envio un codigo a este correo',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoadingSignUp = true;
+                                        });
+                                        final user = UserAria(
+                                            nameUser: nameUser.value.trim(),
+                                            lastName: lastName.value.trim(),
+                                            email: email.value.trim(),
+                                            password: password.value,
+                                            gender:
+                                                _genderController.text.trim(),
+                                            country:
+                                                _countryController.text.trim(),
+                                            city: country.value.trim(),
+                                            nickname: nickname.value.trim(),
+                                            dateBirth: DateTime.parse(
+                                                DateFormat('yyyy-MM-dd').format(
+                                                    DateTime.parse(
+                                                        birthDate.value))),
+                                            role: 'USER');
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VerifyCode(
+                                                        email:
+                                                            email.value.trim(),
+                                                        verify: 'Crear cuenta',
+                                                        isResetPassword: false,
+                                                        user: user)));
 
-                                            setState(() {
-                                              isLoadingSignUp = false;
-                                            });
-                                          },
-                                        );
+                                        setState(() {
+                                          isLoadingSignUp = false;
+                                        });
                                       },
                                     );
                                   } else {
-                                    showDialog(
+                                    CustomDialogs().showConfirmationDialog(
                                       context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text: 'Verifique sus datos',
-                                          onAccept: () {
-                                            setState(() {
-                                              isLoadingSignUp = false;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
+                                      title: 'Alerta',
+                                      content: 'Verifique sus datos',
+                                      onAccept: () {
+                                        setState(() {
+                                          isLoadingSignUp = false;
+                                        });
+                                        Navigator.pop(context);
                                       },
                                     );
                                   }
                                 } else {
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text:
-                                            'Por favor, acepta los términos y condiciones antes de continuar.',
-                                        onAccept: () {
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content:
+                                        'Por favor, acepta los términos y condiciones antes de continuar.',
+                                    onAccept: () {
+                                      setState(() {
+                                        isLoadingSignUp = false;
+                                      });
+                                      Navigator.pop(context);
                                     },
                                   );
                                 }

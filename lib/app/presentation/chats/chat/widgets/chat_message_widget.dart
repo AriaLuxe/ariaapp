@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +55,7 @@ class ChatMessageWidget extends StatelessWidget {
             padding: const EdgeInsets.all(9),
             margin: const EdgeInsets.only(bottom: 5, left: 55, right: 10),
             decoration: BoxDecoration(
-              color: color, //Color(0xFF354271),
+              color: color,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(0),

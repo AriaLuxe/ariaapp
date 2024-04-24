@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
@@ -212,16 +213,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          showDialog(
+                                          CustomDialogs()
+                                              .showConfirmationDialog(
                                             context: context,
-                                            builder: (BuildContext context) {
-                                              return CustomDialogAccept(
-                                                text:
-                                                    'La informacion de los suscritos no esta disponible',
-                                                onAccept: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              );
+                                            title: 'Alerta',
+                                            content:
+                                                'La informacion de los suscritos no esta disponible',
+                                            onAccept: () {
+                                              Navigator.pop(context);
                                             },
                                           );
                                         },
@@ -374,16 +373,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       GestureDetector(
                                         onTap: () async {
                                           if (state.isBlock) {
-                                            showDialog(
+                                            CustomDialogs()
+                                                .showConfirmationDialog(
                                               context: context,
-                                              builder: (BuildContext context) {
-                                                return CustomDialogAccept(
-                                                  text:
-                                                      'Desbloquear para enviar mensaje',
-                                                  onAccept: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
+                                              title: 'Alerta',
+                                              content:
+                                                  'Desbloquear para enviar mensaje',
+                                              onAccept: () {
+                                                Navigator.pop(context);
                                               },
                                             );
                                           } else {
@@ -404,32 +401,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   '/chat/${response.chatId!}/${response.chatId!}/${widget.user!.id!}');
                                             } else if (response ==
                                                 'This user is not a creator') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else if (response ==
                                                 'Same user') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        '¡Oops!\nNo puedes chatear contigo mismo :c',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    '¡Oops!\nNo puedes chatear contigo mismo :c',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             }
@@ -594,46 +585,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         widget.user!.id!);
                                             if (response ==
                                                 'Chat does not exists') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'Lo sentimo, no tienes chat con este usuario',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'Lo sentimo, no tienes chat con este usuario',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else if (response ==
                                                 'No messages') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'No tienes mensajes favoritos, selecciona algunos para poder verlos',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'No tienes mensajes favoritos, selecciona algunos para poder verlos',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else if (response == 'No chat') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'Lo sentimo, no tienes chat con este usuario',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'Lo sentimo, no tienes chat con este usuario',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else {
@@ -724,18 +706,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                       .id!);
                                                       if (response ==
                                                           'Chat does not exist') {
-                                                        showDialog(
+                                                        CustomDialogs()
+                                                            .showConfirmationDialog(
                                                           context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return CustomDialogAccept(
-                                                              text:
-                                                                  '¡Oops!\nEl chat no existe.',
-                                                              onAccept: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            );
+                                                          title: 'Alerta',
+                                                          content:
+                                                              '¡Oops!\nEl chat no existe.',
+                                                          onAccept: () {
+                                                            Navigator.pop(
+                                                                context);
                                                           },
                                                         );
                                                       } else if (int.parse(
@@ -743,27 +722,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           0) {
                                                         int chatId =
                                                             int.parse(response);
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return CustomDialog(
-                                                              text:
-                                                                  '¿Estás seguro de eliminar chat?',
-                                                              onOk: () {
-                                                                chatListBloc
-                                                                    .deleteChat(
-                                                                        chatId);
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              onCancel: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            );
-                                                          },
-                                                        );
+
+                                                        CustomDialogs()
+                                                            .showCustomDialog(
+                                                                context:
+                                                                    context,
+                                                                text:
+                                                                    '¿Estás seguro de eliminar chat?',
+                                                                onOk: () {
+                                                                  chatListBloc
+                                                                      .deleteChat(
+                                                                          chatId);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                onCancel: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                });
                                                       }
                                                     }),
                                           );

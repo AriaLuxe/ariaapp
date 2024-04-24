@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/infrastructure/services/camera_gallery_service_impl.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../../../infrastructure/data_sources/users_data_provider.dart';
 import '../../../../security/shared_preferences_manager.dart';
 import '../../../widgets/custom_dialog.dart';
 import '../../../widgets/header.dart';
@@ -145,22 +145,17 @@ class _UpdateImageState extends State<UpdateImage> {
                               trailing:
                                   const Icon(Icons.delete, color: Colors.red),
                               onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomDialog(
-                                      text:
-                                          '¿Estás seguro que desea eliminar foto?',
-                                      onOk: () {
-                                        _defaultImage();
-                                        Navigator.of(context).pop();
-                                      },
-                                      onCancel: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                );
+                                CustomDialogs().showCustomDialog(
+                                    context: context,
+                                    text:
+                                        '¿Estás seguro que desea eliminar foto?',
+                                    onOk: () {
+                                      _defaultImage();
+                                      Navigator.of(context).pop();
+                                    },
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    });
                               },
                             ),
                           ),
