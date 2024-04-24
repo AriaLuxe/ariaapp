@@ -8,4 +8,6 @@ abstract class ChatInterface {
   Future<List<Chat>> searchChats(String keyword, int userId);
 
   Future<String> deleteChat(int chatId);
+
+  Future<String> validateCreateChat(int senderId, int receiverId);
 }

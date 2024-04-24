@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
@@ -711,10 +713,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         Icons.delete,
                                                         color: Colors.red),
                                                     onTap: () async {
-                                                      final chatsDataProvider =
-                                                          ChatsDataProvider();
+                                                      final chatRepository =
+                                                          GetIt.instance<
+                                                              ChatRepository>();
                                                       final response =
-                                                          await chatsDataProvider
+                                                          await chatRepository
                                                               .validateCreateChat(
                                                                   userLoggedId!,
                                                                   widget.user!

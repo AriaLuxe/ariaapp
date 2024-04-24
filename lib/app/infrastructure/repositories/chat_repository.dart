@@ -28,4 +28,9 @@ class ChatRepository extends ChatInterface {
   Future<List<Chat>> searchChats(String keyword, int userId) {
     return chatsDataProvider.searchChats(keyword, userId);
   }
+
+  @override
+  Future<String> validateCreateChat(int senderId, int receiverId) {
+    return chatsDataProvider.validateCreateChat(senderId, receiverId);
+  }
 }

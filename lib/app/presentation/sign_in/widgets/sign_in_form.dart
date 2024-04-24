@@ -230,7 +230,6 @@ class _SignInFormState extends State<SignInForm> {
                                       decodedToken['email']);
                                   final userId = await SharedPreferencesManager
                                       .getUserId();
-//                      final userRepository = GetIt.instance<UserAriaRepository>();
                                   final user = await usersRepository
                                       .getUserById(userId!);
                                   userLogged(user);

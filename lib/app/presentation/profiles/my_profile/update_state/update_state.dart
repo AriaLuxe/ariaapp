@@ -163,11 +163,10 @@ class _UpdateStateFormState extends State<UpdateStateForm> {
                                     GetIt.instance<UserAriaRepository>();
                                 final userId =
                                     await SharedPreferencesManager.getUserId();
-                                print(userId);
                                 final response =
                                     await userRepository.updateUserState(
                                         userId!, _stateController.text.trim());
-                                print(response);
+
                                 _stateController.clear();
                                 context
                                     .read<ProfileBloc>()

@@ -1,7 +1,8 @@
-import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
+import 'package:ariapp/app/infrastructure/data_sources/message_data_provider.dart';
 import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_clone_screen.dart';
@@ -297,9 +298,9 @@ class _VoiceScreenState extends State<VoiceScreen> {
                                     });
                                     int? userId = await SharedPreferencesManager
                                         .getUserId();
-                                    final voiceCloneDataProvider =
-                                        VoiceCloneDataProvider();
-                                    final path = await voiceCloneDataProvider
+                                    final voiceRepository =
+                                        GetIt.instance<VoiceRepository>();
+                                    final path = await voiceRepository
                                         .testAudio(userId!, _testVoice.text);
                                     _audioPlayer.setUrl(
                                         'https://uploadsaria.blob.core.windows.net/files/$path');
@@ -358,15 +359,14 @@ class _VoiceScreenState extends State<VoiceScreen> {
               chatBloc.dataChatFetched(1);
 
               final chatsDataProvider = GetIt.instance<ChatRepository>();
-              final messagesDataProvider =
-                  GetIt.instance<MessageDataProvider>();
+              final messagesDataProvider = GetIt.instance<MessageRepository>();
 
               final response =
                   await chatsDataProvider.createChat(userLoggedId!, 1);
 
               if (response is ChatModel) {
                 await messagesDataProvider.createTraining(
-                    userLoggedId!, response.chatId!);
+                    userLoggedId, response.chatId!);
                 chatBloc.messageFetched(response.chatId!, 0, 12);
                 chatBloc.isReadyToTraining(response.chatId!);
 
@@ -409,7 +409,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                     setState(() {
                       loadingDeleteVoiceClone = true;
                     });
-                    final voiceCloneDataProvider = VoiceCloneDataProvider();
+                    final voiceRepository = GetIt.instance<VoiceRepository>();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -418,7 +418,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                               '¿Estás seguro que desea eliminar la voz clonada?',
                           onOk: () async {
                             Navigator.pop(context);
-                            await voiceCloneDataProvider.deleteVoice(voiceId);
+                            await voiceRepository.deleteVoice(voiceId);
                             setState(() {
                               loadingDeleteVoiceClone = false;
                             });

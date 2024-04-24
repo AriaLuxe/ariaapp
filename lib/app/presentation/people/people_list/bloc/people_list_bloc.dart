@@ -32,7 +32,7 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
     emit(state.copyWith(peopleListStatus: PeopleListStatus.loading));
     try {
       final List<UserAria> users =
-          await usersRepository.getAllFriends(event.page, event.pageSize);
+          await usersRepository.getUsers(event.page, event.pageSize);
       List<UserAria> usersUpdated = [];
 
       for (final user in users) {
@@ -63,10 +63,10 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
 
     try {
       final List<UserAria> searchResults =
-          await usersRepository.searchUser(event.keyword);
+          await usersRepository.searchUsers(event.keyword);
       List<UserAria> usersUpdated = [];
       if (event.keyword.isEmpty) {
-        final List<UserAria> users = await usersRepository.getAllFriends(0, 50);
+        final List<UserAria> users = await usersRepository.getUsers(0, 50);
 
         for (final user in users) {
           if (!user.enabled!) {
@@ -102,7 +102,7 @@ class PeopleListBloc extends Bloc<PeopleListEvent, PeopleListState> {
   ) async {
     try {
       final List<UserAria> users =
-          await usersRepository.getAllFriends(event.page, event.pageSize);
+          await usersRepository.getUsers(event.page, event.pageSize);
       List<UserAria> moreUsers = [];
 
       for (final user in users) {

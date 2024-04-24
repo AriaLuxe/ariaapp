@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ariapp/app/domain/entities/follower.dart';
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/domain/interfaces/user_aria_interface.dart';
@@ -9,24 +11,19 @@ class UserAriaRepository extends UserAriaInterface {
   UserAriaRepository({required this.usersDataProvider});
 
   @override
-  Future<List<UserAria>> getAllFriends(int page, int pageSize) async {
+  Future<List<UserAria>> getUsers(int page, int pageSize) async {
     final response = await usersDataProvider.getUsers(page, pageSize);
     return response;
   }
 
   @override
-  Future<String> updateEmail(int userId, String email, String password) async {
+  Future<String> updateUserEmail(
+      int userId, String email, String password) async {
     return await usersDataProvider.updateUserEmail(userId, email, password);
   }
 
   @override
-  Future<List<UserAria>> getFavoriteUsers() {
-    // TODO: implement getFavoriteUsers
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> signUpUser(UserAria user) async {
+  Future<void> signUp(UserAria user) async {
     await usersDataProvider.signUp(user);
   }
 
@@ -36,7 +33,7 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   @override
-  Future<List<UserAria>> searchUser(String keyword) async {
+  Future<List<UserAria>> searchUsers(String keyword) async {
     return await usersDataProvider.searchUsers(keyword);
   }
 
@@ -127,28 +124,37 @@ class UserAriaRepository extends UserAriaInterface {
   }
 
   @override
-  Future<List<UserAria>> searchUserByName() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<bool> checkCreator(int userId) async {
     return await usersDataProvider.checkCreator(userId);
   }
 
+  @override
   Future<void> sendSuggestion(int userId, String title, String content) async {
     return await usersDataProvider.sendSuggestion(userId, title, content);
   }
 
+  @override
   Future<bool> validateNickname(String nickname) async {
     return await usersDataProvider.validateNickname(nickname);
   }
 
+  @override
   Future<void> sendApplicant(int userId) async {
     return await usersDataProvider.sendApplicant(userId);
   }
 
+  @override
   Future<bool> getApplicant(int userId) async {
     return await usersDataProvider.getApplicant(userId);
+  }
+
+  @override
+  Future<String> updateUserImageProfile(int userId, File image) async {
+    return await usersDataProvider.updateUserImageProfile(userId, image);
+  }
+
+  @override
+  Future<String> deleteAccount(int userId) async {
+    return await usersDataProvider.deleteAccount(userId);
   }
 }

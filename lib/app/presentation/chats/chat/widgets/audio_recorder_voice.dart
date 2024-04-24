@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/styles.dart';
-import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
@@ -277,9 +277,9 @@ class _RecordControlState extends State<RecordControl> {
                                 text:
                                     '¿Estás seguro de enviar chat para entrenar?',
                                 onOk: () async {
-                                  final messageDataProvider =
-                                      MessageDataProvider();
-                                  await messageDataProvider.sendTraining(
+                                  final messageRepository =
+                                      GetIt.instance<MessageRepository>();
+                                  await messageRepository.sendTraining(
                                       userLoggedId!, widget.chatId);
                                   chatBloc.isReadyToTraining(widget.chatId);
 

@@ -456,7 +456,6 @@ class UsersDataProvider {
     }
   }
 
-//TODO CHATS BLOCK
   Future<bool> checkBlock(int userId, int userLooking) async {
     try {
       String? token = await SharedPreferencesManager.getToken();

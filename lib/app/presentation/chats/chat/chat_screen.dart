@@ -77,8 +77,6 @@ class _ChatState extends State<Chat> {
 
   @override
   void initState() {
-    final userLoggedId = GetIt.instance<UserLogged>().user.id;
-
     showPlayer = false;
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     chatBloc.checkBlock(widget.userReceivedId);

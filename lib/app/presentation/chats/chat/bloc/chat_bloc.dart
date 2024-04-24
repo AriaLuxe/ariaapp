@@ -1,5 +1,4 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
-import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
@@ -543,7 +542,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _isReadyToTraining(
       IsReadyTraining event, Emitter<ChatState> emit) async {
     try {
-      print('entre');
       int? userLogged = await SharedPreferencesManager.getUserId();
       final response =
           await messageRepository.isReadyToTraining(userLogged!, event.chatId);

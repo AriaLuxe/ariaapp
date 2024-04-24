@@ -308,8 +308,7 @@ class _VerifyCodeState extends State<VerifyCode> {
                                               nickname: widget.user!.nickname,
                                               dateBirth: widget.user!.dateBirth,
                                               role: widget.user!.role);
-                                          await usersRepository
-                                              .signUpUser(user);
+                                          await usersRepository.signUp(user);
 
                                           Navigator.push(
                                             context,

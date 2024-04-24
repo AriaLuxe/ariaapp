@@ -9,24 +9,6 @@ import '../models/chat_model.dart';
 class ChatsDataProvider {
   String endPoint = 'chats/ordinary';
 
-  Future<List<ChatModel>> getAllChatsByUserId(int id) async {
-    try {
-      String? token = await SharedPreferencesManager.getToken();
-      final response = await http.get(
-        Uri.parse('${BaseUrlConfig.baseUrl}/chats/IA/$id'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      List<ChatModel> chats = ChatModel.toChatsList(response.body);
-
-      return chats;
-    } catch (error) {
-      throw Exception(error);
-    }
-  }
-
   Future<dynamic> createChat(int senderId, int receiverId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
@@ -54,19 +36,41 @@ class ChatsDataProvider {
     }
   }
 
-  Future<String> validateCreateChat(int senderId, int receiverId) async {
+  Future<List<ChatModel>> getAllChatsByUserId(int id) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
-
-      final response = await http.delete(
-        Uri.parse(
-            '${BaseUrlConfig.baseUrl}/chats/delete?idUserLogged=$senderId&idUserLooking=$receiverId'),
+      final response = await http.get(
+        Uri.parse('${BaseUrlConfig.baseUrl}/chats/IA/$id'),
         headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
         },
       );
-      return response.body;
+
+      List<ChatModel> chats = ChatModel.toChatsList(response.body);
+
+      return chats;
+    } catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  Future<List<ChatModel>> searchChats(String keyword, int userId) async {
+    try {
+      String? token = await SharedPreferencesManager.getToken();
+
+      final response = await http.get(
+        Uri.parse(
+            "${BaseUrlConfig.baseUrl}/chats/search?keyword=$keyword&idUser=$userId"),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final List<ChatModel> chats = ChatModel.toChatsList(response.body);
+        return chats;
+      } else {
+        throw Exception(response.body);
+      }
     } catch (error) {
       throw Exception(error);
     }
@@ -88,23 +92,19 @@ class ChatsDataProvider {
     }
   }
 
-  Future<List<ChatModel>> searchChats(String keyword, int userId) async {
+  Future<String> validateCreateChat(int senderId, int receiverId) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
 
-      final response = await http.get(
+      final response = await http.delete(
         Uri.parse(
-            "${BaseUrlConfig.baseUrl}/chats/search?keyword=$keyword&idUser=$userId"),
+            '${BaseUrlConfig.baseUrl}/chats/delete?idUserLogged=$senderId&idUserLooking=$receiverId'),
         headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
         },
       );
-      if (response.statusCode == 200) {
-        final List<ChatModel> chats = ChatModel.toChatsList(response.body);
-        return chats;
-      } else {
-        throw Exception(response.body);
-      }
+      return response.body;
     } catch (error) {
       throw Exception(error);
     }

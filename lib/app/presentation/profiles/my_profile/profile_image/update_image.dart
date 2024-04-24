@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/infrastructure/services/camera_gallery_service_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -323,9 +325,9 @@ class _UpdateImageState extends State<UpdateImage> {
 
     await copyAssetToFile(assetImagePath, targetPath);
 
-    final userDataProvider = UsersDataProvider();
-    final response = await userDataProvider.updateUserImageProfile(
-        userId!, File(targetPath));
+    final usersRepository = GetIt.instance<UserAriaRepository>();
+    final response =
+        await usersRepository.updateUserImageProfile(userId!, File(targetPath));
 
     if (response == 'imgProfile is updated') {
       context.read<ProfileBloc>().fetchDataProfile(userId);

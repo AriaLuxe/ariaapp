@@ -164,11 +164,10 @@ class UpdateEmailForm extends StatelessWidget {
                                 final userId =
                                     await SharedPreferencesManager.getUserId();
                                 final response =
-                                    await userRepository.updateEmail(
+                                    await userRepository.updateUserEmail(
                                         userId!,
                                         _emailController.text.trim(),
                                         _passwordController.text.trim());
-                                print(response);
                                 _emailController.clear();
                                 _passwordController.clear();
 

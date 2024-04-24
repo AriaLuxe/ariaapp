@@ -343,7 +343,6 @@ class _MyProfileState extends State<MyProfile> {
                                           final response =
                                               await userDataProvider
                                                   .deleteAccount(userId!);
-                                          print(response);
                                           if (response == 'done') {
                                             await SharedPreferencesManager
                                                 .clearToken();
