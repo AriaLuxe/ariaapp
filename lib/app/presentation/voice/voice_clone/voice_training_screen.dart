@@ -7,7 +7,6 @@ import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.
 import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_training_finish.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

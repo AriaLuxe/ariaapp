@@ -5,7 +5,6 @@ import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
