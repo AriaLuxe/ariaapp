@@ -35,8 +35,6 @@ class EmailValidationDataProvider {
     }
   }
 
-  //////
-
   Future<String> sendEmailToResetPassword(String email) async {
     try {
       final response = await http.post(Uri.parse(
@@ -57,7 +55,6 @@ class EmailValidationDataProvider {
     }
   }
 
-  //
   Future<String> resetPassword(
       String email, String newPassword, String confirmPassword) async {
     try {
