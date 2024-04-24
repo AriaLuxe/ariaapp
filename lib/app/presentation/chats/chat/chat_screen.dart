@@ -102,6 +102,8 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
@@ -119,7 +121,7 @@ class _ChatState extends State<Chat> {
                     height: 10,
                   ),
                   SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
+                      width: size.width * 0.9,
                       child: HeaderChat(
                         title: state.name,
                         onTap: () {

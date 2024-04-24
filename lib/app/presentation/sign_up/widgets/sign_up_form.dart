@@ -85,6 +85,7 @@ class _SignUpFormState extends State<SignUpForm> {
   @override
   Widget build(BuildContext context) {
     final signUpBloc = context.watch<SignUpBloc>();
+    Size size = MediaQuery.of(context).size;
 
     final nameUser = signUpBloc.state.nameInputValidator;
     final lastName = signUpBloc.state.lastNameInputValidator;
@@ -160,8 +161,8 @@ class _SignUpFormState extends State<SignUpForm> {
                         ),
                       ),
                       content: SizedBox(
-                        height: MediaQuery.of(context).size.height / 4,
-                        width: MediaQuery.of(context).size.height * 2,
+                        height: size.height / 4,
+                        width: size.height * 2,
                         child: CupertinoDatePicker(
                           mode: CupertinoDatePickerMode.date,
                           initialDateTime: DateTime(2000),
@@ -248,7 +249,7 @@ class _SignUpFormState extends State<SignUpForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
+                  width: size.width * 0.45,
                   child: TextInput(
                     verticalPadding: 15,
                     controller: _countryController,
@@ -278,7 +279,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
+                  width: size.width * 0.4,
                   child: TextInput(
                     verticalPadding: 15,
                     prefixIcon: Icons.location_on,
@@ -468,7 +469,6 @@ class _SignUpFormState extends State<SignUpForm> {
                                         text:
                                             'Por favor, acepta los términos y condiciones antes de continuar.',
                                         onAccept: () {
-
                                           Navigator.pop(context);
                                         },
                                       );

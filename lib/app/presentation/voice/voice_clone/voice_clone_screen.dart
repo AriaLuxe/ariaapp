@@ -60,6 +60,7 @@ class VoiceClone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userLogged = GetIt.instance<UserLogged>();
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Container(
@@ -69,8 +70,8 @@ class VoiceClone extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: size.width,
+        height: size.height,
         child: SafeArea(
           child: Stack(
             children: [
@@ -80,7 +81,7 @@ class VoiceClone extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: size.width * 0.7,
                       child: const Text(
                         'DESCUBRE EL PODER DE TU VOZ',
                         style: TextStyle(
@@ -92,12 +93,12 @@ class VoiceClone extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2,
+                      height: size.height * 0.2,
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
+                        width: size.width * 0.7,
                         child: const Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Text(
@@ -109,13 +110,13 @@ class VoiceClone extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
+                      height: size.height * 0.01,
                     ),
                     if (userLogged.user.canCreate!)
                       Align(
                         alignment: Alignment.centerRight,
                         child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
+                            width: size.width * 0.5,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   vertical: 30.0, horizontal: 20),
@@ -147,7 +148,7 @@ class VoiceClone extends StatelessWidget {
                       Align(
                         alignment: Alignment.center,
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.7,
+                          width: size.width * 0.7,
                           child: const Padding(
                             padding: EdgeInsets.all(10.0),
                             child: Text(
@@ -161,7 +162,7 @@ class VoiceClone extends StatelessWidget {
                       ),
                     if (!userLogged.user.canCreate!)
                       SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
+                          width: size.width * 0.9,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 30.0, horizontal: 20),

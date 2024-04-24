@@ -81,8 +81,7 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
 
     final profileBloc = context.watch<ProfileBloc>();
 
@@ -91,13 +90,13 @@ class _MyProfileState extends State<MyProfile> {
       onRefresh: refresh,
       child: SafeArea(
         child: SizedBox(
-          width: screenWidth,
+          width: size.width,
           child: BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: screenHeight * 0.04),
+                    SizedBox(height: size.width * 0.04),
                     const Text('Mi perfil',
                         style: TextStyle(
                             color: Colors.white,
@@ -105,12 +104,12 @@ class _MyProfileState extends State<MyProfile> {
                             fontSize: 21)),
                     Container(
                       padding:
-                          EdgeInsets.symmetric(vertical: screenHeight * 0.03),
+                          EdgeInsets.symmetric(vertical: size.height * 0.03),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: Colors.white,
-                          width: screenWidth * 0.01,
+                          width: size.width * 0.01,
                         ),
                       ),
                       child: GestureDetector(
@@ -119,7 +118,7 @@ class _MyProfileState extends State<MyProfile> {
                         },
                         child: CircleAvatar(
                           backgroundColor: Styles.primaryColor,
-                          radius: screenHeight * 0.09,
+                          radius: size.height * 0.09,
                           backgroundImage: NetworkImage(
                               '${BaseUrlConfig.baseUrlImage}${state.urlProfile}'),
                         ),
@@ -135,9 +134,9 @@ class _MyProfileState extends State<MyProfile> {
                         textAlign: TextAlign.center,
                         style:
                             const TextStyle(color: Colors.white, fontSize: 18)),
-                    SizedBox(height: screenHeight * 0.05),
+                    SizedBox(height: size.height * 0.05),
                     SizedBox(
-                      width: screenWidth * .8,
+                      width: size.width * .8,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -231,9 +230,9 @@ class _MyProfileState extends State<MyProfile> {
                         ],
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: size.height * 0.02),
                     SizedBox(
-                      width: screenWidth * .8,
+                      width: size.width * .8,
                       child: ListTile(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
@@ -264,9 +263,9 @@ class _MyProfileState extends State<MyProfile> {
                         },
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: size.height * 0.02),
                     SizedBox(
-                        width: screenWidth * .8,
+                        width: size.width * .8,
                         child: MyProfileOption(
                           icon: Icons.person_search,
                           title: 'Mi informacion',
@@ -274,9 +273,9 @@ class _MyProfileState extends State<MyProfile> {
                             context.go("/my_profile/my_information");
                           },
                         )),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: size.height * 0.02),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * .8,
+                        width: size.width * .8,
                         child: MyProfileOption(
                           icon: Icons.lock,
                           title: 'Cambiar contraseña',
@@ -284,9 +283,9 @@ class _MyProfileState extends State<MyProfile> {
                             context.go("/my_profile/update_password");
                           },
                         )),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: size.height * 0.02),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * .8,
+                        width: size.width * .8,
                         child: MyProfileOption(
                           icon: Icons.email,
                           title: 'Cambiar correo',
@@ -294,9 +293,9 @@ class _MyProfileState extends State<MyProfile> {
                             context.go("/my_profile/update_email");
                           },
                         )),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: size.height * 0.02),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * .8,
+                        width: size.width * .8,
                         child: MyProfileOption(
                           icon: Icons.lightbulb_outline,
                           title: 'Enviar sugerencias',
@@ -304,9 +303,9 @@ class _MyProfileState extends State<MyProfile> {
                             context.go("/my_profile/sugerir");
                           },
                         )),
-                    SizedBox(height: screenHeight * 0.04),
+                    SizedBox(height: size.height * 0.04),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * .8,
+                        width: size.width * .8,
                         child: CustomButtonBlue(
                             text: 'Cerrar sesión',
                             onPressed: () async {
@@ -317,9 +316,9 @@ class _MyProfileState extends State<MyProfile> {
                               context.pushReplacement('/sign_in');
                             },
                             width: 0.5)),
-                    SizedBox(height: screenHeight * 0.03),
+                    SizedBox(height: size.height * 0.03),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * .8,
+                        width: size.width * .8,
                         child: isLoadingDeletedAccount
                             ? const Center(
                                 child: CircularProgressIndicator(),
@@ -379,7 +378,7 @@ class _MyProfileState extends State<MyProfile> {
                                   );
                                 },
                                 width: 0.5)),
-                    SizedBox(height: screenHeight * 0.03),
+                    SizedBox(height: size.height * 0.03),
                   ],
                 ),
               );

@@ -16,12 +16,12 @@ class UpdateEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => UpdateEmailBloc(),
       child: Center(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: UpdateEmailForm()),
+        child: SizedBox(width: size.width * 0.9, child: UpdateEmailForm()),
       ),
     );
   }

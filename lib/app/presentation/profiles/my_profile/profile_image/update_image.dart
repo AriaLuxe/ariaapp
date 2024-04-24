@@ -34,8 +34,7 @@ class _UpdateImageState extends State<UpdateImage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -65,9 +64,9 @@ class _UpdateImageState extends State<UpdateImage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: screenHeight * 0.03),
+                  SizedBox(height: size.height * 0.03),
                   Container(
-                    width: screenWidth * .7,
+                    width: size.width * .7,
                     decoration: BoxDecoration(
                         color: const Color(0xFFebebeb).withOpacity(0.26),
                         borderRadius: BorderRadius.circular(20)),
@@ -76,7 +75,7 @@ class _UpdateImageState extends State<UpdateImage> {
                       child: Column(
                         children: [
                           Container(
-                            width: screenWidth * .6,
+                            width: size.width * .6,
                             height: 60,
                             decoration: BoxDecoration(
                               color: const Color(0xFF354271).withOpacity(0.97),
@@ -105,9 +104,9 @@ class _UpdateImageState extends State<UpdateImage> {
                               },
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.015),
+                          SizedBox(height: size.height * 0.015),
                           Container(
-                            width: screenWidth * .6,
+                            width: size.width * .6,
                             decoration: BoxDecoration(
                               color: const Color(0xFF354271).withOpacity(0.97),
                               borderRadius: BorderRadius.circular(25),
@@ -133,9 +132,9 @@ class _UpdateImageState extends State<UpdateImage> {
                               },
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.015),
+                          SizedBox(height: size.height * 0.015),
                           Container(
-                            width: screenWidth * .6,
+                            width: size.width * .6,
                             decoration: BoxDecoration(
                               color: const Color(0xFF354271).withOpacity(0.97),
                               borderRadius: BorderRadius.circular(25),
@@ -181,13 +180,15 @@ class _UpdateImageState extends State<UpdateImage> {
   final picker = ImagePicker();
 
   void showImagePicker(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     showModalBottomSheet(
         context: context,
         builder: (builder) {
           return Card(
             child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 5.2,
+                width: size.width,
+                height: size.height / 5.2,
                 margin: const EdgeInsets.only(top: 8.0),
                 padding: const EdgeInsets.all(12),
                 child: Row(

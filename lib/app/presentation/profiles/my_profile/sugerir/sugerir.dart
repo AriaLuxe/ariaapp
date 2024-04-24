@@ -14,12 +14,12 @@ class Sugerir extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => SugerirBloc(),
       child: Center(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: SugerirForm()),
+        child: SizedBox(width: size.width * 0.9, child: SugerirForm()),
       ),
     );
   }

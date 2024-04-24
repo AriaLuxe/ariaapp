@@ -25,6 +25,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
   bool isAcceptedTerminos = false;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocBuilder<VoiceCloneBloc, VoiceCloneState>(
       builder: (context, state) {
         return Scaffold(
@@ -35,8 +36,8 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                 fit: BoxFit.cover,
               ),
             ),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: size.width,
+            height: size.height,
             child: SafeArea(
               child: Stack(
                 children: [
@@ -72,7 +73,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
+                                width: size.width * 0.1,
                               ),
                               const Text(
                                 'Entrenamiento de voz',
@@ -120,7 +121,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
+                              width: size.width * 0.5,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 5.0, horizontal: 20),

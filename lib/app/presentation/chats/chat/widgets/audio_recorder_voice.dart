@@ -141,6 +141,8 @@ class _RecordControlState extends State<RecordControl> {
     final chatBloc = context.watch<ChatBloc>();
     final chatListBloc = context.watch<ChatListBloc>();
     final userLoggedId = GetIt.instance<UserLogged>().user.id;
+    final size = MediaQuery.of(context).size;
+
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         return Padding(
@@ -149,7 +151,7 @@ class _RecordControlState extends State<RecordControl> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: size.width * 0.7,
                   child: TextInput(
                       errorMessage:
                           state.textMessageInputValidator.errorMessage,

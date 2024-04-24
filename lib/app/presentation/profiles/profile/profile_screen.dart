@@ -52,7 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
+
     final favoritesMessagesBloc =
         BlocProvider.of<FavoritesMessagesBloc>(context);
 
@@ -87,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: size.height * 0.4,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
@@ -167,8 +168,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             Container(
-                              height: MediaQuery.of(context).size.height * 0.35,
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              height: size.height * 0.35,
+                              width: size.width * 0.6,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.white),
                                   borderRadius: BorderRadius.circular(32)),
@@ -201,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 10,
                             ),
                             SizedBox(
-                                width: screenWidth * .8,
+                                width: size.width * .8,
                                 child: BlocBuilder<FollowerCounterBloc,
                                         FollowerCounterState>(
                                     builder: (context, state) {
@@ -319,7 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Container(
                                 height: 60,
-                                width: MediaQuery.of(context).size.width * .8,
+                                width: size.width * .8,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(25),
                                     color: const Color(0xFFebebeb)
@@ -472,7 +473,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 20,
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: size.width * 0.8,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 color:
@@ -494,8 +495,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             widget.user?.isCreator ?? false
                                 ? SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .8,
+                                    width: size.width * .8,
                                     child: ListTile(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
@@ -516,7 +516,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 6,
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * .8,
+                              width: size.width * .8,
                               child: ListTile(
                                 shape: RoundedRectangleBorder(
                                   //<-- SEE HERE
@@ -539,7 +539,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 6,
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * .8,
+                              width: size.width * .8,
                               child: ListTile(
                                 shape: RoundedRectangleBorder(
                                   //<-- SEE HERE
@@ -561,7 +561,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 30,
                             ),
                             Container(
-                                width: MediaQuery.of(context).size.width * .8,
+                                width: size.width * .8,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(25),
                                     color: const Color(0xFFebebeb)

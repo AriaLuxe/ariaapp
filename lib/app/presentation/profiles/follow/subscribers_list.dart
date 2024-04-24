@@ -9,11 +9,13 @@ class SubscribersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: size.width * 0.9,
             child: Column(
               children: [
                 Header(

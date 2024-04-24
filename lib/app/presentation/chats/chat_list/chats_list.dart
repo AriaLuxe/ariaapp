@@ -1,3 +1,4 @@
+import 'package:ariapp/app/config/base_url_config.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +34,7 @@ class _ChatsListState extends State<ChatsList> {
   Widget build(BuildContext context) {
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final chatListBloc = BlocProvider.of<ChatListBloc>(context);
-
+    final size = MediaQuery.of(context).size;
     return BlocBuilder<ChatListBloc, ChatListState>(
       builder: (context, state) {
         switch (state.chatListStatus) {
@@ -148,7 +149,7 @@ class _ChatsListState extends State<ChatsList> {
                                                 CircleAvatar(
                                                   radius: 30.0,
                                                   backgroundImage: NetworkImage(
-                                                    'https://uploadsaria.blob.core.windows.net/files/${chat.imgProfile}',
+                                                    '${BaseUrlConfig.baseUrlImage}${chat.imgProfile}',
                                                   ),
                                                 ),
                                                 const SizedBox(width: 10.0),
@@ -157,11 +158,7 @@ class _ChatsListState extends State<ChatsList> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.5,
+                                                      width: size.width * 0.5,
                                                       child: Text(
                                                         '${chat.nameUser} ${chat.lastName}',
                                                         maxLines: 1,

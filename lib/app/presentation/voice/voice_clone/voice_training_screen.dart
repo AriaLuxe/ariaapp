@@ -68,6 +68,8 @@ class _VoiceTrainingState extends State<VoiceTraining> {
   @override
   Widget build(BuildContext context) {
     final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
+    Size size = MediaQuery.of(context).size;
+
     return BlocBuilder<VoiceCloneBloc, VoiceCloneState>(
       builder: (context, state) {
         return Scaffold(
@@ -78,8 +80,8 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                 fit: BoxFit.cover,
               ),
             ),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: size.width,
+            height: size.height,
             child: SafeArea(
               child: Stack(
                 children: [
@@ -114,7 +116,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
+                                width: size.width * 0.1,
                               ),
                               const Text(
                                 'Entrenamiento de voz',
@@ -125,7 +127,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
+                          width: size.width * 0.8,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.67),
@@ -134,7 +136,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                           child: Column(
                             children: [
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
+                                width: size.width * 0.7,
                                 child: Text(
                                   'Subir audios o responder preguntas',
                                   style: TextStyle(
@@ -145,7 +147,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.65,
+                                width: size.width * 0.65,
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.7),
                                   borderRadius: BorderRadius.circular(30.0),
@@ -205,7 +207,7 @@ class _VoiceTrainingState extends State<VoiceTraining> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
+                              width: size.width * 0.5,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 5.0, horizontal: 20),

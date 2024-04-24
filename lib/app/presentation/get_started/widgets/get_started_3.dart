@@ -40,7 +40,7 @@ class _GetStarted3State extends State<GetStarted3>
     return Scaffold(
       body: Container(
         width: size.width,
-        height: MediaQuery.of(context).size.height,
+        height: size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/start-2.jpg'),

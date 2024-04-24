@@ -48,6 +48,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
   @override
   Widget build(BuildContext context) {
     final voiceBloc = BlocProvider.of<VoiceBloc>(context);
+    Size size = MediaQuery.of(context).size;
 
     return BlocBuilder<VoiceBloc, VoiceState>(builder: (context, state) {
       return state.isThereAudio
@@ -62,7 +63,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
+                    width: size.width * 0.9,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -95,8 +96,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                             isEditingConfiguration
                                 ? const SizedBox()
                                 : SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.2,
+                                    width: size.width * 0.2,
                                     child: CustomButtonFollow(
                                         text: 'Editar',
                                         onPressed: () {

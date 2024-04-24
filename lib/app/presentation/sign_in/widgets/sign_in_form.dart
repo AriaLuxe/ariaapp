@@ -63,14 +63,14 @@ class _SignInFormState extends State<SignInForm> {
               ),
               Image.asset(
                 'assets/images/tree_oficial.png',
-                width: MediaQuery.of(context).size.height * 0.1,
+                width: size.height * 0.1,
               ),
               SizedBox(
                 height: size.height * 0.03,
               ),
               Image.asset(
                 'assets/images/aia.png',
-                width: MediaQuery.of(context).size.height * 0.15,
+                width: size.height * 0.15,
               ),
               SizedBox(
                 height: size.height * 0.03,

@@ -17,11 +17,13 @@ class UpdateState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => UpdateStateBloc(),
       child: Center(
         child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: size.width * 0.9,
             child: UpdateStateForm(
               state: state,
             )),

@@ -23,9 +23,10 @@ class _QuestionResponseState extends State<QuestionResponse> {
   @override
   Widget build(BuildContext context) {
     final voiceBloc = BlocProvider.of<VoiceCloneBloc>(context);
+    Size size = MediaQuery.of(context).size;
 
     return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
+      width: size.width * 0.8,
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.67),
@@ -34,7 +35,7 @@ class _QuestionResponseState extends State<QuestionResponse> {
       child: Column(
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: size.width * 0.7,
             child: Text(
               widget.question,
               style: TextStyle(
