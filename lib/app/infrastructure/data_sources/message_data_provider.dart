@@ -19,7 +19,6 @@ class MessageDataProvider {
             '${BaseUrlConfig.baseUrl}/messages/IA/$chatId/$userId?page=$page&pageSize=$pageSize'),
         headers: {'Authorization': 'Bearer $token'},
       );
-      print(response.body);
       List<dynamic> contentList =
           json.decode(utf8.decode(response.bodyBytes))['content'];
 
@@ -28,7 +27,6 @@ class MessageDataProvider {
 
       return messages;
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
@@ -119,7 +117,6 @@ class MessageDataProvider {
         }
       }
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }
@@ -231,7 +228,7 @@ class MessageDataProvider {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      return bool.parse(response.body) ?? false;
+      return bool.parse(response.body);
     } catch (e) {
       throw Exception(e);
     }

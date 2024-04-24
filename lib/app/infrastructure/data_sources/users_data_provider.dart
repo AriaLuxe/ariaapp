@@ -570,7 +570,6 @@ class UsersDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
-      print(response.body);
       if (response.statusCode == 200) {
         return bool.parse(response.body);
       } else {
