@@ -1,12 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/config/styles.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/people/people_list/bloc/people_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -222,38 +222,32 @@ class _PeopleListState extends State<PeopleList> {
                                                           user.id!);
                                               if (response is ChatModel) {
                                                 chatBloc.messageFetched(
-                                                    response.chatId!, 0, 8);
+                                                    response.chatId!, 0, 12);
 
                                                 context.push(
                                                     '/chat/${response.chatId!}/${response.chatId!}/${user.id!}');
                                               } else if (response ==
                                                   'This user is not a creator') {
-                                                showDialog(
+                                                CustomDialogs()
+                                                    .showConfirmationDialog(
                                                   context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return CustomDialogAccept(
-                                                      text:
-                                                          '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
-                                                      onAccept: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    );
+                                                  title: 'Alerta',
+                                                  content:
+                                                      '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                                                  onAccept: () {
+                                                    Navigator.pop(context);
                                                   },
                                                 );
                                               } else if (response ==
                                                   'Same user') {
-                                                showDialog(
+                                                CustomDialogs()
+                                                    .showConfirmationDialog(
                                                   context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return CustomDialogAccept(
-                                                      text:
-                                                          '¡Oops!\nNo puedes chatear contigo mismo :c',
-                                                      onAccept: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    );
+                                                  title: 'Alerta',
+                                                  content:
+                                                      '¡Oops!\nNo puedes chatear contigo mismo :c',
+                                                  onAccept: () {
+                                                    Navigator.pop(context);
                                                   },
                                                 );
                                               }

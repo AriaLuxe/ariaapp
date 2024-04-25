@@ -25,11 +25,13 @@ class FollowingList extends StatefulWidget {
 class _FollowingListState extends State<FollowingList> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: size.width * 0.9,
             child: Column(
               children: [
                 Row(
@@ -115,8 +117,7 @@ class _FollowingListState extends State<FollowingList> {
                                               color: Color(0xFFc0c0c0)),
                                           maxLines: 1)),
                                   trailing: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
+                                      width: size.width * 0.2,
                                       child: CustomButtonFollow(
                                         onPressed: () {
                                           setState(() {

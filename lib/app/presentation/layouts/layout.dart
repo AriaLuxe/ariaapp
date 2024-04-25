@@ -142,8 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return UserProfileIcon(
                               profileImageURL:
                                   '${BaseUrlConfig.baseUrlImage}${state.urlProfile}',
-                              genericImageURL:
-                                  'https://cdn-icons-png.flaticon.com/512/660/660611.png',
+                              genericImageURL: BaseUrlConfig.defaultImage,
                             );
                           },
                         ),

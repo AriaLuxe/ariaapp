@@ -192,7 +192,7 @@ class _MyInformationState extends State<MyInformation> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.45,
+                        width: size.width * 0.45,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -211,7 +211,7 @@ class _MyInformationState extends State<MyInformation> {
                         ),
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
+                        width: size.width * 0.4,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

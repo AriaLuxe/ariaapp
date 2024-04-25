@@ -27,6 +27,8 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: const Color(0xFF5368d6), // Color específico
@@ -41,7 +43,7 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: size.width * 0.9,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -54,7 +56,7 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: size.height * 0.02,
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -83,13 +85,12 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
                           _buildSubtitle(
                             'El usuario tiene el derecho de solicitar la eliminación de los datos de voz clonada asociados a su cuenta en cualquier momento.',
                           ),
-
                         ],
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: size.height * 0.02,
                   ),
                   const Text(
                     'Políticas de privacidad',
@@ -100,7 +101,7 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: size.height * 0.02,
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -114,14 +115,14 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
                             color: Colors.black,
                             decoration: TextDecoration
                                 .none // Ajusta el color del texto aquí
-                        ),
+                            ),
                         children: [
-                          _buildTitle(
-                              '1. Recopilación de Datos:'),
+                          _buildTitle('1. Recopilación de Datos:'),
                           _buildSubtitle(
                             'La aplicación recolecta únicamente los datos personales proporcionados durante el registro (nombre, correo electrónico, fecha de nacimiento, género, ubicación, etc.) con el propósito de crear y mantener un perfil de usuario para el funcionamiento de la aplicación.',
                           ),
-                          _buildSubtitle('La fecha de nacimiento se utiliza exclusivamente para verificar la mayoría de edad y cumplir con las pautas de las tiendas de aplicaciones.'),
+                          _buildSubtitle(
+                              'La fecha de nacimiento se utiliza exclusivamente para verificar la mayoría de edad y cumplir con las pautas de las tiendas de aplicaciones.'),
                           _buildTitle('2. Visibilidad de Datos:'),
                           _buildSubtitle(
                             'Los datos de nombre, apodo, correo electrónico y foto de perfil son los únicos que se muestran públicamente a otros usuarios de la aplicación.',
@@ -134,7 +135,6 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
                           _buildSubtitle(
                             'Nos reservamos el derecho de modificar estos términos en cualquier momento y te notificaremos sobre cambios significativos. La continua utilización de la aplicación después de dichas modificaciones se considerará como aceptación de los nuevos términos',
                           ),
-
                         ],
                       ),
                     ),

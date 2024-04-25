@@ -17,11 +17,13 @@ class UpdateState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => UpdateStateBloc(),
       child: Center(
         child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: size.width * 0.9,
             child: UpdateStateForm(
               state: state,
             )),
@@ -163,11 +165,10 @@ class _UpdateStateFormState extends State<UpdateStateForm> {
                                     GetIt.instance<UserAriaRepository>();
                                 final userId =
                                     await SharedPreferencesManager.getUserId();
-                                print(userId);
                                 final response =
                                     await userRepository.updateUserState(
                                         userId!, _stateController.text.trim());
-                                print(response);
+
                                 _stateController.clear();
                                 context
                                     .read<ProfileBloc>()

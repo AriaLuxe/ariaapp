@@ -22,12 +22,13 @@ class UpdateInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => MyProfileBloc(),
       child: Center(
         child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: const UpdateInformationForm()),
+            width: size.width * 0.9, child: const UpdateInformationForm()),
       ),
     );
   }
@@ -334,9 +335,8 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                                   ),
                                 ),
                                 content: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height / 4,
-                                  width: MediaQuery.of(context).size.height * 2,
+                                  height: size.height / 4,
+                                  width: size.height * 2,
                                   child: CupertinoDatePicker(
                                     mode: CupertinoDatePickerMode.date,
                                     initialDateTime: DateTime(2000),
@@ -380,7 +380,7 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.45,
+                        width: size.width * 0.45,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -420,7 +420,7 @@ class _UpdateInformationState extends State<UpdateInformationForm> {
                         ),
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
+                        width: size.width * 0.4,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

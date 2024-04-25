@@ -21,11 +21,13 @@ class FollowersList extends StatefulWidget {
 class _FollowersListState extends State<FollowersList> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: size.width * 0.9,
             child: Column(
               children: [
                 Row(
@@ -118,8 +120,7 @@ class _FollowersListState extends State<FollowersList> {
                                     ),
                                   ),
                                   trailing: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
+                                      width: size.width * 0.2,
                                       child: CustomButtonFollow(
                                         onPressed: () {
                                           setState(() {
@@ -157,12 +158,7 @@ class _FollowersListState extends State<FollowersList> {
                                           '${BaseUrlConfig.baseUrlImage}${follower.imgProfile}'),
                                     ),
                                   ),
-                                  onTap: () async {
-                                    //TODO: CAMBIAR NAVEGACION
-                                    //final userAriaRepository = GetIt.instance<UserAriaRepository>();
-                                    // final user = await userAriaRepository.getUserById(follower.idUser);
-                                    //Navigator.push(context,MaterialPageRoute(builder: (context) => ProfileScreen( user: user)));
-                                  },
+                                  onTap: () async {},
                                 );
                               },
                             ),

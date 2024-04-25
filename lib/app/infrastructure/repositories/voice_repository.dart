@@ -7,10 +7,8 @@ class VoiceRepository extends VoiceInterface {
   VoiceRepository({required this.voiceCloneDataProvider});
 
   @override
-  Future<void> cloneVoice(List<String> audioPaths, String imgPath, String name,
-      String description) {
-    // TODO: implement cloneVoice
-    throw UnimplementedError();
+  Future<void> cloneVoice(List<String> audioPaths) async {
+    return await voiceCloneDataProvider.cloneVoice(audioPaths);
   }
 
   @override
@@ -35,5 +33,10 @@ class VoiceRepository extends VoiceInterface {
   @override
   Future<String> testAudio(int userId, String text) async {
     return await voiceCloneDataProvider.testAudio(userId, text);
+  }
+
+  @override
+  Future<void> deleteVoice(String voiceId) async {
+    return await voiceCloneDataProvider.deleteVoice(voiceId);
   }
 }

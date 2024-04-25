@@ -1,9 +1,10 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/presentation/get_started/get_started_screen.dart';
+import 'package:ariapp/app/presentation/notifications/notifications_bloc.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/arrow_back.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:ariapp/app/security/sign_in_service.dart';
 import 'package:ariapp/injections.dart';
@@ -62,14 +63,14 @@ class _SignInFormState extends State<SignInForm> {
               ),
               Image.asset(
                 'assets/images/tree_oficial.png',
-                width: MediaQuery.of(context).size.height * 0.1,
+                width: size.height * 0.1,
               ),
               SizedBox(
                 height: size.height * 0.03,
               ),
               Image.asset(
                 'assets/images/aia.png',
-                width: MediaQuery.of(context).size.height * 0.15,
+                width: size.height * 0.15,
               ),
               SizedBox(
                 height: size.height * 0.03,
@@ -134,52 +135,56 @@ class _SignInFormState extends State<SignInForm> {
                           final response = await emailValidation
                               .sendEmailToResetPassword(email.text.trim());
                           if (email.text.isEmpty) {
-                            showDialog(
+                            CustomDialogs().showConfirmationDialog(
                               context: context,
-                              builder: (BuildContext context) {
-                                return CustomDialogAccept(
-                                  text:
-                                      'Por favor, ingresa tu correo electrónico para recuperar tu contraseña.',
+                              title: 'Alerta',
+                              content:
+                                  'Por favor, ingresa tu correo electrónico para recuperar tu contraseña.',
+                              onAccept: () {
+                                Navigator.pop(context);
+                              },
+                            );
+                          } else {
+                            switch (response) {
+                              case EmailToResetPasswordResponse
+                                    .sentSuccessfully:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VerifyCode(
+                                          email: email.text.trim(),
+                                          verify: 'Verificar código',
+                                          isResetPassword: true)),
+                                );
+                              case EmailToResetPasswordResponse.codeAlreadySent:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VerifyCode(
+                                          email: email.text.trim(),
+                                          verify: 'Verificar código',
+                                          isResetPassword: true)),
+                                );
+                              case EmailToResetPasswordResponse.accountNotFound:
+                                CustomDialogs().showConfirmationDialog(
+                                  context: context,
+                                  title: 'Alerta',
+                                  content:
+                                      'No existe una cuenta con este correo, por favor, ingrese nuevamente',
                                   onAccept: () {
                                     Navigator.pop(context);
                                   },
                                 );
-                              },
-                            );
-                          } else {
-                            if (response == 'Email sent sucessfully') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VerifyCode(
-                                        email: email.text.trim(),
-                                        verify: 'Verificar código',
-                                        isResetPassword: true)),
-                              );
-                            } else if (response ==
-                                'A code has already been sent') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VerifyCode(
-                                        email: email.text.trim(),
-                                        verify: 'Verificar código',
-                                        isResetPassword: true)),
-                              );
-                            } else if (response ==
-                                'Does not exist an account with this email') {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomDialogAccept(
-                                    text:
-                                        'No existe una cuenta con este correo, por favor, ingrese nuevamente',
-                                    onAccept: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              );
+                                break;
+                              default:
+                                CustomDialogs().showConfirmationDialog(
+                                  context: context,
+                                  title: 'Alerta',
+                                  content: 'Error desconocido',
+                                  onAccept: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
                             }
                           }
                         },
@@ -211,8 +216,12 @@ class _SignInFormState extends State<SignInForm> {
                                 });
 
                                 final signInService = SignInService();
+                                final tokenFCM = await context
+                                    .read<NotificationsBloc>()
+                                    .getFCMToken();
+
                                 final response = await signInService.signIn(
-                                    email.text, password.text);
+                                    email.text, password.text, tokenFCM);
 
                                 if (response.containsKey('token')) {
                                   final token = response['token'];
@@ -225,7 +234,6 @@ class _SignInFormState extends State<SignInForm> {
                                       decodedToken['email']);
                                   final userId = await SharedPreferencesManager
                                       .getUserId();
-//                      final userRepository = GetIt.instance<UserAriaRepository>();
                                   final user = await usersRepository
                                       .getUserById(userId!);
                                   userLogged(user);
@@ -234,20 +242,15 @@ class _SignInFormState extends State<SignInForm> {
                                   });
                                   context.go('/chats');
                                 } else {
-                                  showDialog(
+                                  CustomDialogs().showConfirmationDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text: 'Credenciales incorrectos',
-                                        onAccept: () {
-                                          setState(() {
-                                            isLoadingSignIn = false;
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                      );
+                                    title: 'Alerta',
+                                    content: 'Credenciales incorrectos',
+                                    onAccept: () {
+                                      Navigator.pop(context);
                                     },
                                   );
+
                                   setState(() {
                                     isLoadingSignIn = false;
                                   });

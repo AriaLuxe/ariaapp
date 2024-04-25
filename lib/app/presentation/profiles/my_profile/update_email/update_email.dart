@@ -16,12 +16,12 @@ class UpdateEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => UpdateEmailBloc(),
       child: Center(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: UpdateEmailForm()),
+        child: SizedBox(width: size.width * 0.9, child: UpdateEmailForm()),
       ),
     );
   }
@@ -164,11 +164,10 @@ class UpdateEmailForm extends StatelessWidget {
                                 final userId =
                                     await SharedPreferencesManager.getUserId();
                                 final response =
-                                    await userRepository.updateEmail(
+                                    await userRepository.updateUserEmail(
                                         userId!,
                                         _emailController.text.trim(),
                                         _passwordController.text.trim());
-                                print(response);
                                 _emailController.clear();
                                 _passwordController.clear();
 

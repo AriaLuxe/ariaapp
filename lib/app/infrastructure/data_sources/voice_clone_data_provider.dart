@@ -8,7 +8,7 @@ import '../../security/shared_preferences_manager.dart';
 
 class VoiceCloneDataProvider {
   Future<void> cloneVoice(List<String> audioPaths) async {
-    const url = 'https://ariachat-production.up.railway.app/voice/add';
+    final url = '${BaseUrlConfig.baseUrl}/voice/add';
     String? token = await SharedPreferencesManager.getToken();
     int? userId = await SharedPreferencesManager.getUserId();
     final request = http.MultipartRequest('POST', Uri.parse(url));
@@ -45,8 +45,7 @@ class VoiceCloneDataProvider {
         'Authorization': 'Bearer $token',
       },
     );
-    if (response.statusCode == 200 &&
-        response.body.isNotEmpty) {
+    if (response.statusCode == 200 && response.body.isNotEmpty) {
       return response.body;
     } else {
       return 'No clone';

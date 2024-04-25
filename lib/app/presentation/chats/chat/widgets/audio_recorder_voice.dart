@@ -1,9 +1,14 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/config/styles.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
+import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
+import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
@@ -11,8 +16,15 @@ import 'package:open_settings/open_settings.dart';
 
 class AudioRecorderView extends StatefulWidget {
   final Function(String filePath) onSaved;
+  final int chatId;
+  final int userReceivedId;
 
-  const AudioRecorderView({Key? key, required this.onSaved}) : super(key: key);
+  const AudioRecorderView({
+    Key? key,
+    required this.onSaved,
+    required this.chatId,
+    required this.userReceivedId,
+  }) : super(key: key);
 
   @override
   State<AudioRecorderView> createState() => _AudioRecorderViewState();
@@ -93,6 +105,8 @@ class _AudioRecorderViewState extends State<AudioRecorderView> {
       onStart: _startRecording,
       onStop: _stopRecording,
       onCancel: _cancelRecording,
+      chatId: widget.chatId,
+      userReceivedId: widget.userReceivedId,
     );
   }
 }
@@ -102,6 +116,8 @@ class RecordControl extends StatefulWidget {
   final VoidCallback onStart;
   final VoidCallback onStop;
   final VoidCallback onCancel;
+  final int chatId;
+  final int userReceivedId;
 
   const RecordControl({
     Key? key,
@@ -109,6 +125,8 @@ class RecordControl extends StatefulWidget {
     required this.onStart,
     required this.onStop,
     required this.onCancel,
+    required this.chatId,
+    required this.userReceivedId,
   }) : super(key: key);
 
   @override
@@ -121,6 +139,9 @@ class _RecordControlState extends State<RecordControl> {
   @override
   Widget build(BuildContext context) {
     final chatBloc = context.watch<ChatBloc>();
+    final chatListBloc = context.watch<ChatListBloc>();
+    final userLoggedId = GetIt.instance<UserLogged>().user.id;
+    final size = MediaQuery.of(context).size;
 
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
@@ -130,7 +151,7 @@ class _RecordControlState extends State<RecordControl> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: size.width * 0.7,
                   child: TextInput(
                       errorMessage:
                           state.textMessageInputValidator.errorMessage,
@@ -170,7 +191,19 @@ class _RecordControlState extends State<RecordControl> {
                       ),
                       child: IconButton(
                         icon: Icon(Icons.send, color: Styles.primaryColor),
-                        onPressed: () {}, //TODO: implementar enviar texto
+                        onPressed: textMessageController.text.isEmpty
+                            ? null
+                            : () {
+                                chatBloc.messageSent(
+                                  widget.chatId,
+                                  widget.userReceivedId,
+                                  '',
+                                  textMessageController.text,
+                                  TypeMsg.text,
+                                );
+                                chatListBloc.chatsFetched();
+                                textMessageController.clear();
+                              },
                       ),
                     )
                   : GestureDetector(
@@ -219,6 +252,46 @@ class _RecordControlState extends State<RecordControl> {
                               ),
                             ),
                     ),
+              const SizedBox(
+                width: 10,
+              ),
+              state.isReadyToTraining
+                  ? Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF5368d6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 0,
+                            blurRadius: 15,
+                            offset: Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.send, color: Styles.primaryColor),
+                        onPressed: () async {
+                          CustomDialogs().showCustomDialog(
+                              context: context,
+                              text:
+                                  '¿Estás seguro de enviar chat para entrenar?',
+                              onOk: () async {
+                                final messageRepository =
+                                    GetIt.instance<MessageRepository>();
+                                await messageRepository.sendTraining(
+                                    userLoggedId!, widget.chatId);
+                                chatBloc.isReadyToTraining(widget.chatId);
+
+                                Navigator.pop(context);
+                              },
+                              onCancel: () {
+                                Navigator.pop(context);
+                              });
+                        },
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         );

@@ -1,21 +1,21 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
+import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/infrastructure/services/camera_gallery_service_impl.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/bloc/profile_bloc.dart';
+import 'package:ariapp/app/presentation/profiles/my_profile/profile_image/edit_image.dart';
+import 'package:ariapp/app/presentation/widgets/header.dart';
+import 'package:ariapp/app/security/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../../../../infrastructure/data_sources/users_data_provider.dart';
-import '../../../../security/shared_preferences_manager.dart';
-import '../../../widgets/custom_dialog.dart';
-import '../../../widgets/header.dart';
-import '../bloc/profile_bloc.dart';
-import 'edit_image.dart';
 
 class UpdateImage extends StatefulWidget {
   const UpdateImage({super.key, required this.urlPhoto});
@@ -32,8 +32,7 @@ class _UpdateImageState extends State<UpdateImage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -63,9 +62,9 @@ class _UpdateImageState extends State<UpdateImage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: screenHeight * 0.03),
+                  SizedBox(height: size.height * 0.03),
                   Container(
-                    width: screenWidth * .7,
+                    width: size.width * .7,
                     decoration: BoxDecoration(
                         color: const Color(0xFFebebeb).withOpacity(0.26),
                         borderRadius: BorderRadius.circular(20)),
@@ -74,7 +73,7 @@ class _UpdateImageState extends State<UpdateImage> {
                       child: Column(
                         children: [
                           Container(
-                            width: screenWidth * .6,
+                            width: size.width * .6,
                             height: 60,
                             decoration: BoxDecoration(
                               color: const Color(0xFF354271).withOpacity(0.97),
@@ -103,9 +102,9 @@ class _UpdateImageState extends State<UpdateImage> {
                               },
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.015),
+                          SizedBox(height: size.height * 0.015),
                           Container(
-                            width: screenWidth * .6,
+                            width: size.width * .6,
                             decoration: BoxDecoration(
                               color: const Color(0xFF354271).withOpacity(0.97),
                               borderRadius: BorderRadius.circular(25),
@@ -131,9 +130,9 @@ class _UpdateImageState extends State<UpdateImage> {
                               },
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.015),
+                          SizedBox(height: size.height * 0.015),
                           Container(
-                            width: screenWidth * .6,
+                            width: size.width * .6,
                             decoration: BoxDecoration(
                               color: const Color(0xFF354271).withOpacity(0.97),
                               borderRadius: BorderRadius.circular(25),
@@ -144,22 +143,17 @@ class _UpdateImageState extends State<UpdateImage> {
                               trailing:
                                   const Icon(Icons.delete, color: Colors.red),
                               onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomDialog(
-                                      text:
-                                          '¿Estás seguro que desea eliminar foto?',
-                                      onOk: () {
-                                        _defaultImage();
-                                        Navigator.of(context).pop();
-                                      },
-                                      onCancel: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                );
+                                CustomDialogs().showCustomDialog(
+                                    context: context,
+                                    text:
+                                        '¿Estás seguro que desea eliminar foto?',
+                                    onOk: () {
+                                      _defaultImage();
+                                      Navigator.of(context).pop();
+                                    },
+                                    onCancel: () {
+                                      Navigator.pop(context);
+                                    });
                               },
                             ),
                           ),
@@ -179,13 +173,15 @@ class _UpdateImageState extends State<UpdateImage> {
   final picker = ImagePicker();
 
   void showImagePicker(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     showModalBottomSheet(
         context: context,
         builder: (builder) {
           return Card(
             child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 5.2,
+                width: size.width,
+                height: size.height / 5.2,
                 margin: const EdgeInsets.only(top: 8.0),
                 padding: const EdgeInsets.all(12),
                 child: Row(
@@ -323,9 +319,9 @@ class _UpdateImageState extends State<UpdateImage> {
 
     await copyAssetToFile(assetImagePath, targetPath);
 
-    final userDataProvider = UsersDataProvider();
-    final response = await userDataProvider.updateUserImageProfile(
-        userId!, File(targetPath));
+    final usersRepository = GetIt.instance<UserAriaRepository>();
+    final response =
+        await usersRepository.updateUserImageProfile(userId!, File(targetPath));
 
     if (response == 'imgProfile is updated') {
       context.read<ProfileBloc>().fetchDataProfile(userId);

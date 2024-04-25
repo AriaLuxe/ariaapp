@@ -46,6 +46,8 @@ class _EditImageState extends State<EditImage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -53,7 +55,7 @@ class _EditImageState extends State<EditImage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: size.height * 0.7,
                 child: CustomImageCrop(
                   backgroundColor: Styles.primaryColor,
                   cropController: controller,
@@ -77,13 +79,13 @@ class _EditImageState extends State<EditImage> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: size.height * 0.05,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: size.width * 0.4,
                     child: CustomButtonBlue(
                       text: 'Cancelar',
                       onPressed: () {
@@ -93,12 +95,14 @@ class _EditImageState extends State<EditImage> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: isLoading ?const Center(child: CircularProgressIndicator()):CustomButtonBlue(
-                      text: 'Guardar',
-                      onPressed: _saveCroppedImage,
-                      width: 0.8,
-                    ),
+                    width: size.width * 0.4,
+                    child: isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : CustomButtonBlue(
+                            text: 'Guardar',
+                            onPressed: _saveCroppedImage,
+                            width: 0.8,
+                          ),
                   ),
                 ],
               ),
@@ -111,9 +115,9 @@ class _EditImageState extends State<EditImage> {
   }
 
   Future<void> _saveCroppedImage() async {
-setState(() {
-  isLoading = true;
-});
+    setState(() {
+      isLoading = true;
+    });
     final croppedImage = await controller.onCropImage();
     if (croppedImage != null) {
       final bytes = croppedImage.bytes;

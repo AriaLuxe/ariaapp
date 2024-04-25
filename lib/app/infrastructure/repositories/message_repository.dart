@@ -1,6 +1,6 @@
 import 'package:ariapp/app/domain/entities/message.dart';
 import 'package:ariapp/app/domain/interfaces/message_interface.dart';
-import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
+import 'package:ariapp/app/infrastructure/data_sources/message_data_provider.dart';
 
 class MessageRepository extends MessageInterface {
   final MessageDataProvider messageDataProvider;
@@ -10,9 +10,10 @@ class MessageRepository extends MessageInterface {
   });
 
   @override
-  Future<Message> createMessage(int chatId, int userId, String audioPath) {
+  Future<Message> createMessage(
+      int chatId, int userId, String audioPath, String text) {
     final response =
-        messageDataProvider.createMessage(chatId, userId, audioPath);
+        messageDataProvider.createMessage(chatId, userId, audioPath, text);
     return response;
   }
 
@@ -26,9 +27,9 @@ class MessageRepository extends MessageInterface {
 
   @override
   Future<Message> responseMessage(
-      int chatId, int userReceivedId, String audioPath) {
-    final response =
-        messageDataProvider.responseMessage(chatId, userReceivedId, audioPath);
+      int chatId, int userReceivedId, String audioPath, String text) {
+    final response = messageDataProvider.responseMessage(
+        chatId, userReceivedId, audioPath, text);
     return response;
   }
 
@@ -49,5 +50,29 @@ class MessageRepository extends MessageInterface {
     final response =
         messageDataProvider.getFavoritesMessages(userLogged, idUserLooking);
     return response;
+  }
+
+  @override
+  Future<bool> isReadyToTraining(int userLogged, int chatId) async {
+    final response = messageDataProvider.isReadyToTraining(userLogged, chatId);
+    return response;
+  }
+
+  @override
+  Future<Message> createTextMessage(
+      int chatId, int userId, String textMessage) {
+    final response =
+        messageDataProvider.createTextMessage(chatId, userId, textMessage);
+    return response;
+  }
+
+  @override
+  Future<void> createTraining(int userId, int chatId) {
+    return messageDataProvider.createTraining(userId, chatId);
+  }
+
+  @override
+  Future<void> sendTraining(int userId, int chatId) {
+    return messageDataProvider.sendTraining(userId, chatId);
   }
 }

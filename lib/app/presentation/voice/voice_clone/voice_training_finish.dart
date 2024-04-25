@@ -1,13 +1,14 @@
-import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
+import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
 import 'package:ariapp/app/presentation/voice/bloc/voice_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/bloc/voice_clone_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/question_response.dart';
 import 'package:ariapp/app/presentation/voice/voice_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/question_background.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_voice_clone.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class VoiceTrainingFinish extends StatefulWidget {
@@ -22,6 +23,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
   bool isAcceptedTerminos = false;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocBuilder<VoiceCloneBloc, VoiceCloneState>(
       builder: (context, state) {
         return Scaffold(
@@ -32,8 +34,8 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                 fit: BoxFit.cover,
               ),
             ),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: size.width,
+            height: size.height,
             child: SafeArea(
               child: Stack(
                 children: [
@@ -69,7 +71,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
+                                width: size.width * 0.1,
                               ),
                               const Text(
                                 'Entrenamiento de voz',
@@ -117,7 +119,7 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.5,
+                              width: size.width * 0.5,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 5.0, horizontal: 20),
@@ -144,9 +146,9 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                               });
 
                                               // Procede con la creación de la voz y otras operaciones
-                                              final voiceCloneDataProvider =
-                                                  VoiceCloneDataProvider();
-                                              await voiceCloneDataProvider
+                                              final voiceRepository = GetIt
+                                                  .instance<VoiceRepository>();
+                                              voiceRepository
                                                   .cloneVoice(state.audioPaths);
                                               voiceBloc.showView(true);
                                               voiceCloneBloc.clearPaths();
@@ -162,32 +164,27 @@ class _VoiceTrainingFinishState extends State<VoiceTrainingFinish> {
                                               );
                                             } else {
                                               // Mostrar un showDialog indicando que los términos no han sido aceptados
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'Por favor, acepta los términos y condiciones antes de continuar.',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'Por favor, acepta los términos y condiciones antes de continuar.',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             }
                                           } else {
                                             // Mostrar un showDialog indicando que no se grabaron los 10 audios
-                                            showDialog(
+                                            CustomDialogs()
+                                                .showConfirmationDialog(
                                               context: context,
-                                              builder: (BuildContext context) {
-                                                return CustomDialogAccept(
-                                                  text:
-                                                      'Por favor, asegurate de subir por lo menos 5 audios\no responder las preguntas',
-                                                  onAccept: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
+                                              title: 'Alerta',
+                                              content:
+                                                  'Por favor, asegurate de subir por lo menos 5 audios\no responder las preguntas',
+                                              onAccept: () {
+                                                Navigator.pop(context);
                                               },
                                             );
                                           }

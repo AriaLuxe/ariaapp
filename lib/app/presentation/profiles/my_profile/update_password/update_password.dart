@@ -15,12 +15,12 @@ class UpdatePassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return BlocProvider(
       create: (context) => UpdatePasswordBloc(),
       child: Center(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: UpdatePasswordForm()),
+        child: SizedBox(width: size.width * 0.9, child: UpdatePasswordForm()),
       ),
     );
   }

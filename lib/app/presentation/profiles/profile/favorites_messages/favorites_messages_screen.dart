@@ -44,6 +44,8 @@ class _FavoritesMessagesState extends State<FavoritesMessages> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: BlocBuilder<FavoritesMessagesBloc, FavoritesMessagesState>(
         builder: (context, state) {
@@ -65,7 +67,7 @@ class _FavoritesMessagesState extends State<FavoritesMessages> {
                     height: 10,
                   ),
                   SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
+                      width: size.width * 0.9,
                       //TODO: Agregar navegacion hacia el perfile al tocar la foto
                       child: HeaderFavoritesMessages(
                         title: 'Mensajes favoritos',

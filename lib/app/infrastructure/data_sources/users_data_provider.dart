@@ -456,7 +456,6 @@ class UsersDataProvider {
     }
   }
 
-//TODO CHATS BLOCK
   Future<bool> checkBlock(int userId, int userLooking) async {
     try {
       String? token = await SharedPreferencesManager.getToken();
@@ -571,7 +570,6 @@ class UsersDataProvider {
           'Authorization': 'Bearer $token',
         },
       );
-      print(response.body);
       if (response.statusCode == 200) {
         return bool.parse(response.body);
       } else {

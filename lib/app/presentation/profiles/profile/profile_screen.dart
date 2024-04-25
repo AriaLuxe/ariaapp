@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/models/chat_model.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
@@ -9,8 +9,6 @@ import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart
 import 'package:ariapp/app/presentation/profiles/profile/bloc/follower_counter_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/bloc/favorites_messages_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/favorites_messages/favorites_messages_screen.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -50,7 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
+
     final favoritesMessagesBloc =
         BlocProvider.of<FavoritesMessagesBloc>(context);
 
@@ -85,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: size.height * 0.4,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
@@ -165,8 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             Container(
-                              height: MediaQuery.of(context).size.height * 0.35,
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              height: size.height * 0.35,
+                              width: size.width * 0.6,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.white),
                                   borderRadius: BorderRadius.circular(32)),
@@ -199,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 10,
                             ),
                             SizedBox(
-                                width: screenWidth * .8,
+                                width: size.width * .8,
                                 child: BlocBuilder<FollowerCounterBloc,
                                         FollowerCounterState>(
                                     builder: (context, state) {
@@ -209,16 +208,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          showDialog(
+                                          CustomDialogs()
+                                              .showConfirmationDialog(
                                             context: context,
-                                            builder: (BuildContext context) {
-                                              return CustomDialogAccept(
-                                                text:
-                                                    'La informacion de los suscritos no esta disponible',
-                                                onAccept: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              );
+                                            title: 'Alerta',
+                                            content:
+                                                'La informacion de los suscritos no esta disponible',
+                                            onAccept: () {
+                                              Navigator.pop(context);
                                             },
                                           );
                                         },
@@ -317,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Container(
                                 height: 60,
-                                width: MediaQuery.of(context).size.width * .8,
+                                width: size.width * .8,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(25),
                                     color: const Color(0xFFebebeb)
@@ -371,16 +368,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       GestureDetector(
                                         onTap: () async {
                                           if (state.isBlock) {
-                                            showDialog(
+                                            CustomDialogs()
+                                                .showConfirmationDialog(
                                               context: context,
-                                              builder: (BuildContext context) {
-                                                return CustomDialogAccept(
-                                                  text:
-                                                      'Desbloquear para enviar mensaje',
-                                                  onAccept: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
+                                              title: 'Alerta',
+                                              content:
+                                                  'Desbloquear para enviar mensaje',
+                                              onAccept: () {
+                                                Navigator.pop(context);
                                               },
                                             );
                                           } else {
@@ -395,38 +390,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         widget.user!.id!);
                                             if (response is ChatModel) {
                                               chatBloc.messageFetched(
-                                                  response.chatId!, 0, 8);
+                                                  response.chatId!, 0, 12);
 
                                               context.push(
                                                   '/chat/${response.chatId!}/${response.chatId!}/${widget.user!.id!}');
                                             } else if (response ==
                                                 'This user is not a creator') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else if (response ==
                                                 'Same user') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        '¡Oops!\nNo puedes chatear contigo mismo :c',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    '¡Oops!\nNo puedes chatear contigo mismo :c',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             }
@@ -470,7 +459,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 20,
                             ),
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: size.width * 0.8,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 color:
@@ -492,8 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             widget.user?.isCreator ?? false
                                 ? SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .8,
+                                    width: size.width * .8,
                                     child: ListTile(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
@@ -514,7 +502,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 6,
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * .8,
+                              width: size.width * .8,
                               child: ListTile(
                                 shape: RoundedRectangleBorder(
                                   //<-- SEE HERE
@@ -537,7 +525,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 6,
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * .8,
+                              width: size.width * .8,
                               child: ListTile(
                                 shape: RoundedRectangleBorder(
                                   //<-- SEE HERE
@@ -559,7 +547,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 30,
                             ),
                             Container(
-                                width: MediaQuery.of(context).size.width * .8,
+                                width: size.width * .8,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(25),
                                     color: const Color(0xFFebebeb)
@@ -592,46 +580,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         widget.user!.id!);
                                             if (response ==
                                                 'Chat does not exists') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'Lo sentimo, no tienes chat con este usuario',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'Lo sentimo, no tienes chat con este usuario',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else if (response ==
                                                 'No messages') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'No tienes mensajes favoritos, selecciona algunos para poder verlos',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'No tienes mensajes favoritos, selecciona algunos para poder verlos',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else if (response == 'No chat') {
-                                              showDialog(
+                                              CustomDialogs()
+                                                  .showConfirmationDialog(
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return CustomDialogAccept(
-                                                    text:
-                                                        'Lo sentimo, no tienes chat con este usuario',
-                                                    onAccept: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  );
+                                                title: 'Alerta',
+                                                content:
+                                                    'Lo sentimo, no tienes chat con este usuario',
+                                                onAccept: () {
+                                                  Navigator.pop(context);
                                                 },
                                               );
                                             } else {
@@ -711,28 +690,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         Icons.delete,
                                                         color: Colors.red),
                                                     onTap: () async {
-                                                      final chatsDataProvider =
-                                                          ChatsDataProvider();
+                                                      final chatRepository =
+                                                          GetIt.instance<
+                                                              ChatRepository>();
                                                       final response =
-                                                          await chatsDataProvider
+                                                          await chatRepository
                                                               .validateCreateChat(
                                                                   userLoggedId!,
                                                                   widget.user!
                                                                       .id!);
                                                       if (response ==
                                                           'Chat does not exist') {
-                                                        showDialog(
+                                                        CustomDialogs()
+                                                            .showConfirmationDialog(
                                                           context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return CustomDialogAccept(
-                                                              text:
-                                                                  '¡Oops!\nEl chat no existe.',
-                                                              onAccept: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            );
+                                                          title: 'Alerta',
+                                                          content:
+                                                              '¡Oops!\nEl chat no existe.',
+                                                          onAccept: () {
+                                                            Navigator.pop(
+                                                                context);
                                                           },
                                                         );
                                                       } else if (int.parse(
@@ -740,27 +717,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           0) {
                                                         int chatId =
                                                             int.parse(response);
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return CustomDialog(
-                                                              text:
-                                                                  '¿Estás seguro de eliminar chat?',
-                                                              onOk: () {
-                                                                chatListBloc
-                                                                    .deleteChat(
-                                                                        chatId);
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              onCancel: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            );
-                                                          },
-                                                        );
+
+                                                        CustomDialogs()
+                                                            .showCustomDialog(
+                                                                context:
+                                                                    context,
+                                                                text:
+                                                                    '¿Estás seguro de eliminar chat?',
+                                                                onOk: () {
+                                                                  chatListBloc
+                                                                      .deleteChat(
+                                                                          chatId);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                onCancel: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                });
                                                       }
                                                     }),
                                           );

@@ -1,10 +1,8 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
-import 'package:ariapp/app/presentation/sign_in/sing_in_screen.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
+import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
+import 'package:ariapp/app/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-
-import '../../sign_in/widgets/text_input.dart';
-import '../../widgets/custom_button.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key, required this.email});
@@ -185,38 +183,38 @@ class _ResetPasswordState extends State<ResetPassword> {
                             widget.email,
                             password.text.trim(),
                             confirmPassword.text.trim());
-                        if (response == 'Password is updated') {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogAccept(
-                                text:
-                                    'La contraseña se ha cambiado satisfactoriamente.\nInicie sesión con su nueva contraseña.',
-                                onAccept: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignInScreen(),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogAccept(
-                                text:
-                                    '¡Oops!\nParece que las contraseñas no coinciden. Revise e inténtelo de nuevo.',
-                                onAccept: () {
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
+
+                        switch (response) {
+                          case ResetPasswordResponse.passwordUpdated:
+                            CustomDialogs().showConfirmationDialog(
+                              context: context,
+                              title: 'Alerta',
+                              content:
+                                  'La contraseña se ha cambiado satisfactoriamente.\nInicie sesión con su nueva contraseña.',
+                              onAccept: () {
+                                Navigator.pop(context);
+                              },
+                            );
+                          case ResetPasswordResponse.passwordsMismatch:
+                            CustomDialogs().showConfirmationDialog(
+                              context: context,
+                              title: 'Alerta',
+                              content:
+                                  '¡Oops!\nParece que las contraseñas no coinciden. Revise e inténtelo de nuevo.',
+                              onAccept: () {
+                                Navigator.pop(context);
+                              },
+                            );
+                            break;
+                          default:
+                            CustomDialogs().showConfirmationDialog(
+                              context: context,
+                              title: 'Alerta',
+                              content: 'Error desconocido',
+                              onAccept: () {
+                                Navigator.pop(context);
+                              },
+                            );
                         }
                       },
                       width: 0.5)),

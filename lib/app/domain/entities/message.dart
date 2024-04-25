@@ -2,13 +2,14 @@ class Message {
   final int id;
   final int sender;
   final String content;
+  final String msgText;
   final int durationSeconds;
   final DateTime date;
   final bool read;
   final bool isLiked;
   final int chat;
 
-  Message( {
+  Message({
     required this.durationSeconds,
     required this.id,
     required this.sender,
@@ -17,5 +18,6 @@ class Message {
     required this.read,
     required this.isLiked,
     required this.chat,
+    required this.msgText,
   });
 }

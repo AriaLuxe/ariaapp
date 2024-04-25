@@ -1,9 +1,13 @@
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
+import 'package:ariapp/app/config/styles.dart';
+import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/email_validation_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
+import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
+import 'package:ariapp/app/presentation/sign_up/bloc/sign_up_bloc.dart';
 import 'package:ariapp/app/presentation/sign_up/terminos_condiciones_screen.dart';
 import 'package:ariapp/app/presentation/sign_up/widgets/verify_code.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button.dart';
-import 'package:ariapp/app/presentation/widgets/custom_dialog_accept.dart';
 import 'package:ariapp/app/presentation/widgets/header.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,11 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-
-import '../../../config/styles.dart';
-import '../../../domain/entities/user_aria.dart';
-import '../../sign_in/widgets/text_input.dart';
-import '../bloc/sign_up_bloc.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -85,6 +84,7 @@ class _SignUpFormState extends State<SignUpForm> {
   @override
   Widget build(BuildContext context) {
     final signUpBloc = context.watch<SignUpBloc>();
+    Size size = MediaQuery.of(context).size;
 
     final nameUser = signUpBloc.state.nameInputValidator;
     final lastName = signUpBloc.state.lastNameInputValidator;
@@ -160,8 +160,8 @@ class _SignUpFormState extends State<SignUpForm> {
                         ),
                       ),
                       content: SizedBox(
-                        height: MediaQuery.of(context).size.height / 4,
-                        width: MediaQuery.of(context).size.height * 2,
+                        height: size.height / 4,
+                        width: size.height * 2,
                         child: CupertinoDatePicker(
                           mode: CupertinoDatePickerMode.date,
                           initialDateTime: DateTime(2000),
@@ -248,7 +248,7 @@ class _SignUpFormState extends State<SignUpForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
+                  width: size.width * 0.45,
                   child: TextInput(
                     verticalPadding: 15,
                     controller: _countryController,
@@ -278,7 +278,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
+                  width: size.width * 0.4,
                   child: TextInput(
                     verticalPadding: 15,
                     prefixIcon: Icons.location_on,
@@ -349,129 +349,126 @@ class _SignUpFormState extends State<SignUpForm> {
                                       EmailValidationDataProvider();
                                   final response = await emailValidation
                                       .sendEmailToRegisterUser(email.value);
-                                  print(response);
-                                  if (response == 'Email sent successfully') {
-                                    final user = UserAria(
-                                        nameUser: nameUser.value.trim(),
-                                        lastName: lastName.value.trim(),
-                                        email: email.value.trim(),
-                                        password: password.value,
-                                        gender: _genderController.text.trim(),
-                                        country: _countryController.text.trim(),
-                                        city: country.value.trim(),
-                                        nickname: nickname.value.trim(),
-                                        dateBirth: DateTime.parse(
-                                            DateFormat('yyyy-MM-dd').format(
-                                                DateTime.parse(
-                                                    birthDate.value))),
-                                        role: 'USER');
+                                  switch (response) {
+                                    case EmailToRegisterUserResponse
+                                          .emailSentSuccessfully:
+                                      final user = UserAria(
+                                          nameUser: nameUser.value.trim(),
+                                          lastName: lastName.value.trim(),
+                                          email: email.value.trim(),
+                                          password: password.value,
+                                          gender: _genderController.text.trim(),
+                                          country:
+                                              _countryController.text.trim(),
+                                          city: country.value.trim(),
+                                          nickname: nickname.value.trim(),
+                                          dateBirth: DateTime.parse(
+                                              DateFormat('yyyy-MM-dd').format(
+                                                  DateTime.parse(
+                                                      birthDate.value))),
+                                          role: 'USER');
 
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => VerifyCode(
-                                                email: email.value.trim(),
-                                                verify:
-                                                    'Verificar y Registrarse',
-                                                isResetPassword: false,
-                                                user: user)));
-                                    setState(() {
-                                      isLoadingSignUp = false;
-                                    });
-                                  } else if (response ==
-                                      'Has already exists an account with this email') {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text:
-                                              'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
-                                          onAccept: () {
-                                            setState(() {
-                                              isLoadingSignUp = true;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    );
-                                  } else if (response ==
-                                      'Code already send to this email') {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text:
-                                              'Ya se envio un codigo a este correo',
-                                          onAccept: () {
-                                            setState(() {
-                                              isLoadingSignUp = true;
-                                            });
-                                            final user = UserAria(
-                                                nameUser: nameUser.value.trim(),
-                                                lastName: lastName.value.trim(),
-                                                email: email.value.trim(),
-                                                password: password.value,
-                                                gender: _genderController.text
-                                                    .trim(),
-                                                country: _countryController.text
-                                                    .trim(),
-                                                city: country.value.trim(),
-                                                nickname: nickname.value.trim(),
-                                                dateBirth: DateTime.parse(
-                                                    DateFormat('yyyy-MM-dd')
-                                                        .format(DateTime.parse(
-                                                            birthDate.value))),
-                                                role: 'USER');
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        VerifyCode(
-                                                            email: email.value
-                                                                .trim(),
-                                                            verify:
-                                                                'Crear cuenta',
-                                                            isResetPassword:
-                                                                false,
-                                                            user: user)));
-
-                                            setState(() {
-                                              isLoadingSignUp = false;
-                                            });
-                                          },
-                                        );
-                                      },
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return CustomDialogAccept(
-                                          text: 'Verifique sus datos',
-                                          onAccept: () {
-                                            setState(() {
-                                              isLoadingSignUp = false;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      },
-                                    );
-                                  }
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return CustomDialogAccept(
-                                        text:
-                                            'Por favor, acepta los términos y condiciones antes de continuar.',
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => VerifyCode(
+                                                  email: email.value.trim(),
+                                                  verify:
+                                                      'Verificar y Registrarse',
+                                                  isResetPassword: false,
+                                                  user: user)));
+                                      setState(() {
+                                        isLoadingSignUp = false;
+                                      });
+                                    case EmailToRegisterUserResponse
+                                          .accountExists:
+                                      CustomDialogs().showConfirmationDialog(
+                                        context: context,
+                                        title: 'Alerta',
+                                        content:
+                                            'Ya existe una cuenta con este correo.\n Ingrese nuevo correo',
                                         onAccept: () {
-
                                           Navigator.pop(context);
                                         },
                                       );
+                                    case EmailToRegisterUserResponse
+                                          .codeAlreadySent:
+                                      CustomDialogs().showConfirmationDialog(
+                                        context: context,
+                                        title: 'Alerta',
+                                        content:
+                                            'Ya se envio un codigo a este correo',
+                                        onAccept: () {
+                                          setState(() {
+                                            isLoadingSignUp = true;
+                                          });
+                                          final user = UserAria(
+                                              nameUser: nameUser.value.trim(),
+                                              lastName: lastName.value.trim(),
+                                              email: email.value.trim(),
+                                              password: password.value,
+                                              gender:
+                                                  _genderController.text.trim(),
+                                              country: _countryController.text
+                                                  .trim(),
+                                              city: country.value.trim(),
+                                              nickname: nickname.value.trim(),
+                                              dateBirth: DateTime.parse(
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(DateTime.parse(
+                                                          birthDate.value))),
+                                              role: 'USER');
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      VerifyCode(
+                                                          email: email.value
+                                                              .trim(),
+                                                          verify:
+                                                              'Crear cuenta',
+                                                          isResetPassword:
+                                                              false,
+                                                          user: user)));
+
+                                          setState(() {
+                                            isLoadingSignUp = false;
+                                          });
+                                        },
+                                      );
+                                    case EmailToRegisterUserResponse
+                                          .invalidData:
+                                      CustomDialogs().showConfirmationDialog(
+                                        context: context,
+                                        title: 'Alerta',
+                                        content: 'Data invalid',
+                                        onAccept: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                      break;
+                                    default:
+                                      CustomDialogs().showConfirmationDialog(
+                                        context: context,
+                                        title: 'Alerta',
+                                        content: 'Error desconocido',
+                                        onAccept: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                  }
+                                } else {
+                                  CustomDialogs().showConfirmationDialog(
+                                    context: context,
+                                    title: 'Alerta',
+                                    content:
+                                        'Por favor, acepta los términos y condiciones antes de continuar.',
+                                    onAccept: () {
+                                      setState(() {
+                                        isLoadingSignUp = false;
+                                      });
+                                      Navigator.pop(context);
                                     },
                                   );
                                 }

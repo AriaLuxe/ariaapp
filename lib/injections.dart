@@ -1,6 +1,6 @@
 import 'package:ariapp/app/domain/entities/user_aria.dart';
 import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
-import 'package:ariapp/app/infrastructure/data_sources/message_data_privider.dart';
+import 'package:ariapp/app/infrastructure/data_sources/message_data_provider.dart';
 import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
 import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';

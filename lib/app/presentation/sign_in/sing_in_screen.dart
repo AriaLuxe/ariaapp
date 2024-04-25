@@ -17,6 +17,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Styles.primaryColor,
@@ -29,7 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: SizedBox(
-              width: MediaQuery.of(context).size.width * 1,
+              width: size.width * 1,
               child: const SingleChildScrollView(
                 child: SignInForm(),
               ),

@@ -1,14 +1,22 @@
-import 'package:ariapp/app/infrastructure/data_sources/voice_clone_data_provider.dart';
+import 'package:ariapp/app/config/base_url_config.dart';
+import 'package:ariapp/app/config/helpers/custom_dialogs.dart';
+import 'package:ariapp/app/infrastructure/data_sources/chats_data_provider.dart';
+import 'package:ariapp/app/infrastructure/models/chat_model.dart';
+import 'package:ariapp/app/infrastructure/repositories/chat_repository.dart';
+import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/voice_repository.dart';
+import 'package:ariapp/app/presentation/chats/chat/bloc/chat_bloc.dart';
 import 'package:ariapp/app/presentation/voice/voice_clone/voice_clone_screen.dart';
 import 'package:ariapp/app/presentation/voice/widgets/audio_player_test.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_blue.dart';
 import 'package:ariapp/app/presentation/widgets/custom_button_follow.dart';
 import 'package:ariapp/app/presentation/widgets/custom_dialog.dart';
 import 'package:ariapp/app/security/shared_preferences_manager.dart';
+import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'bloc/voice_bloc.dart';
@@ -40,6 +48,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
   @override
   Widget build(BuildContext context) {
     final voiceBloc = BlocProvider.of<VoiceBloc>(context);
+    Size size = MediaQuery.of(context).size;
 
     return BlocBuilder<VoiceBloc, VoiceState>(builder: (context, state) {
       return state.isThereAudio
@@ -54,7 +63,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
+                    width: size.width * 0.9,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -87,8 +96,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                             isEditingConfiguration
                                 ? const SizedBox()
                                 : SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.2,
+                                    width: size.width * 0.2,
                                     child: CustomButtonFollow(
                                         text: 'Editar',
                                         onPressed: () {
@@ -261,7 +269,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                         testAudio
                             ? AudioPlayerTest(
                                 audioUrl:
-                                    'https://uploadsaria.blob.core.windows.net/files/${state.urlAudioTest}',
+                                    '${BaseUrlConfig.baseUrlImage}${state.urlAudioTest}',
                                 //time: DateTime.now(),
                                 //senderId: 1,
                                 //isMe: true,
@@ -290,12 +298,12 @@ class _VoiceScreenState extends State<VoiceScreen> {
                                     });
                                     int? userId = await SharedPreferencesManager
                                         .getUserId();
-                                    final voiceCloneDataProvider =
-                                        VoiceCloneDataProvider();
-                                    final path = await voiceCloneDataProvider
+                                    final voiceRepository =
+                                        GetIt.instance<VoiceRepository>();
+                                    final path = await voiceRepository
                                         .testAudio(userId!, _testVoice.text);
                                     _audioPlayer.setUrl(
-                                        'https://uploadsaria.blob.core.windows.net/files/$path');
+                                        '${BaseUrlConfig.baseUrlImage}$path');
                                     setState(() {
                                       loadingVoiceTest = false;
                                       testAudio = !testAudio;
@@ -332,6 +340,9 @@ class _VoiceScreenState extends State<VoiceScreen> {
 
   Widget buildOptionsContainer(
       voiceBloc, String title, String description, String voiceId) {
+    final chatBloc = BlocProvider.of<ChatBloc>(context);
+    final userLoggedId = GetIt.instance<UserLogged>().user.id;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
@@ -342,6 +353,70 @@ class _VoiceScreenState extends State<VoiceScreen> {
         child: Column(
           children: [
             const SizedBox(height: 6),
+            buildOptionTile('Entrenar oneBot', Icons.construction, Colors.white,
+                () async {
+              chatBloc.clearMessages();
+              chatBloc.dataChatFetched(1);
+
+              final chatsDataProvider = GetIt.instance<ChatRepository>();
+              final messagesDataProvider = GetIt.instance<MessageRepository>();
+
+              final response =
+                  await chatsDataProvider.createChat(userLoggedId!, 1);
+
+              if (response is ChatModel) {
+                await messagesDataProvider.createTraining(
+                    userLoggedId, response.chatId!);
+                chatBloc.messageFetched(response.chatId!, 0, 12);
+                chatBloc.isReadyToTraining(response.chatId!);
+
+                context.push('/chat/${response.chatId!}/${response.chatId!}/1');
+              } else {
+                switch (response) {
+                  case CreateChatResponse.userNotCreator:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content:
+                          '¡Oops!\nNo se puede chatear con este usuario, ya que no es creador.',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  case CreateChatResponse.sameUser:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content: '¡Oops!\nNo puedes chatear contigo mismo :c',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  case CreateChatResponse.unknownError:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content: 'Invalid Data',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                    break;
+                  default:
+                    CustomDialogs().showConfirmationDialog(
+                      context: context,
+                      title: 'Alerta',
+                      content: 'Error Desconocido',
+                      onAccept: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                }
+              }
+            }, Colors.white),
+            const SizedBox(
+              height: 10,
+            ),
             loadingDeleteVoiceClone
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -350,7 +425,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                     setState(() {
                       loadingDeleteVoiceClone = true;
                     });
-                    final voiceCloneDataProvider = VoiceCloneDataProvider();
+                    final voiceRepository = GetIt.instance<VoiceRepository>();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -359,7 +434,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                               '¿Estás seguro que desea eliminar la voz clonada?',
                           onOk: () async {
                             Navigator.pop(context);
-                            await voiceCloneDataProvider.deleteVoice(voiceId);
+                            await voiceRepository.deleteVoice(voiceId);
                             setState(() {
                               loadingDeleteVoiceClone = false;
                             });

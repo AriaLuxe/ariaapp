@@ -25,8 +25,16 @@ class MessageSent extends ChatEvent {
   final int chatId;
   final String audioPath;
   final int userReceivedId;
+  final String text;
+  final TypeMsg typeMsg;
 
-  const MessageSent(this.chatId, this.audioPath, this.userReceivedId);
+  const MessageSent(
+    this.chatId,
+    this.audioPath,
+    this.userReceivedId,
+    this.text,
+    this.typeMsg,
+  );
 }
 
 class ShowPlayer extends ChatEvent {
@@ -112,4 +120,10 @@ class CheckIsCreator extends ChatEvent {
   final int userId;
 
   const CheckIsCreator(this.userId);
+}
+
+class IsReadyTraining extends ChatEvent {
+  final int chatId;
+
+  const IsReadyTraining(this.chatId);
 }

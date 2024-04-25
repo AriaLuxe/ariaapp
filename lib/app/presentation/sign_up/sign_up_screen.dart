@@ -14,6 +14,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: BlocProvider(
         create: (context) => SignUpBloc(),
@@ -24,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
+              width: size.width * 0.9,
               child: const SafeArea(
                   child: SingleChildScrollView(child: SignUpForm())),
             ),

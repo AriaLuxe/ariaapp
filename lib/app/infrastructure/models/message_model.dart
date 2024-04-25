@@ -12,6 +12,7 @@ class MessageModel extends Message {
     required bool read,
     required bool isLiked,
     required int chat,
+    required String msgText,
   }) : super(
           id: id,
           sender: sender,
@@ -21,6 +22,7 @@ class MessageModel extends Message {
           read: read,
           isLiked: isLiked,
           chat: chat,
+          msgText: msgText,
         );
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class MessageModel extends Message {
       read: json['read'] ?? false,
       isLiked: json['isliked'] ?? false,
       chat: json['chat'] ?? 0,
+      msgText: json['msgText'] ?? '',
     );
   }
 
@@ -47,6 +50,7 @@ class MessageModel extends Message {
       'read': read,
       'isliked': isLiked,
       'chat': chat,
+      'msgText': msgText,
     };
   }
 
