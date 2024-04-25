@@ -64,16 +64,14 @@ class FavoritesMessagesBloc
       AudioPlayer? audioPlayer;
 
       audioUrl = message.content;
-      if (audioUrl != null) {
-        audioPlayer = AudioPlayer();
-        audioPlayer.setUrl(
-            'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
-        audioControllers.add(audioPlayer);
-      }
-
+      audioPlayer = AudioPlayer();
+      audioPlayer.setUrl(
+          'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+      audioControllers.add(audioPlayer);
+    
       chatMessages.add(FavoritesMessageWidget(
         color: const Color(0xFF354271),
-        audioPlayer: audioPlayer!,
+        audioPlayer: audioPlayer,
         audioUrl: audioUrl,
         dateTime: message.date,
         read: message.read,

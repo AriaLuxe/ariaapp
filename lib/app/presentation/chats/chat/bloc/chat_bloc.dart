@@ -189,7 +189,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 // Función para crear el mensaje del usuario actual
   ChatMessageWidget _createUserMessage(String audioPath) {
     final audioPlayer = AudioPlayer();
-    if (audioPath != null && audioPath.isNotEmpty) {
+    if (audioPath.isNotEmpty) {
       audioPlayer.setFilePath(audioPath);
     }
     return ChatMessageWidget(
@@ -232,18 +232,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       AudioPlayer? audioPlayer;
 
       audioUrl = message.content;
-      if (audioUrl != null) {
-        audioPlayer = AudioPlayer();
-        audioPlayer.setUrl(
-            'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
-        audioControllers.add(audioPlayer);
-      }
-
+      audioPlayer = AudioPlayer();
+      audioPlayer.setUrl(
+          'https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+      audioControllers.add(audioPlayer);
+    
       chatMessages.add(
           //  0,
           ChatMessageWidget(
         color: const Color(0xFF354271),
-        audioPlayer: audioPlayer!,
+        audioPlayer: audioPlayer,
         audioUrl: audioUrl,
         dateTime: message.date,
         read: message.read,
@@ -286,16 +284,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     AudioPlayer? audioPlayer;
 
     audioUrl = message.content;
-    if (audioUrl != null) {
-      audioPlayer = AudioPlayer();
-      audioPlayer
-          .setUrl('https://uploadsaria.blob.core.windows.net/files/$audioUrl');
-      audioControllers.add(audioPlayer);
-    }
-
+    audioPlayer = AudioPlayer();
+    audioPlayer
+        .setUrl('https://uploadsaria.blob.core.windows.net/files/$audioUrl');
+    audioControllers.add(audioPlayer);
+  
     return ChatMessageWidget(
       color: const Color(0xFF5368d6),
-      audioPlayer: audioPlayer!,
+      audioPlayer: audioPlayer,
       audioUrl: audioUrl,
       dateTime: message.date,
       read: message.read,

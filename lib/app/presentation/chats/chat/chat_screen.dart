@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:ariapp/app/config/base_url_config.dart';
@@ -7,7 +6,6 @@ import 'package:ariapp/app/infrastructure/repositories/message_repository.dart';
 import 'package:ariapp/app/infrastructure/repositories/user_aria_repository.dart';
 import 'package:ariapp/app/presentation/chats/chat_list/bloc/chat_list_bloc.dart';
 import 'package:ariapp/app/presentation/profiles/profile/profile_screen.dart';
-import 'package:ariapp/app/presentation/sign_in/widgets/text_input.dart';
 import 'package:ariapp/app/security/user_logged.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -234,11 +232,11 @@ class _ChatState extends State<Chat> {
                                         audioPath!,
                                       );
                                       chatBloc.isRecording(false);
-                                      final AudioPlayer _audioPlayerNotify =
+                                      final AudioPlayer audioPlayerNotify =
                                           AudioPlayer();
-                                      _audioPlayerNotify
+                                      audioPlayerNotify
                                           .setAsset('assets/audio/Eureka.mp3');
-                                      _audioPlayerNotify.play();
+                                      audioPlayerNotify.play();
                                       await Future.delayed(
                                           const Duration(milliseconds: 5000));
                                       chatListBloc.chatsFetched();

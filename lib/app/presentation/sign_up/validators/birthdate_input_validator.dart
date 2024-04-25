@@ -34,7 +34,7 @@ class BirthDateInputValidator extends FormzInput<String, BirthDateInputError> {
     final currentDate = DateTime.now();
     final birthDate = DateTime(year, month, day);
     final adultDate = currentDate
-        .subtract(Duration(days: 18 * 365)); // Consideramos 18 años completos.
+        .subtract(const Duration(days: 18 * 365)); // Consideramos 18 años completos.
 
     if (birthDate.isAfter(adultDate)) {
       return BirthDateInputError.notAdult;

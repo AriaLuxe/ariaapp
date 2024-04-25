@@ -8,7 +8,7 @@ class TerminosCondicionesCloneVoiceScreen extends StatelessWidget {
   TextSpan _buildTitle(String text) {
     return TextSpan(
       text: '$text\n',
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 16,
         color: Colors.red,

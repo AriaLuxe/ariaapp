@@ -183,7 +183,7 @@ class _SignInFormState extends State<SignInForm> {
                             }
                           }
                         },
-                        child: Text(
+                        child: const Text(
                           '¿Olvidaste tu contraseña?',
                           style: TextStyle(
                               color: /*context.read<SignInBloc>().state.emailInputValidator.isValid ? Colors.white :*/

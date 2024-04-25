@@ -80,7 +80,7 @@ class AppNavigation {
                     pageBuilder: (context, state) {
                       return CustomTransitionPage<void>(
                         key: state.pageKey,
-                        child: ProfileScreen(
+                        child: const ProfileScreen(
                           user: null,
                         ),
                         transitionsBuilder: (

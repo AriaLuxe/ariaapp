@@ -46,7 +46,6 @@ class VoiceCloneDataProvider {
       },
     );
     if (response.statusCode == 200 &&
-        response.body != null &&
         response.body.isNotEmpty) {
       return response.body;
     } else {
