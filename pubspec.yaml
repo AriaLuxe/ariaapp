@@ -37,8 +37,8 @@ dependencies:
   device_preview: ^1.1.0
   equatable: ^2.0.5
   file_picker: ^6.1.1
-  firebase_core: ^2.30.0
-  firebase_messaging: ^14.8.2
+  firebase_core: ^2.27.0
+  firebase_messaging: ^14.7.19
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
